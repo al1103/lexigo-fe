@@ -1,0 +1,2 @@
+D:/Projects/lexigo/android/app/.cxx/Debug/18523j2q/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/Projects/lexigo/android/app/.cxx/Debug/18523j2q/arm64-v8a/CMakeFiles/rebuild_cache.dir
