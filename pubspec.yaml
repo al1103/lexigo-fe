@@ -31,7 +31,7 @@ dependencies:
   flutter_native_splash: ^2.4.6
   flutter_riverpod: ^2.3.6
   flutter_svg: ^2.1.0
-  flutter_tts: ^4.2.2
+  flutter_tts: ^4.2.3
   fluttertoast: ^8.2.12
   freezed_annotation: ^2.2.0
   google_fonts: ^6.2.1
