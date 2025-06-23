@@ -253,8 +253,8 @@ PayloadPageableDto<T> _$PayloadPageableDtoFromJson<T>(
 
 /// @nodoc
 mixin _$PayloadPageableDto<T> {
-  @JsonKey(name: 'data')
-  List<T> get data => throw _privateConstructorUsedError;
+  @JsonKey(name: 'contents')
+  List<T> get contents => throw _privateConstructorUsedError;
   @JsonKey(name: 'pagination')
   PageableModelDto? get pagination => throw _privateConstructorUsedError;
 
@@ -276,7 +276,7 @@ abstract class $PayloadPageableDtoCopyWith<T, $Res> {
       _$PayloadPageableDtoCopyWithImpl<T, $Res, PayloadPageableDto<T>>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'data') List<T> data,
+      {@JsonKey(name: 'contents') List<T> contents,
       @JsonKey(name: 'pagination') PageableModelDto? pagination});
 
   $PageableModelDtoCopyWith<$Res>? get pagination;
@@ -298,13 +298,13 @@ class _$PayloadPageableDtoCopyWithImpl<T, $Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? data = null,
+    Object? contents = null,
     Object? pagination = freezed,
   }) {
     return _then(_value.copyWith(
-      data: null == data
-          ? _value.data
-          : data // ignore: cast_nullable_to_non_nullable
+      contents: null == contents
+          ? _value.contents
+          : contents // ignore: cast_nullable_to_non_nullable
               as List<T>,
       pagination: freezed == pagination
           ? _value.pagination
@@ -337,7 +337,7 @@ abstract class _$$PayloadPageableDtoImplCopyWith<T, $Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'data') List<T> data,
+      {@JsonKey(name: 'contents') List<T> contents,
       @JsonKey(name: 'pagination') PageableModelDto? pagination});
 
   @override
@@ -358,13 +358,13 @@ class __$$PayloadPageableDtoImplCopyWithImpl<T, $Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? data = null,
+    Object? contents = null,
     Object? pagination = freezed,
   }) {
     return _then(_$PayloadPageableDtoImpl<T>(
-      data: null == data
-          ? _value._data
-          : data // ignore: cast_nullable_to_non_nullable
+      contents: null == contents
+          ? _value._contents
+          : contents // ignore: cast_nullable_to_non_nullable
               as List<T>,
       pagination: freezed == pagination
           ? _value.pagination
@@ -378,21 +378,21 @@ class __$$PayloadPageableDtoImplCopyWithImpl<T, $Res>
 @JsonSerializable(genericArgumentFactories: true)
 class _$PayloadPageableDtoImpl<T> implements _PayloadPageableDto<T> {
   const _$PayloadPageableDtoImpl(
-      {@JsonKey(name: 'data') final List<T> data = const [],
+      {@JsonKey(name: 'contents') final List<T> contents = const [],
       @JsonKey(name: 'pagination') this.pagination})
-      : _data = data;
+      : _contents = contents;
 
   factory _$PayloadPageableDtoImpl.fromJson(
           Map<String, dynamic> json, T Function(Object?) fromJsonT) =>
       _$$PayloadPageableDtoImplFromJson(json, fromJsonT);
 
-  final List<T> _data;
+  final List<T> _contents;
   @override
-  @JsonKey(name: 'data')
-  List<T> get data {
-    if (_data is EqualUnmodifiableListView) return _data;
+  @JsonKey(name: 'contents')
+  List<T> get contents {
+    if (_contents is EqualUnmodifiableListView) return _contents;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_data);
+    return EqualUnmodifiableListView(_contents);
   }
 
   @override
@@ -401,7 +401,7 @@ class _$PayloadPageableDtoImpl<T> implements _PayloadPageableDto<T> {
 
   @override
   String toString() {
-    return 'PayloadPageableDto<$T>(data: $data, pagination: $pagination)';
+    return 'PayloadPageableDto<$T>(contents: $contents, pagination: $pagination)';
   }
 
   @override
@@ -409,7 +409,7 @@ class _$PayloadPageableDtoImpl<T> implements _PayloadPageableDto<T> {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PayloadPageableDtoImpl<T> &&
-            const DeepCollectionEquality().equals(other._data, _data) &&
+            const DeepCollectionEquality().equals(other._contents, _contents) &&
             (identical(other.pagination, pagination) ||
                 other.pagination == pagination));
   }
@@ -417,7 +417,7 @@ class _$PayloadPageableDtoImpl<T> implements _PayloadPageableDto<T> {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_data), pagination);
+      runtimeType, const DeepCollectionEquality().hash(_contents), pagination);
 
   /// Create a copy of PayloadPageableDto
   /// with the given fields replaced by the non-null parameter values.
@@ -436,7 +436,7 @@ class _$PayloadPageableDtoImpl<T> implements _PayloadPageableDto<T> {
 
 abstract class _PayloadPageableDto<T> implements PayloadPageableDto<T> {
   const factory _PayloadPageableDto(
-          {@JsonKey(name: 'data') final List<T> data,
+          {@JsonKey(name: 'contents') final List<T> contents,
           @JsonKey(name: 'pagination') final PageableModelDto? pagination}) =
       _$PayloadPageableDtoImpl<T>;
 
@@ -445,8 +445,8 @@ abstract class _PayloadPageableDto<T> implements PayloadPageableDto<T> {
       _$PayloadPageableDtoImpl<T>.fromJson;
 
   @override
-  @JsonKey(name: 'data')
-  List<T> get data;
+  @JsonKey(name: 'contents')
+  List<T> get contents;
   @override
   @JsonKey(name: 'pagination')
   PageableModelDto? get pagination;

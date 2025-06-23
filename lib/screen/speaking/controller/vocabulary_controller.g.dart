@@ -7,7 +7,7 @@ part of 'vocabulary_controller.dart';
 // **************************************************************************
 
 String _$vocabularyControllerHash() =>
-    r'9118ab2315c1bed5bc3daf8ef2dfac3e5e1ca393';
+    r'9bdba60b993d65c7d158592151432f3700a868f4';
 
 /// Copied from Dart SDK
 class _SystemHash {

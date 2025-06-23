@@ -31,6 +31,12 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
   // Thêm để track kết quả
   final List<QuizResult> _quizResults = [];
 
+  // Thêm để track bookmarks
+  final Set<int> _bookmarkedQuestions = <int>{};
+
+  // Thêm sessionId cho quiz - trong thực tế có thể lấy từ API start quiz
+  final int sessionId = 8;
+
   late AnimationController _animationController;
   late AnimationController _speakingController;
   late Animation<double> _fadeAnimation;
@@ -111,28 +117,20 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
   List<Map<String, dynamic>> _getOptionsFromLessonsDetail(
     LessonsDetail lesson,
   ) {
-    return [
-      {
-        'text': lesson.optionA ?? '',
-        'isCorrect': lesson.correctAnswer == 'A',
-        'letter': 'A',
-      },
-      {
-        'text': lesson.optionB ?? '',
-        'isCorrect': lesson.correctAnswer == 'B',
-        'letter': 'B',
-      },
-      {
-        'text': lesson.optionC ?? '',
-        'isCorrect': lesson.correctAnswer == 'C',
-        'letter': 'C',
-      },
-      {
-        'text': lesson.optionD ?? '',
-        'isCorrect': lesson.correctAnswer == 'D',
-        'letter': 'D',
-      },
-    ].where((option) => option['text'].toString().isNotEmpty).toList();
+    if (lesson.options == null || lesson.options!.isEmpty) {
+      return [];
+    }
+
+    return lesson.options!
+        .map(
+          (option) => {
+            'text': option.optionText ?? '',
+            'isCorrect': option.isCorrect ?? false,
+            'optionId': option.optionId,
+            'optionOrder': option.optionOrder,
+          },
+        )
+        .toList();
   }
 
   @override
@@ -261,13 +259,28 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
                     color: Colors.white,
                   ),
                 ),
-                Text(
-                  '$total Questions Available',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white.withOpacity(0.8),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '$total Questions Available',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white.withOpacity(0.8),
+                      ),
+                    ),
+                    if (_bookmarkedQuestions.isNotEmpty) ...[
+                      Text(
+                        ' • ${_bookmarkedQuestions.length} Bookmarked',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white.withOpacity(0.8),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ],
             ),
@@ -340,6 +353,37 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
                   ),
                 ),
               ),
+              // Bookmark button
+              GestureDetector(
+                onTap: () => _toggleBookmark(currentQuestion),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  margin: const EdgeInsets.only(right: 8),
+                  decoration: BoxDecoration(
+                    color: _isBookmarked(currentQuestion)
+                        ? const Color(0xFF6366F1).withOpacity(0.1)
+                        : Colors.grey[100],
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: _isBookmarked(currentQuestion)
+                          ? const Color(0xFF6366F1)
+                          : Colors.grey[300]!,
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Icon(
+                    _isBookmarked(currentQuestion)
+                        ? Icons.bookmark
+                        : Icons.bookmark_border,
+                    color: _isBookmarked(currentQuestion)
+                        ? const Color(0xFF6366F1)
+                        : Colors.grey[500],
+                    size: 20,
+                  ),
+                ),
+              ),
+              // Audio button
               AnimatedBuilder(
                 animation: _speakingAnimation,
                 builder: (context, child) {
@@ -387,8 +431,8 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
               ),
             ],
           ),
-          if (currentQuestion.explanation != null &&
-              currentQuestion.explanation!.isNotEmpty) ...[
+          if (currentQuestion.word != null &&
+              currentQuestion.meaning != null) ...[
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
@@ -396,13 +440,41 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
                 color: const Color(0xFF6366F1).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Text(
-                currentQuestion.explanation!,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF6366F1),
-                  fontStyle: FontStyle.italic,
-                ),
+              child: Column(
+                children: [
+                  if (currentQuestion.word != null) ...[
+                    Text(
+                      'Word: ${currentQuestion.word!}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF6366F1),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                  ],
+                  if (currentQuestion.meaning != null) ...[
+                    Text(
+                      'Meaning: ${currentQuestion.meaning!}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF6366F1),
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
+                  if (currentQuestion.pronunciation != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      'Pronunciation: ${currentQuestion.pronunciation!}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF6366F1),
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
           ],
@@ -453,8 +525,6 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
 
                       // Lưu kết quả câu hỏi
                       _saveQuestionResult(currentQuestion, index, isCorrect);
-
-                      Future.delayed(const Duration(seconds: 2), _nextQuestion);
                     },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
@@ -508,7 +578,9 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
                                 )
                               : Center(
                                   child: Text(
-                                    option['letter'] as String,
+                                    String.fromCharCode(
+                                      65 + index,
+                                    ), // A, B, C, D
                                     style: TextStyle(
                                       color: getTextColor(),
                                       fontSize: 14,
@@ -581,7 +653,7 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
                   ),
                   if (!isCorrect) ...[
                     Text(
-                      'Correct answer: ${currentQuestion.correctAnswer}',
+                      'Points: ${currentQuestion.points ?? 0}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
@@ -590,6 +662,47 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
                     ),
                   ],
                 ],
+              ),
+            ),
+            // Bookmark button
+            GestureDetector(
+              onTap: () => _toggleBookmark(currentQuestion),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  _isBookmarked(currentQuestion)
+                      ? Icons.bookmark
+                      : Icons.bookmark_border,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Next button
+            GestureDetector(
+              onTap: _nextQuestion,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  'Next',
+                  style: TextStyle(
+                    color: isCorrect
+                        ? const Color(0xFF10B981)
+                        : const Color(0xFFEF4444),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             ),
           ],
@@ -626,23 +739,87 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
     final options = _getOptionsFromLessonsDetail(question);
     final correctAnswerIndex =
         options.indexWhere((option) => option['isCorrect'] as bool);
-
     final result = QuizResult(
-      questionId: question.id?.toString() ?? currentQuestionIndex.toString(),
+      questionId:
+          question.questionId?.toString() ?? currentQuestionIndex.toString(),
       question: question.questionText ?? 'No question text',
       options: options.map((option) => option['text'] as String).toList(),
       correctAnswerIndex: correctAnswerIndex,
       userAnswerIndex: userAnswerIndex,
       isCorrect: isCorrect,
-      explanation: question.explanation,
+      explanation: question.meaning ?? question.word,
     );
 
     _quizResults.add(result);
   }
 
-  void _nextQuestion() {
+  // Thêm bookmark methods
+  bool _isBookmarked(LessonsDetail question) {
+    return _bookmarkedQuestions.contains(question.questionId);
+  }
+
+  void _toggleBookmark(LessonsDetail question) {
+    setState(() {
+      if (_bookmarkedQuestions.contains(question.questionId)) {
+        _bookmarkedQuestions.remove(question.questionId);
+        _showSnackBar('Removed from bookmarks', Icons.bookmark_border);
+      } else {
+        _bookmarkedQuestions.add(question.questionId!);
+        _showSnackBar('Added to bookmarks', Icons.bookmark);
+      }
+    });
+  }
+
+  void _showSnackBar(String message, IconData icon) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(icon, color: Colors.white),
+            const SizedBox(width: 8),
+            Text(message),
+          ],
+        ),
+        backgroundColor: const Color(0xFF6366F1),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 1),
+      ),
+    );
+  }
+
+  Future<void> _nextQuestion() async {
     final wordData =
         ref.read(wordControllerProvider(widget.levelId ?? 1)).value;
+
+    // Submit answer nếu đã trả lời
+    if (isAnswerSubmitted && selectedAnswerIndex >= 0 && wordData != null) {
+      final currentQuestion = wordData[currentQuestionIndex];
+      final options = _getOptionsFromLessonsDetail(currentQuestion);
+
+      if (selectedAnswerIndex < options.length) {
+        final selectedOption = options[selectedAnswerIndex];
+        final selectedOptionId = selectedOption['optionId'] as int?;
+
+        if (selectedOptionId != null && currentQuestion.questionId != null) {
+          try {
+            await ref
+                .read(wordControllerProvider(widget.levelId ?? 1).notifier)
+                .submitAnswer(
+                  sessionId: sessionId,
+                  questionId: currentQuestion.questionId!,
+                  selectedOptionId: selectedOptionId,
+                );
+            print('Answer submitted successfully');
+          } catch (e) {
+            print('Failed to submit answer: $e');
+            // Hiển thị thông báo lỗi cho user
+            _showSnackBar('Failed to submit answer', Icons.error);
+          }
+        }
+      }
+    }
 
     // Kiểm tra còn câu hỏi nào không
     if (wordData != null && currentQuestionIndex < wordData.length - 1) {
@@ -666,7 +843,7 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
 
     print('Showing completion dialog for $totalQuestions questions');
 
-    showDialog(
+    showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(

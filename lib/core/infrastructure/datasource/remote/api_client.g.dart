@@ -200,20 +200,27 @@ class _ApiClient implements ApiClient {
 
   @override
   Future<ApiResponse<PayloadPageableDto<LessonsDetail>>> getLessonDetails(
-      int id) async {
+    int id,
+    int? page,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = {
+      'level_id': id,
+      'question_count': page,
+    };
+    _data.removeWhere((k, v) => v == null);
     final _options =
         _setStreamType<ApiResponse<PayloadPageableDto<LessonsDetail>>>(Options(
-      method: 'GET',
+      method: 'POST',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/lessons/${id}',
+              '/quiz/start',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -300,7 +307,7 @@ class _ApiClient implements ApiClient {
     )
         .compose(
           _dio.options,
-          '/lessons',
+          '/levels',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -320,6 +327,86 @@ class _ApiClient implements ApiClient {
                     (i) => LessonsModel.fromJson(i as Map<String, dynamic>))
                 .toList()
             : List.empty(),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApiResponse<SmartWord>> getWordDetails(String word) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = {'word': word};
+    final _options = _setStreamType<ApiResponse<SmartWord>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/ai/vocabulary',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<SmartWord> _value;
+    try {
+      _value = ApiResponse<SmartWord>.fromJson(
+        _result.data!,
+        (json) => SmartWord.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApiResponse<void>> submitAnswer(
+    int sessionId,
+    int questionId,
+    int selectedOptionId,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = {
+      'session_id': sessionId,
+      'question_id': questionId,
+      'selected_option_id': selectedOptionId,
+    };
+    final _options = _setStreamType<ApiResponse<void>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/quiz/submit-answer',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<void> _value;
+    try {
+      _value = ApiResponse<void>.fromJson(
+        _result.data!,
+        (json) => () {}(),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

@@ -22,13 +22,9 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     CameraRoute.name: (routeData) {
-      final args = routeData.argsAs<CameraRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: CameraScreen(
-          camera: args.camera,
-          key: args.key,
-        ),
+        child: const CameraScreen(),
       );
     },
     ChatRoute.name: (routeData) {
@@ -105,12 +101,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ReviewPage(),
       );
     },
-    ScanObjectRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ScanObjectScreen(),
-      );
-    },
     SignInRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -148,6 +138,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const VocabularyScreen(),
       );
     },
+    WordDetailRoute.name: (routeData) {
+      final args = routeData.argsAs<WordDetailRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: WordDetailScreen(
+          word: args.word,
+          key: args.key,
+        ),
+      );
+    },
     WordLearningRoute.name: (routeData) {
       final args = routeData.argsAs<WordLearningRouteArgs>(
           orElse: () => const WordLearningRouteArgs());
@@ -178,39 +178,16 @@ class BookmarksRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [CameraScreen]
-class CameraRoute extends PageRouteInfo<CameraRouteArgs> {
-  CameraRoute({
-    required CameraDescription camera,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
+class CameraRoute extends PageRouteInfo<void> {
+  const CameraRoute({List<PageRouteInfo>? children})
+      : super(
           CameraRoute.name,
-          args: CameraRouteArgs(
-            camera: camera,
-            key: key,
-          ),
           initialChildren: children,
         );
 
   static const String name = 'CameraRoute';
 
-  static const PageInfo<CameraRouteArgs> page = PageInfo<CameraRouteArgs>(name);
-}
-
-class CameraRouteArgs {
-  const CameraRouteArgs({
-    required this.camera,
-    this.key,
-  });
-
-  final CameraDescription camera;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'CameraRouteArgs{camera: $camera, key: $key}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -435,20 +412,6 @@ class ReviewRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [ScanObjectScreen]
-class ScanObjectRoute extends PageRouteInfo<void> {
-  const ScanObjectRoute({List<PageRouteInfo>? children})
-      : super(
-          ScanObjectRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ScanObjectRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [SignInPage]
 class SignInRoute extends PageRouteInfo<void> {
   const SignInRoute({List<PageRouteInfo>? children})
@@ -555,6 +518,44 @@ class VocabularyRoute extends PageRouteInfo<void> {
   static const String name = 'VocabularyRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [WordDetailScreen]
+class WordDetailRoute extends PageRouteInfo<WordDetailRouteArgs> {
+  WordDetailRoute({
+    required String word,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          WordDetailRoute.name,
+          args: WordDetailRouteArgs(
+            word: word,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'WordDetailRoute';
+
+  static const PageInfo<WordDetailRouteArgs> page =
+      PageInfo<WordDetailRouteArgs>(name);
+}
+
+class WordDetailRouteArgs {
+  const WordDetailRouteArgs({
+    required this.word,
+    this.key,
+  });
+
+  final String word;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'WordDetailRouteArgs{word: $word, key: $key}';
+  }
 }
 
 /// generated route for

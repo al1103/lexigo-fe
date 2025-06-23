@@ -27,7 +27,7 @@ class VocabularyController extends _$VocabularyController {
     } else {
       // Return empty data structure if no data
       return const PayloadPageableDto<VocabularyModel>(
-        data: [],
+        contents: [],
       );
     }
   }
@@ -65,17 +65,17 @@ class VocabularyController extends _$VocabularyController {
           .read(speakingRepositoryProvider)
           .getVocabulary(search, nextPage);
 
-      if (response.data != null) {
-        final newData = response.data!;
+      // if (response.contents != null) {
+      //   final newData = response.contents!;
 
-        // Merge with existing data
-        final mergedData = PayloadPageableDto<VocabularyModel>(
-          data: [...currentState.data, ...newData.data],
-          pagination: newData.pagination,
-        );
+      //   // Merge with existing data
+      //   final mergedData = PayloadPageableDto<VocabularyModel>(
+      //     contents: [...currentState.contents, ...newData.contents],
+      //     pagination: newData.pagination,
+      //   );
 
-        state = AsyncValue.data(mergedData);
-      }
+      //   state = AsyncValue.data(mergedData);
+      // }
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
     }

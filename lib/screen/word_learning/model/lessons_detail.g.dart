@@ -8,24 +8,39 @@ part of 'lessons_detail.dart';
 
 _$LessonsDetailImpl _$$LessonsDetailImplFromJson(Map<String, dynamic> json) =>
     _$LessonsDetailImpl(
-      id: (json['id'] as num?)?.toInt(),
+      questionId: (json['question_id'] as num?)?.toInt(),
       questionText: json['question_text'] as String?,
-      optionA: json['option_a'] as String?,
-      optionB: json['option_b'] as String?,
-      optionC: json['option_c'] as String?,
-      optionD: json['option_d'] as String?,
-      correctAnswer: json['correct_answer'] as String?,
-      explanation: json['explanation'] as String?,
+      word: json['word'] as String?,
+      meaning: json['meaning'] as String?,
+      pronunciation: json['pronunciation'] as String?,
+      options: (json['options'] as List<dynamic>?)
+          ?.map((e) => Option.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      points: (json['points'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$LessonsDetailImplToJson(_$LessonsDetailImpl instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      'question_id': instance.questionId,
       'question_text': instance.questionText,
-      'option_a': instance.optionA,
-      'option_b': instance.optionB,
-      'option_c': instance.optionC,
-      'option_d': instance.optionD,
-      'correct_answer': instance.correctAnswer,
-      'explanation': instance.explanation,
+      'word': instance.word,
+      'meaning': instance.meaning,
+      'pronunciation': instance.pronunciation,
+      'options': instance.options,
+      'points': instance.points,
+    };
+
+_$OptionImpl _$$OptionImplFromJson(Map<String, dynamic> json) => _$OptionImpl(
+      optionId: (json['option_id'] as num?)?.toInt(),
+      optionText: json['option_text'] as String?,
+      isCorrect: json['is_correct'] as bool?,
+      optionOrder: (json['option_order'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$$OptionImplToJson(_$OptionImpl instance) =>
+    <String, dynamic>{
+      'option_id': instance.optionId,
+      'option_text': instance.optionText,
+      'is_correct': instance.isCorrect,
+      'option_order': instance.optionOrder,
     };

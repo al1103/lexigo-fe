@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:lexigo/auth/presentation/pages/sign_in_page.dart';
 import 'package:lexigo/auth/presentation/pages/sign_up_page.dart';
@@ -14,8 +13,8 @@ import 'package:lexigo/screen/level_selection/level_selection_screen.dart';
 import 'package:lexigo/screen/profile/profile_screen.dart';
 import 'package:lexigo/screen/progress_screen.dart';
 import 'package:lexigo/screen/register_screen.dart';
-import 'package:lexigo/screen/scan_objects/scan_object_screen.dart';
 import 'package:lexigo/screen/scan_objects/screens/camera_screen.dart';
+import 'package:lexigo/screen/scan_objects/screens/word_detail_screen.dart';
 import 'package:lexigo/screen/speaking/model/speaking_result.dart';
 import 'package:lexigo/screen/speaking/speaking_result_screen.dart';
 import 'package:lexigo/screen/speaking/speaking_screen.dart';
@@ -65,10 +64,7 @@ class AppRouter extends _$AppRouter {
         page: SpeakingRoute.page,
         path: '/speaking',
       ),
-      AutoRoute(
-        page: ScanObjectRoute.page,
-        path: '/scanObject',
-      ),
+
       AutoRoute(
         page: LevelSelectionRoute.page,
         path: '/levelSelection',

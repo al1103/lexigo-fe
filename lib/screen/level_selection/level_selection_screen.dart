@@ -146,12 +146,11 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
     );
   }
 
-  Widget _buildLessonsContent(dynamic response) {
-    if (response?.data == null || (response!.data as List?)?.isEmpty == true) {
+  Widget _buildLessonsContent(List<LessonsModel>? lessonsModel) {
+    print('Lessons Model: $lessonsModel');
+    if (lessonsModel == null || lessonsModel.isEmpty) {
       return _buildEmptyState();
     }
-
-    final lessonsModel = response.data! as List<LessonsModel>;
 
     return AnimatedBuilder(
       animation: _fadeAnimation,
@@ -167,10 +166,10 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
                 children: [
                   const SizedBox(height: 8),
 
-                  // Title
-                  const Text(
-                    'Available LessonsModel',
-                    style: TextStyle(
+                  // Title với count
+                  Text(
+                    'Available Levels (${lessonsModel.length})',
+                    style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.w800,
                       color: Color(0xFF1F2937),
@@ -178,7 +177,7 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Select a lesson to start learning new vocabulary',
+                    'Select a level to start learning new vocabulary',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -187,12 +186,12 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
                   ),
                   const SizedBox(height: 24),
 
-                  // LessonsModel List
+                  // Levels List
                   Expanded(
                     child: ListView.builder(
                       itemCount: lessonsModel.length,
                       itemBuilder: (context, index) {
-                        return _buildLessonCard(lessonsModel[index], index);
+                        return _buildLevelCard(lessonsModel[index], index);
                       },
                     ),
                   ),
@@ -205,55 +204,51 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
     );
   }
 
-  Widget _buildLessonCard(LessonsModel lesson, int index) {
-    final difficultyColor = _getDifficultyColor(lesson.difficultyLevel);
-    final isPublished = lesson.isPublished ?? false;
-    print('Lesson ${lesson.id} isPublished: $isPublished');
+  Widget _buildLevelCard(LessonsModel level, int index) {
+    final levelColor = _getLevelColor(level.color);
+    final isActive = level.isActive ?? false;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: GestureDetector(
-        onTap: isPublished
-            ? () => _navigateToWordLearning(lesson)
-            : () => _showNotAvailableDialog(lesson),
+        onTap: isActive
+            ? () => _navigateToWordLearning(level)
+            : () => _showNotAvailableDialog(level),
         child: AnimatedContainer(
           duration: Duration(milliseconds: 200 + (index * 100)),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: isPublished ? Colors.white : Colors.grey[50],
+            color: isActive ? Colors.white : Colors.grey[50],
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: isPublished
-                    ? difficultyColor.withOpacity(0.1)
+                color: isActive
+                    ? levelColor.withOpacity(0.15)
                     : Colors.grey.withOpacity(0.05),
-                blurRadius: isPublished ? 15 : 5,
+                blurRadius: isActive ? 15 : 5,
                 offset: const Offset(0, 5),
               ),
             ],
             border: Border.all(
-              color: isPublished
-                  ? difficultyColor.withOpacity(0.2)
-                  : Colors.grey[300]!,
+              color: isActive ? levelColor.withOpacity(0.3) : Colors.grey[300]!,
               width: 1.5,
             ),
           ),
           child: Row(
             children: [
-              // Lesson Icon
+              // Level Icon
               Container(
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: isPublished
-                      ? difficultyColor.withOpacity(0.1)
-                      : Colors.grey[200],
+                  color:
+                      isActive ? levelColor.withOpacity(0.1) : Colors.grey[200],
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Center(
-                  child: isPublished
+                  child: isActive
                       ? Text(
-                          _getDifficultyIcon(lesson.difficultyLevel),
+                          level.icon ?? '📚',
                           style: const TextStyle(fontSize: 28),
                         )
                       : Icon(
@@ -265,7 +260,7 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
               ),
               const SizedBox(width: 16),
 
-              // Lesson Info
+              // Level Info
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,33 +269,34 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
                       children: [
                         Expanded(
                           child: Text(
-                            lesson.title ?? 'Untitled Lesson',
+                            level.levelName ??
+                                level.levelNameVi ??
+                                'Unnamed Level',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
-                              color: isPublished
+                              color: isActive
                                   ? const Color(0xFF1F2937)
                                   : Colors.grey[500],
                             ),
                           ),
                         ),
-                        if (isPublished) ...[
+                        if (isActive && level.levelCode != null) ...[
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8,
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: difficultyColor.withOpacity(0.1),
+                              color: levelColor.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              lesson.difficultyLevel?.toUpperCase() ??
-                                  'UNKNOWN',
+                              level.levelCode!.toUpperCase(),
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w700,
-                                color: difficultyColor,
+                                color: levelColor,
                               ),
                             ),
                           ),
@@ -309,7 +305,9 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      lesson.description ?? 'No description available',
+                      level.description ??
+                          level.descriptionVi ??
+                          'No description available',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -321,27 +319,41 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                        Icon(
-                          Icons.quiz_outlined,
-                          size: 16,
-                          color: Colors.grey[500],
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${lesson.totalQuestions ?? 0} questions',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
+                        if (level.minScore != null &&
+                            level.maxScore != null) ...[
+                          Icon(
+                            Icons.emoji_events_outlined,
+                            size: 16,
                             color: Colors.grey[500],
                           ),
-                        ),
-                        const Spacer(),
-                        if (lesson.createdAt != null) ...[
+                          const SizedBox(width: 4),
                           Text(
-                            _formatDate(lesson.createdAt!),
+                            'Score: ${level.minScore} - ${level.maxScore}',
                             style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey[400],
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                        ],
+                        const Spacer(),
+                        if (level.sortOrder != null) ...[
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              '#${level.sortOrder}',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ],
@@ -353,8 +365,8 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
 
               // Arrow Icon
               Icon(
-                isPublished ? Icons.arrow_forward_ios : Icons.lock_outline,
-                color: isPublished ? difficultyColor : Colors.grey[400],
+                isActive ? Icons.arrow_forward_ios : Icons.lock_outline,
+                color: isActive ? levelColor : Colors.grey[400],
                 size: 20,
               ),
             ],
@@ -374,7 +386,7 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
           ),
           const SizedBox(height: 16),
           Text(
-            'Loading LessonsModel...',
+            'Loading Levels...',
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600],
@@ -408,7 +420,7 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              'Unable to load LessonsModel. Please check your connection and try again.',
+              'Unable to load levels. Please check your connection and try again.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
@@ -449,7 +461,7 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
             ),
             const SizedBox(height: 16),
             const Text(
-              'No LessonsModel Available',
+              'No Levels Available',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
@@ -458,7 +470,7 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              'There are no LessonsModel available at the moment. Please check back later.',
+              'There are no levels available at the moment. Please check back later.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
@@ -471,64 +483,31 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
     );
   }
 
-  Color _getDifficultyColor(String? difficulty) {
-    switch (difficulty?.toLowerCase()) {
-      case 'beginner':
-      case 'easy':
-        return const Color(0xFF10B981);
-      case 'intermediate':
-      case 'medium':
-        return const Color(0xFFF59E0B);
-      case 'advanced':
-      case 'hard':
-        return const Color(0xFFEF4444);
-      case 'expert':
-        return const Color(0xFF8B5CF6);
-      default:
-        return const Color(0xFF6366F1);
+  Color _getLevelColor(String? colorHex) {
+    if (colorHex == null || colorHex.isEmpty) {
+      return const Color(0xFF6366F1);
     }
+
+    try {
+      // Remove # if present and ensure it's 6 characters
+      final cleanHex = colorHex.replaceAll('#', '');
+      if (cleanHex.length == 6) {
+        return Color(int.parse('FF$cleanHex', radix: 16));
+      }
+    } catch (e) {
+      // If parsing fails, return default color
+    }
+
+    return const Color(0xFF6366F1);
   }
 
-  String _getDifficultyIcon(String? difficulty) {
-    switch (difficulty?.toLowerCase()) {
-      case 'beginner':
-      case 'easy':
-        return '🌱';
-      case 'intermediate':
-      case 'medium':
-        return '🎯';
-      case 'advanced':
-      case 'hard':
-        return '🏆';
-      case 'expert':
-        return '👑';
-      default:
-        return '📚';
-    }
-  }
-
-  String _formatDate(DateTime date) {
-    final now = DateTime.now();
-    final difference = now.difference(date);
-
-    if (difference.inDays == 0) {
-      return 'Today';
-    } else if (difference.inDays == 1) {
-      return 'Yesterday';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
-    } else {
-      return '${date.day}/${date.month}/${date.year}';
-    }
-  }
-
-  void _navigateToWordLearning(LessonsModel lesson) {
+  void _navigateToWordLearning(LessonsModel level) {
     context.pushRoute(
-      WordLearningRoute(levelId: lesson.id ?? 0),
+      WordLearningRoute(levelId: level.id ?? 0),
     );
   }
 
-  void _showNotAvailableDialog(LessonsModel lesson) {
+  void _showNotAvailableDialog(LessonsModel level) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -537,11 +516,11 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
           children: [
             Icon(Icons.lock, color: Colors.grey[600]),
             const SizedBox(width: 8),
-            const Text('Lesson Not Available'),
+            const Text('Level Not Available'),
           ],
         ),
         content: const Text(
-          'This lesson is not published yet. Please check back later or contact support.',
+          'This level is not active yet. Please check back later or contact support.',
         ),
         actions: [
           TextButton(

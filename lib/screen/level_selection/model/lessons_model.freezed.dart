@@ -22,20 +22,28 @@ LessonsModel _$LessonsModelFromJson(Map<String, dynamic> json) {
 mixin _$LessonsModel {
   @JsonKey(name: 'id')
   int? get id => throw _privateConstructorUsedError;
-  @JsonKey(name: 'title')
-  String? get title => throw _privateConstructorUsedError;
+  @JsonKey(name: 'level_code')
+  String? get levelCode => throw _privateConstructorUsedError;
+  @JsonKey(name: 'level_name')
+  String? get levelName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'level_name_vi')
+  String? get levelNameVi => throw _privateConstructorUsedError;
   @JsonKey(name: 'description')
   String? get description => throw _privateConstructorUsedError;
-  @JsonKey(name: 'difficulty_level')
-  String? get difficultyLevel => throw _privateConstructorUsedError;
-  @JsonKey(name: 'total_questions')
-  int? get totalQuestions => throw _privateConstructorUsedError;
-  @JsonKey(name: 'is_published')
-  bool? get isPublished => throw _privateConstructorUsedError;
-  @JsonKey(name: 'created_at')
-  DateTime? get createdAt => throw _privateConstructorUsedError;
-  @JsonKey(name: 'actual_question_count')
-  String? get actualQuestionCount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'description_vi')
+  String? get descriptionVi => throw _privateConstructorUsedError;
+  @JsonKey(name: 'color')
+  String? get color => throw _privateConstructorUsedError;
+  @JsonKey(name: 'icon')
+  String? get icon => throw _privateConstructorUsedError;
+  @JsonKey(name: 'min_score')
+  int? get minScore => throw _privateConstructorUsedError;
+  @JsonKey(name: 'max_score')
+  int? get maxScore => throw _privateConstructorUsedError;
+  @JsonKey(name: 'sort_order')
+  int? get sortOrder => throw _privateConstructorUsedError;
+  @JsonKey(name: 'is_active')
+  bool? get isActive => throw _privateConstructorUsedError;
 
   /// Serializes this LessonsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -55,13 +63,17 @@ abstract class $LessonsModelCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'id') int? id,
-      @JsonKey(name: 'title') String? title,
+      @JsonKey(name: 'level_code') String? levelCode,
+      @JsonKey(name: 'level_name') String? levelName,
+      @JsonKey(name: 'level_name_vi') String? levelNameVi,
       @JsonKey(name: 'description') String? description,
-      @JsonKey(name: 'difficulty_level') String? difficultyLevel,
-      @JsonKey(name: 'total_questions') int? totalQuestions,
-      @JsonKey(name: 'is_published') bool? isPublished,
-      @JsonKey(name: 'created_at') DateTime? createdAt,
-      @JsonKey(name: 'actual_question_count') String? actualQuestionCount});
+      @JsonKey(name: 'description_vi') String? descriptionVi,
+      @JsonKey(name: 'color') String? color,
+      @JsonKey(name: 'icon') String? icon,
+      @JsonKey(name: 'min_score') int? minScore,
+      @JsonKey(name: 'max_score') int? maxScore,
+      @JsonKey(name: 'sort_order') int? sortOrder,
+      @JsonKey(name: 'is_active') bool? isActive});
 }
 
 /// @nodoc
@@ -80,47 +92,67 @@ class _$LessonsModelCopyWithImpl<$Res, $Val extends LessonsModel>
   @override
   $Res call({
     Object? id = freezed,
-    Object? title = freezed,
+    Object? levelCode = freezed,
+    Object? levelName = freezed,
+    Object? levelNameVi = freezed,
     Object? description = freezed,
-    Object? difficultyLevel = freezed,
-    Object? totalQuestions = freezed,
-    Object? isPublished = freezed,
-    Object? createdAt = freezed,
-    Object? actualQuestionCount = freezed,
+    Object? descriptionVi = freezed,
+    Object? color = freezed,
+    Object? icon = freezed,
+    Object? minScore = freezed,
+    Object? maxScore = freezed,
+    Object? sortOrder = freezed,
+    Object? isActive = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int?,
-      title: freezed == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
+      levelCode: freezed == levelCode
+          ? _value.levelCode
+          : levelCode // ignore: cast_nullable_to_non_nullable
+              as String?,
+      levelName: freezed == levelName
+          ? _value.levelName
+          : levelName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      levelNameVi: freezed == levelNameVi
+          ? _value.levelNameVi
+          : levelNameVi // ignore: cast_nullable_to_non_nullable
               as String?,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
-      difficultyLevel: freezed == difficultyLevel
-          ? _value.difficultyLevel
-          : difficultyLevel // ignore: cast_nullable_to_non_nullable
+      descriptionVi: freezed == descriptionVi
+          ? _value.descriptionVi
+          : descriptionVi // ignore: cast_nullable_to_non_nullable
               as String?,
-      totalQuestions: freezed == totalQuestions
-          ? _value.totalQuestions
-          : totalQuestions // ignore: cast_nullable_to_non_nullable
+      color: freezed == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String?,
+      icon: freezed == icon
+          ? _value.icon
+          : icon // ignore: cast_nullable_to_non_nullable
+              as String?,
+      minScore: freezed == minScore
+          ? _value.minScore
+          : minScore // ignore: cast_nullable_to_non_nullable
               as int?,
-      isPublished: freezed == isPublished
-          ? _value.isPublished
-          : isPublished // ignore: cast_nullable_to_non_nullable
+      maxScore: freezed == maxScore
+          ? _value.maxScore
+          : maxScore // ignore: cast_nullable_to_non_nullable
+              as int?,
+      sortOrder: freezed == sortOrder
+          ? _value.sortOrder
+          : sortOrder // ignore: cast_nullable_to_non_nullable
+              as int?,
+      isActive: freezed == isActive
+          ? _value.isActive
+          : isActive // ignore: cast_nullable_to_non_nullable
               as bool?,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      actualQuestionCount: freezed == actualQuestionCount
-          ? _value.actualQuestionCount
-          : actualQuestionCount // ignore: cast_nullable_to_non_nullable
-              as String?,
     ) as $Val);
   }
 }
@@ -135,13 +167,17 @@ abstract class _$$LessonsImplCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: 'id') int? id,
-      @JsonKey(name: 'title') String? title,
+      @JsonKey(name: 'level_code') String? levelCode,
+      @JsonKey(name: 'level_name') String? levelName,
+      @JsonKey(name: 'level_name_vi') String? levelNameVi,
       @JsonKey(name: 'description') String? description,
-      @JsonKey(name: 'difficulty_level') String? difficultyLevel,
-      @JsonKey(name: 'total_questions') int? totalQuestions,
-      @JsonKey(name: 'is_published') bool? isPublished,
-      @JsonKey(name: 'created_at') DateTime? createdAt,
-      @JsonKey(name: 'actual_question_count') String? actualQuestionCount});
+      @JsonKey(name: 'description_vi') String? descriptionVi,
+      @JsonKey(name: 'color') String? color,
+      @JsonKey(name: 'icon') String? icon,
+      @JsonKey(name: 'min_score') int? minScore,
+      @JsonKey(name: 'max_score') int? maxScore,
+      @JsonKey(name: 'sort_order') int? sortOrder,
+      @JsonKey(name: 'is_active') bool? isActive});
 }
 
 /// @nodoc
@@ -158,47 +194,67 @@ class __$$LessonsImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
-    Object? title = freezed,
+    Object? levelCode = freezed,
+    Object? levelName = freezed,
+    Object? levelNameVi = freezed,
     Object? description = freezed,
-    Object? difficultyLevel = freezed,
-    Object? totalQuestions = freezed,
-    Object? isPublished = freezed,
-    Object? createdAt = freezed,
-    Object? actualQuestionCount = freezed,
+    Object? descriptionVi = freezed,
+    Object? color = freezed,
+    Object? icon = freezed,
+    Object? minScore = freezed,
+    Object? maxScore = freezed,
+    Object? sortOrder = freezed,
+    Object? isActive = freezed,
   }) {
     return _then(_$LessonsImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int?,
-      title: freezed == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
+      levelCode: freezed == levelCode
+          ? _value.levelCode
+          : levelCode // ignore: cast_nullable_to_non_nullable
+              as String?,
+      levelName: freezed == levelName
+          ? _value.levelName
+          : levelName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      levelNameVi: freezed == levelNameVi
+          ? _value.levelNameVi
+          : levelNameVi // ignore: cast_nullable_to_non_nullable
               as String?,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
-      difficultyLevel: freezed == difficultyLevel
-          ? _value.difficultyLevel
-          : difficultyLevel // ignore: cast_nullable_to_non_nullable
+      descriptionVi: freezed == descriptionVi
+          ? _value.descriptionVi
+          : descriptionVi // ignore: cast_nullable_to_non_nullable
               as String?,
-      totalQuestions: freezed == totalQuestions
-          ? _value.totalQuestions
-          : totalQuestions // ignore: cast_nullable_to_non_nullable
+      color: freezed == color
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
+              as String?,
+      icon: freezed == icon
+          ? _value.icon
+          : icon // ignore: cast_nullable_to_non_nullable
+              as String?,
+      minScore: freezed == minScore
+          ? _value.minScore
+          : minScore // ignore: cast_nullable_to_non_nullable
               as int?,
-      isPublished: freezed == isPublished
-          ? _value.isPublished
-          : isPublished // ignore: cast_nullable_to_non_nullable
+      maxScore: freezed == maxScore
+          ? _value.maxScore
+          : maxScore // ignore: cast_nullable_to_non_nullable
+              as int?,
+      sortOrder: freezed == sortOrder
+          ? _value.sortOrder
+          : sortOrder // ignore: cast_nullable_to_non_nullable
+              as int?,
+      isActive: freezed == isActive
+          ? _value.isActive
+          : isActive // ignore: cast_nullable_to_non_nullable
               as bool?,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      actualQuestionCount: freezed == actualQuestionCount
-          ? _value.actualQuestionCount
-          : actualQuestionCount // ignore: cast_nullable_to_non_nullable
-              as String?,
     ));
   }
 }
@@ -208,13 +264,17 @@ class __$$LessonsImplCopyWithImpl<$Res>
 class _$LessonsImpl implements _Lessons {
   const _$LessonsImpl(
       {@JsonKey(name: 'id') this.id,
-      @JsonKey(name: 'title') this.title,
+      @JsonKey(name: 'level_code') this.levelCode,
+      @JsonKey(name: 'level_name') this.levelName,
+      @JsonKey(name: 'level_name_vi') this.levelNameVi,
       @JsonKey(name: 'description') this.description,
-      @JsonKey(name: 'difficulty_level') this.difficultyLevel,
-      @JsonKey(name: 'total_questions') this.totalQuestions,
-      @JsonKey(name: 'is_published') this.isPublished,
-      @JsonKey(name: 'created_at') this.createdAt,
-      @JsonKey(name: 'actual_question_count') this.actualQuestionCount});
+      @JsonKey(name: 'description_vi') this.descriptionVi,
+      @JsonKey(name: 'color') this.color,
+      @JsonKey(name: 'icon') this.icon,
+      @JsonKey(name: 'min_score') this.minScore,
+      @JsonKey(name: 'max_score') this.maxScore,
+      @JsonKey(name: 'sort_order') this.sortOrder,
+      @JsonKey(name: 'is_active') this.isActive});
 
   factory _$LessonsImpl.fromJson(Map<String, dynamic> json) =>
       _$$LessonsImplFromJson(json);
@@ -223,30 +283,42 @@ class _$LessonsImpl implements _Lessons {
   @JsonKey(name: 'id')
   final int? id;
   @override
-  @JsonKey(name: 'title')
-  final String? title;
+  @JsonKey(name: 'level_code')
+  final String? levelCode;
+  @override
+  @JsonKey(name: 'level_name')
+  final String? levelName;
+  @override
+  @JsonKey(name: 'level_name_vi')
+  final String? levelNameVi;
   @override
   @JsonKey(name: 'description')
   final String? description;
   @override
-  @JsonKey(name: 'difficulty_level')
-  final String? difficultyLevel;
+  @JsonKey(name: 'description_vi')
+  final String? descriptionVi;
   @override
-  @JsonKey(name: 'total_questions')
-  final int? totalQuestions;
+  @JsonKey(name: 'color')
+  final String? color;
   @override
-  @JsonKey(name: 'is_published')
-  final bool? isPublished;
+  @JsonKey(name: 'icon')
+  final String? icon;
   @override
-  @JsonKey(name: 'created_at')
-  final DateTime? createdAt;
+  @JsonKey(name: 'min_score')
+  final int? minScore;
   @override
-  @JsonKey(name: 'actual_question_count')
-  final String? actualQuestionCount;
+  @JsonKey(name: 'max_score')
+  final int? maxScore;
+  @override
+  @JsonKey(name: 'sort_order')
+  final int? sortOrder;
+  @override
+  @JsonKey(name: 'is_active')
+  final bool? isActive;
 
   @override
   String toString() {
-    return 'LessonsModel(id: $id, title: $title, description: $description, difficultyLevel: $difficultyLevel, totalQuestions: $totalQuestions, isPublished: $isPublished, createdAt: $createdAt, actualQuestionCount: $actualQuestionCount)';
+    return 'LessonsModel(id: $id, levelCode: $levelCode, levelName: $levelName, levelNameVi: $levelNameVi, description: $description, descriptionVi: $descriptionVi, color: $color, icon: $icon, minScore: $minScore, maxScore: $maxScore, sortOrder: $sortOrder, isActive: $isActive)';
   }
 
   @override
@@ -255,19 +327,26 @@ class _$LessonsImpl implements _Lessons {
         (other.runtimeType == runtimeType &&
             other is _$LessonsImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.title, title) || other.title == title) &&
+            (identical(other.levelCode, levelCode) ||
+                other.levelCode == levelCode) &&
+            (identical(other.levelName, levelName) ||
+                other.levelName == levelName) &&
+            (identical(other.levelNameVi, levelNameVi) ||
+                other.levelNameVi == levelNameVi) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.difficultyLevel, difficultyLevel) ||
-                other.difficultyLevel == difficultyLevel) &&
-            (identical(other.totalQuestions, totalQuestions) ||
-                other.totalQuestions == totalQuestions) &&
-            (identical(other.isPublished, isPublished) ||
-                other.isPublished == isPublished) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.actualQuestionCount, actualQuestionCount) ||
-                other.actualQuestionCount == actualQuestionCount));
+            (identical(other.descriptionVi, descriptionVi) ||
+                other.descriptionVi == descriptionVi) &&
+            (identical(other.color, color) || other.color == color) &&
+            (identical(other.icon, icon) || other.icon == icon) &&
+            (identical(other.minScore, minScore) ||
+                other.minScore == minScore) &&
+            (identical(other.maxScore, maxScore) ||
+                other.maxScore == maxScore) &&
+            (identical(other.sortOrder, sortOrder) ||
+                other.sortOrder == sortOrder) &&
+            (identical(other.isActive, isActive) ||
+                other.isActive == isActive));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -275,13 +354,17 @@ class _$LessonsImpl implements _Lessons {
   int get hashCode => Object.hash(
       runtimeType,
       id,
-      title,
+      levelCode,
+      levelName,
+      levelNameVi,
       description,
-      difficultyLevel,
-      totalQuestions,
-      isPublished,
-      createdAt,
-      actualQuestionCount);
+      descriptionVi,
+      color,
+      icon,
+      minScore,
+      maxScore,
+      sortOrder,
+      isActive);
 
   /// Create a copy of LessonsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -302,14 +385,17 @@ class _$LessonsImpl implements _Lessons {
 abstract class _Lessons implements LessonsModel {
   const factory _Lessons(
       {@JsonKey(name: 'id') final int? id,
-      @JsonKey(name: 'title') final String? title,
+      @JsonKey(name: 'level_code') final String? levelCode,
+      @JsonKey(name: 'level_name') final String? levelName,
+      @JsonKey(name: 'level_name_vi') final String? levelNameVi,
       @JsonKey(name: 'description') final String? description,
-      @JsonKey(name: 'difficulty_level') final String? difficultyLevel,
-      @JsonKey(name: 'total_questions') final int? totalQuestions,
-      @JsonKey(name: 'is_published') final bool? isPublished,
-      @JsonKey(name: 'created_at') final DateTime? createdAt,
-      @JsonKey(name: 'actual_question_count')
-      final String? actualQuestionCount}) = _$LessonsImpl;
+      @JsonKey(name: 'description_vi') final String? descriptionVi,
+      @JsonKey(name: 'color') final String? color,
+      @JsonKey(name: 'icon') final String? icon,
+      @JsonKey(name: 'min_score') final int? minScore,
+      @JsonKey(name: 'max_score') final int? maxScore,
+      @JsonKey(name: 'sort_order') final int? sortOrder,
+      @JsonKey(name: 'is_active') final bool? isActive}) = _$LessonsImpl;
 
   factory _Lessons.fromJson(Map<String, dynamic> json) = _$LessonsImpl.fromJson;
 
@@ -317,26 +403,38 @@ abstract class _Lessons implements LessonsModel {
   @JsonKey(name: 'id')
   int? get id;
   @override
-  @JsonKey(name: 'title')
-  String? get title;
+  @JsonKey(name: 'level_code')
+  String? get levelCode;
+  @override
+  @JsonKey(name: 'level_name')
+  String? get levelName;
+  @override
+  @JsonKey(name: 'level_name_vi')
+  String? get levelNameVi;
   @override
   @JsonKey(name: 'description')
   String? get description;
   @override
-  @JsonKey(name: 'difficulty_level')
-  String? get difficultyLevel;
+  @JsonKey(name: 'description_vi')
+  String? get descriptionVi;
   @override
-  @JsonKey(name: 'total_questions')
-  int? get totalQuestions;
+  @JsonKey(name: 'color')
+  String? get color;
   @override
-  @JsonKey(name: 'is_published')
-  bool? get isPublished;
+  @JsonKey(name: 'icon')
+  String? get icon;
   @override
-  @JsonKey(name: 'created_at')
-  DateTime? get createdAt;
+  @JsonKey(name: 'min_score')
+  int? get minScore;
   @override
-  @JsonKey(name: 'actual_question_count')
-  String? get actualQuestionCount;
+  @JsonKey(name: 'max_score')
+  int? get maxScore;
+  @override
+  @JsonKey(name: 'sort_order')
+  int? get sortOrder;
+  @override
+  @JsonKey(name: 'is_active')
+  bool? get isActive;
 
   /// Create a copy of LessonsModel
   /// with the given fields replaced by the non-null parameter values.

@@ -6,6 +6,7 @@ import 'package:lexigo/screen/scan_objects/models/detection_result.dart';
 import 'package:lexigo/screen/scan_objects/scan_object_controller.dart';
 import 'package:lexigo/screen/scan_objects/widgets/image_analys.dart';
 import 'package:lexigo/screen/scan_objects/widgets/image_preview_controls.dart';
+import 'package:lexigo/screen/scan_objects/widgets/square_image_widget.dart';
 
 class ImagePreviewScreen extends ConsumerStatefulWidget {
   const ImagePreviewScreen({required this.imagePath, super.key});
@@ -20,11 +21,8 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
   bool _hasAnalyzed = false;
   bool _showAnalysis = false;
   List<DetectionResult>? _detections;
-
   @override
   Widget build(BuildContext context) {
-    final scanState = ref.watch(scanObjectControllerProvider);
-
     // Listen to scan state changes
     ref.listen<AsyncValue<List<DetectionResult>>>(
       scanObjectControllerProvider,
@@ -39,7 +37,6 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
                 _detections = results;
                 _showAnalysis = true;
               });
-              _showResultDialog(context, results);
             }
           },
           error: (error, stackTrace) {
@@ -88,11 +85,9 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
                           imagePath: widget.imagePath,
                           detections: _detections!,
                         )
-                      : Image.file(
-                          File(widget.imagePath),
-                          fit: BoxFit.cover,
-                          width: imageSize,
-                          height: imageSize,
+                      : SquareImageWidget(
+                          imagePath: widget.imagePath,
+                          size: imageSize,
                         ),
                 ),
               ),
@@ -128,7 +123,6 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
             onAnalyze: _analyzeImage,
             onToggleView: () => setState(() => _showAnalysis = !_showAnalysis),
             onBack: () {
-              // ref.read(scanObjectControllerProvider.notifier).reset();
               Navigator.pop(context);
             },
             onRetake: () {
@@ -154,9 +148,6 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
     });
 
     try {
-      // ref.read(scanObjectControllerProvider.notifier).reset();
-      await Future.delayed(Duration.zero);
-
       await ref.read(scanObjectControllerProvider.notifier).analyzeImage(
             File(widget.imagePath),
             // 'en',
@@ -172,96 +163,5 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
         );
       }
     }
-  }
-
-  void _showResultDialog(BuildContext context, List<DetectionResult> results) {
-    if (results.isEmpty) return;
-
-    final result = results.first;
-
-    // showDialog(
-    //   context: context,
-    //   barrierDismissible: false,
-    //   builder: (context) => AlertDialog(
-    //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-    //     title: Row(
-    //       children: [
-    //         const Icon(Icons.auto_awesome, color: Colors.blue),
-    //         const SizedBox(width: 12),
-    //         Expanded(
-    //           child: Text(
-    //             result.name ?? 'Unknown Object',
-    //             style: const TextStyle(fontWeight: FontWeight.bold),
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //     content: SingleChildScrollView(
-    //       child: Column(
-    //         mainAxisSize: MainAxisSize.min,
-    //         crossAxisAlignment: CrossAxisAlignment.start,
-    //         children: [
-    //           Text(
-    //             'Confidence: ${(result.score * 100).toInt()}%',
-    //             style: const TextStyle(fontSize: 16),
-    //           ),
-    //           const SizedBox(height: 16),
-    //           if (results.length > 1) ...[
-    //             const Text(
-    //               'Other detected objects:',
-    //               style: TextStyle(fontWeight: FontWeight.bold),
-    //             ),
-    //             const SizedBox(height: 8),
-    //             ...results.skip(1).take(3).map(
-    //                   (r) => Padding(
-    //                     padding: const EdgeInsets.symmetric(vertical: 2),
-    //                     child: Row(
-    //                       children: [
-    //                         const Icon(
-    //                           Icons.label,
-    //                           size: 16,
-    //                           color: Colors.grey,
-    //                         ),
-    //                         const SizedBox(width: 8),
-    //                         Expanded(
-    //                           child: Text(
-    //                             '${r.name} (${(r.score * 100).toInt()}%)',
-    //                           ),
-    //                         ),
-    //                       ],
-    //                     ),
-    //                   ),
-    //                 ),
-    //           ],
-    //         ],
-    //       ),
-    //     ),
-    //     actions: [
-    //       TextButton(
-    //         onPressed: () {
-    //           Navigator.pop(context);
-    //           Navigator.pop(context);
-    //         },
-    //         child: const Text('Take Another Photo'),
-    //       ),
-    //       ElevatedButton(
-    //         onPressed: () {
-    //           Navigator.pop(context);
-    //           Navigator.pop(context);
-    //         },
-    //         style: ElevatedButton.styleFrom(
-    //           backgroundColor: Colors.blue,
-    //           shape: RoundedRectangleBorder(
-    //             borderRadius: BorderRadius.circular(20),
-    //           ),
-    //         ),
-    //         child: const Text(
-    //           'Continue Scanning',
-    //           style: TextStyle(color: Colors.white),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }

@@ -9,25 +9,31 @@ part of 'lessons_model.dart';
 _$LessonsImpl _$$LessonsImplFromJson(Map<String, dynamic> json) =>
     _$LessonsImpl(
       id: (json['id'] as num?)?.toInt(),
-      title: json['title'] as String?,
+      levelCode: json['level_code'] as String?,
+      levelName: json['level_name'] as String?,
+      levelNameVi: json['level_name_vi'] as String?,
       description: json['description'] as String?,
-      difficultyLevel: json['difficulty_level'] as String?,
-      totalQuestions: (json['total_questions'] as num?)?.toInt(),
-      isPublished: json['is_published'] as bool?,
-      createdAt: json['created_at'] == null
-          ? null
-          : DateTime.parse(json['created_at'] as String),
-      actualQuestionCount: json['actual_question_count'] as String?,
+      descriptionVi: json['description_vi'] as String?,
+      color: json['color'] as String?,
+      icon: json['icon'] as String?,
+      minScore: (json['min_score'] as num?)?.toInt(),
+      maxScore: (json['max_score'] as num?)?.toInt(),
+      sortOrder: (json['sort_order'] as num?)?.toInt(),
+      isActive: json['is_active'] as bool?,
     );
 
 Map<String, dynamic> _$$LessonsImplToJson(_$LessonsImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'title': instance.title,
+      'level_code': instance.levelCode,
+      'level_name': instance.levelName,
+      'level_name_vi': instance.levelNameVi,
       'description': instance.description,
-      'difficulty_level': instance.difficultyLevel,
-      'total_questions': instance.totalQuestions,
-      'is_published': instance.isPublished,
-      'created_at': instance.createdAt?.toIso8601String(),
-      'actual_question_count': instance.actualQuestionCount,
+      'description_vi': instance.descriptionVi,
+      'color': instance.color,
+      'icon': instance.icon,
+      'min_score': instance.minScore,
+      'max_score': instance.maxScore,
+      'sort_order': instance.sortOrder,
+      'is_active': instance.isActive,
     };

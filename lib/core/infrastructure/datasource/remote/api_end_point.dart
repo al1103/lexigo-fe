@@ -7,6 +7,8 @@ class ApiEndPoint {
   static const String chat = '/ai/promptAnswer';
   static const String wordleaning = '/words/questions/random';
   static const String getVocabulary = '/vocabulary';
-  static const String getListLessons = '/lessons';
-  static const String getLessonDetails = '/lessons/{id}';
+  static const String getListLessons = '/levels';
+  static const String getLessonDetails = '/quiz/start';
+  static const String getWordDetails = '/ai/vocabulary';
+  static const String submitAnswer = '/quiz/submit-answer';
 }

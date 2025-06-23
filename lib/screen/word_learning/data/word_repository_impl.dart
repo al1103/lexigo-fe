@@ -13,13 +13,26 @@ class WordRepositoryImpl implements WordRepository {
   WordRepositoryImpl(this.apiService);
 
   final ApiService apiService;
-
   @override
   Future<ApiResponse<PayloadPageableDto<LessonsDetail>>> getLessonDetails(
     int id,
   ) async {
     final response = await apiService.getLessonDetails(
       id,
+    );
+    return response;
+  }
+
+  @override
+  Future<ApiResponse<dynamic>> submitAnswer({
+    required int sessionId,
+    required int questionId,
+    required int selectedOptionId,
+  }) async {
+    final response = await apiService.submitAnswer(
+      sessionId: sessionId,
+      questionId: questionId,
+      selectedOptionId: selectedOptionId,
     );
     return response;
   }

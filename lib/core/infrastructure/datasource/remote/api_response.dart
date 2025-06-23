@@ -26,7 +26,7 @@ class ApiResponse<T> with _$ApiResponse<T> {
 @Freezed(genericArgumentFactories: true)
 class PayloadPageableDto<T> with _$PayloadPageableDto<T> {
   const factory PayloadPageableDto({
-    @JsonKey(name: 'data') @Default([]) List<T> data,
+    @JsonKey(name: 'contents') @Default([]) List<T> contents,
     @JsonKey(name: 'pagination') PageableModelDto? pagination,
   }) = _PayloadPageableDto<T>;
 

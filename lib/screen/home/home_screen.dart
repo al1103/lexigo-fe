@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:lexigo/common/routes/app_route.dart';
 import 'package:lexigo/common/widgets/app_toast.dart';
-import 'package:lexigo/common/widgets/toast_helper.dart';
 import 'package:lexigo/gen/assets.gen.dart';
 import 'package:lexigo/widgets/bottom_navigation.dart';
 
@@ -259,7 +259,7 @@ class HomeScreen extends StatelessWidget {
                 'Game Mode',
                 'Fun learning games',
                 const Color(0xFF10B981),
-                () => AutoRouter.of(context).pushNamed('/ScanObject'),
+                () => AutoRouter.of(context).pushNamed('/camera'),
               ),
             ),
           ],
@@ -273,7 +273,7 @@ class HomeScreen extends StatelessWidget {
                 'Speaking',
                 'Practice pronunciation',
                 const Color(0xFFEF4444),
-                () => context.showInfoToast('Speaking feature coming soon! 🎯'),
+                () => context.router.push(const SpeakingRoute()),
               ),
             ),
             const SizedBox(width: 12),

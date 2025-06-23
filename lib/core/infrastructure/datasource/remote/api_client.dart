@@ -6,6 +6,7 @@ import 'package:lexigo/core/infrastructure/datasource/remote/api_response.dart';
 import 'package:lexigo/product/domain/vocabulary_model.dart';
 import 'package:lexigo/screen/level_selection/model/lessons_model.dart';
 import 'package:lexigo/screen/scan_objects/models/detection_result.dart';
+import 'package:lexigo/screen/scan_objects/models/smart_word_model.dart';
 import 'package:lexigo/screen/speaking/model/speaking_result.dart';
 import 'package:lexigo/screen/word_learning/model/lessons_detail.dart';
 import 'package:lexigo/screen/word_learning/word_model.dart';
@@ -40,9 +41,12 @@ abstract class ApiClient {
     @Query('limit') int? limit,
   );
 
-  @GET(ApiEndPoint.getLessonDetails)
+  @POST(
+    ApiEndPoint.getLessonDetails,
+  )
   Future<ApiResponse<PayloadPageableDto<LessonsDetail>>> getLessonDetails(
-    @Path('id') int id,
+    @Field('level_id') int id,
+    @Field('question_count') int? page,
   );
   @GET(ApiEndPoint.getVocabulary)
   Future<ApiResponse<PayloadPageableDto<VocabularyModel>>> getVocabulary(
@@ -52,4 +56,15 @@ abstract class ApiClient {
 
   @GET(ApiEndPoint.getListLessons)
   Future<ApiResponse<List<LessonsModel>>> getListLessons();
+  @POST(ApiEndPoint.getWordDetails)
+  Future<ApiResponse<SmartWord>> getWordDetails(
+    @Field('word') String word,
+  );
+
+  @POST(ApiEndPoint.submitAnswer)
+  Future<ApiResponse<void>> submitAnswer(
+    @Field('session_id') int sessionId,
+    @Field('question_id') int questionId,
+    @Field('selected_option_id') int selectedOptionId,
+  );
 }

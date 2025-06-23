@@ -20,22 +20,20 @@ LessonsDetail _$LessonsDetailFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$LessonsDetail {
-  @JsonKey(name: 'id')
-  int? get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'question_id')
+  int? get questionId => throw _privateConstructorUsedError;
   @JsonKey(name: 'question_text')
   String? get questionText => throw _privateConstructorUsedError;
-  @JsonKey(name: 'option_a')
-  String? get optionA => throw _privateConstructorUsedError;
-  @JsonKey(name: 'option_b')
-  String? get optionB => throw _privateConstructorUsedError;
-  @JsonKey(name: 'option_c')
-  String? get optionC => throw _privateConstructorUsedError;
-  @JsonKey(name: 'option_d')
-  String? get optionD => throw _privateConstructorUsedError;
-  @JsonKey(name: 'correct_answer')
-  String? get correctAnswer => throw _privateConstructorUsedError;
-  @JsonKey(name: 'explanation')
-  String? get explanation => throw _privateConstructorUsedError;
+  @JsonKey(name: 'word')
+  String? get word => throw _privateConstructorUsedError;
+  @JsonKey(name: 'meaning')
+  String? get meaning => throw _privateConstructorUsedError;
+  @JsonKey(name: 'pronunciation')
+  String? get pronunciation => throw _privateConstructorUsedError;
+  @JsonKey(name: 'options')
+  List<Option>? get options => throw _privateConstructorUsedError;
+  @JsonKey(name: 'points')
+  int? get points => throw _privateConstructorUsedError;
 
   /// Serializes this LessonsDetail to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -54,14 +52,13 @@ abstract class $LessonsDetailCopyWith<$Res> {
       _$LessonsDetailCopyWithImpl<$Res, LessonsDetail>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'id') int? id,
+      {@JsonKey(name: 'question_id') int? questionId,
       @JsonKey(name: 'question_text') String? questionText,
-      @JsonKey(name: 'option_a') String? optionA,
-      @JsonKey(name: 'option_b') String? optionB,
-      @JsonKey(name: 'option_c') String? optionC,
-      @JsonKey(name: 'option_d') String? optionD,
-      @JsonKey(name: 'correct_answer') String? correctAnswer,
-      @JsonKey(name: 'explanation') String? explanation});
+      @JsonKey(name: 'word') String? word,
+      @JsonKey(name: 'meaning') String? meaning,
+      @JsonKey(name: 'pronunciation') String? pronunciation,
+      @JsonKey(name: 'options') List<Option>? options,
+      @JsonKey(name: 'points') int? points});
 }
 
 /// @nodoc
@@ -79,48 +76,43 @@ class _$LessonsDetailCopyWithImpl<$Res, $Val extends LessonsDetail>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
+    Object? questionId = freezed,
     Object? questionText = freezed,
-    Object? optionA = freezed,
-    Object? optionB = freezed,
-    Object? optionC = freezed,
-    Object? optionD = freezed,
-    Object? correctAnswer = freezed,
-    Object? explanation = freezed,
+    Object? word = freezed,
+    Object? meaning = freezed,
+    Object? pronunciation = freezed,
+    Object? options = freezed,
+    Object? points = freezed,
   }) {
     return _then(_value.copyWith(
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
+      questionId: freezed == questionId
+          ? _value.questionId
+          : questionId // ignore: cast_nullable_to_non_nullable
               as int?,
       questionText: freezed == questionText
           ? _value.questionText
           : questionText // ignore: cast_nullable_to_non_nullable
               as String?,
-      optionA: freezed == optionA
-          ? _value.optionA
-          : optionA // ignore: cast_nullable_to_non_nullable
+      word: freezed == word
+          ? _value.word
+          : word // ignore: cast_nullable_to_non_nullable
               as String?,
-      optionB: freezed == optionB
-          ? _value.optionB
-          : optionB // ignore: cast_nullable_to_non_nullable
+      meaning: freezed == meaning
+          ? _value.meaning
+          : meaning // ignore: cast_nullable_to_non_nullable
               as String?,
-      optionC: freezed == optionC
-          ? _value.optionC
-          : optionC // ignore: cast_nullable_to_non_nullable
+      pronunciation: freezed == pronunciation
+          ? _value.pronunciation
+          : pronunciation // ignore: cast_nullable_to_non_nullable
               as String?,
-      optionD: freezed == optionD
-          ? _value.optionD
-          : optionD // ignore: cast_nullable_to_non_nullable
-              as String?,
-      correctAnswer: freezed == correctAnswer
-          ? _value.correctAnswer
-          : correctAnswer // ignore: cast_nullable_to_non_nullable
-              as String?,
-      explanation: freezed == explanation
-          ? _value.explanation
-          : explanation // ignore: cast_nullable_to_non_nullable
-              as String?,
+      options: freezed == options
+          ? _value.options
+          : options // ignore: cast_nullable_to_non_nullable
+              as List<Option>?,
+      points: freezed == points
+          ? _value.points
+          : points // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -134,14 +126,13 @@ abstract class _$$LessonsDetailImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'id') int? id,
+      {@JsonKey(name: 'question_id') int? questionId,
       @JsonKey(name: 'question_text') String? questionText,
-      @JsonKey(name: 'option_a') String? optionA,
-      @JsonKey(name: 'option_b') String? optionB,
-      @JsonKey(name: 'option_c') String? optionC,
-      @JsonKey(name: 'option_d') String? optionD,
-      @JsonKey(name: 'correct_answer') String? correctAnswer,
-      @JsonKey(name: 'explanation') String? explanation});
+      @JsonKey(name: 'word') String? word,
+      @JsonKey(name: 'meaning') String? meaning,
+      @JsonKey(name: 'pronunciation') String? pronunciation,
+      @JsonKey(name: 'options') List<Option>? options,
+      @JsonKey(name: 'points') int? points});
 }
 
 /// @nodoc
@@ -157,48 +148,43 @@ class __$$LessonsDetailImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
+    Object? questionId = freezed,
     Object? questionText = freezed,
-    Object? optionA = freezed,
-    Object? optionB = freezed,
-    Object? optionC = freezed,
-    Object? optionD = freezed,
-    Object? correctAnswer = freezed,
-    Object? explanation = freezed,
+    Object? word = freezed,
+    Object? meaning = freezed,
+    Object? pronunciation = freezed,
+    Object? options = freezed,
+    Object? points = freezed,
   }) {
     return _then(_$LessonsDetailImpl(
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
+      questionId: freezed == questionId
+          ? _value.questionId
+          : questionId // ignore: cast_nullable_to_non_nullable
               as int?,
       questionText: freezed == questionText
           ? _value.questionText
           : questionText // ignore: cast_nullable_to_non_nullable
               as String?,
-      optionA: freezed == optionA
-          ? _value.optionA
-          : optionA // ignore: cast_nullable_to_non_nullable
+      word: freezed == word
+          ? _value.word
+          : word // ignore: cast_nullable_to_non_nullable
               as String?,
-      optionB: freezed == optionB
-          ? _value.optionB
-          : optionB // ignore: cast_nullable_to_non_nullable
+      meaning: freezed == meaning
+          ? _value.meaning
+          : meaning // ignore: cast_nullable_to_non_nullable
               as String?,
-      optionC: freezed == optionC
-          ? _value.optionC
-          : optionC // ignore: cast_nullable_to_non_nullable
+      pronunciation: freezed == pronunciation
+          ? _value.pronunciation
+          : pronunciation // ignore: cast_nullable_to_non_nullable
               as String?,
-      optionD: freezed == optionD
-          ? _value.optionD
-          : optionD // ignore: cast_nullable_to_non_nullable
-              as String?,
-      correctAnswer: freezed == correctAnswer
-          ? _value.correctAnswer
-          : correctAnswer // ignore: cast_nullable_to_non_nullable
-              as String?,
-      explanation: freezed == explanation
-          ? _value.explanation
-          : explanation // ignore: cast_nullable_to_non_nullable
-              as String?,
+      options: freezed == options
+          ? _value._options
+          : options // ignore: cast_nullable_to_non_nullable
+              as List<Option>?,
+      points: freezed == points
+          ? _value.points
+          : points // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -207,46 +193,51 @@ class __$$LessonsDetailImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$LessonsDetailImpl implements _LessonsDetail {
   const _$LessonsDetailImpl(
-      {@JsonKey(name: 'id') this.id,
+      {@JsonKey(name: 'question_id') this.questionId,
       @JsonKey(name: 'question_text') this.questionText,
-      @JsonKey(name: 'option_a') this.optionA,
-      @JsonKey(name: 'option_b') this.optionB,
-      @JsonKey(name: 'option_c') this.optionC,
-      @JsonKey(name: 'option_d') this.optionD,
-      @JsonKey(name: 'correct_answer') this.correctAnswer,
-      @JsonKey(name: 'explanation') this.explanation});
+      @JsonKey(name: 'word') this.word,
+      @JsonKey(name: 'meaning') this.meaning,
+      @JsonKey(name: 'pronunciation') this.pronunciation,
+      @JsonKey(name: 'options') final List<Option>? options,
+      @JsonKey(name: 'points') this.points})
+      : _options = options;
 
   factory _$LessonsDetailImpl.fromJson(Map<String, dynamic> json) =>
       _$$LessonsDetailImplFromJson(json);
 
   @override
-  @JsonKey(name: 'id')
-  final int? id;
+  @JsonKey(name: 'question_id')
+  final int? questionId;
   @override
   @JsonKey(name: 'question_text')
   final String? questionText;
   @override
-  @JsonKey(name: 'option_a')
-  final String? optionA;
+  @JsonKey(name: 'word')
+  final String? word;
   @override
-  @JsonKey(name: 'option_b')
-  final String? optionB;
+  @JsonKey(name: 'meaning')
+  final String? meaning;
   @override
-  @JsonKey(name: 'option_c')
-  final String? optionC;
+  @JsonKey(name: 'pronunciation')
+  final String? pronunciation;
+  final List<Option>? _options;
   @override
-  @JsonKey(name: 'option_d')
-  final String? optionD;
+  @JsonKey(name: 'options')
+  List<Option>? get options {
+    final value = _options;
+    if (value == null) return null;
+    if (_options is EqualUnmodifiableListView) return _options;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
-  @JsonKey(name: 'correct_answer')
-  final String? correctAnswer;
-  @override
-  @JsonKey(name: 'explanation')
-  final String? explanation;
+  @JsonKey(name: 'points')
+  final int? points;
 
   @override
   String toString() {
-    return 'LessonsDetail(id: $id, questionText: $questionText, optionA: $optionA, optionB: $optionB, optionC: $optionC, optionD: $optionD, correctAnswer: $correctAnswer, explanation: $explanation)';
+    return 'LessonsDetail(questionId: $questionId, questionText: $questionText, word: $word, meaning: $meaning, pronunciation: $pronunciation, options: $options, points: $points)';
   }
 
   @override
@@ -254,23 +245,29 @@ class _$LessonsDetailImpl implements _LessonsDetail {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LessonsDetailImpl &&
-            (identical(other.id, id) || other.id == id) &&
+            (identical(other.questionId, questionId) ||
+                other.questionId == questionId) &&
             (identical(other.questionText, questionText) ||
                 other.questionText == questionText) &&
-            (identical(other.optionA, optionA) || other.optionA == optionA) &&
-            (identical(other.optionB, optionB) || other.optionB == optionB) &&
-            (identical(other.optionC, optionC) || other.optionC == optionC) &&
-            (identical(other.optionD, optionD) || other.optionD == optionD) &&
-            (identical(other.correctAnswer, correctAnswer) ||
-                other.correctAnswer == correctAnswer) &&
-            (identical(other.explanation, explanation) ||
-                other.explanation == explanation));
+            (identical(other.word, word) || other.word == word) &&
+            (identical(other.meaning, meaning) || other.meaning == meaning) &&
+            (identical(other.pronunciation, pronunciation) ||
+                other.pronunciation == pronunciation) &&
+            const DeepCollectionEquality().equals(other._options, _options) &&
+            (identical(other.points, points) || other.points == points));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, questionText, optionA,
-      optionB, optionC, optionD, correctAnswer, explanation);
+  int get hashCode => Object.hash(
+      runtimeType,
+      questionId,
+      questionText,
+      word,
+      meaning,
+      pronunciation,
+      const DeepCollectionEquality().hash(_options),
+      points);
 
   /// Create a copy of LessonsDetail
   /// with the given fields replaced by the non-null parameter values.
@@ -290,48 +287,269 @@ class _$LessonsDetailImpl implements _LessonsDetail {
 
 abstract class _LessonsDetail implements LessonsDetail {
   const factory _LessonsDetail(
-          {@JsonKey(name: 'id') final int? id,
-          @JsonKey(name: 'question_text') final String? questionText,
-          @JsonKey(name: 'option_a') final String? optionA,
-          @JsonKey(name: 'option_b') final String? optionB,
-          @JsonKey(name: 'option_c') final String? optionC,
-          @JsonKey(name: 'option_d') final String? optionD,
-          @JsonKey(name: 'correct_answer') final String? correctAnswer,
-          @JsonKey(name: 'explanation') final String? explanation}) =
-      _$LessonsDetailImpl;
+      {@JsonKey(name: 'question_id') final int? questionId,
+      @JsonKey(name: 'question_text') final String? questionText,
+      @JsonKey(name: 'word') final String? word,
+      @JsonKey(name: 'meaning') final String? meaning,
+      @JsonKey(name: 'pronunciation') final String? pronunciation,
+      @JsonKey(name: 'options') final List<Option>? options,
+      @JsonKey(name: 'points') final int? points}) = _$LessonsDetailImpl;
 
   factory _LessonsDetail.fromJson(Map<String, dynamic> json) =
       _$LessonsDetailImpl.fromJson;
 
   @override
-  @JsonKey(name: 'id')
-  int? get id;
+  @JsonKey(name: 'question_id')
+  int? get questionId;
   @override
   @JsonKey(name: 'question_text')
   String? get questionText;
   @override
-  @JsonKey(name: 'option_a')
-  String? get optionA;
+  @JsonKey(name: 'word')
+  String? get word;
   @override
-  @JsonKey(name: 'option_b')
-  String? get optionB;
+  @JsonKey(name: 'meaning')
+  String? get meaning;
   @override
-  @JsonKey(name: 'option_c')
-  String? get optionC;
+  @JsonKey(name: 'pronunciation')
+  String? get pronunciation;
   @override
-  @JsonKey(name: 'option_d')
-  String? get optionD;
+  @JsonKey(name: 'options')
+  List<Option>? get options;
   @override
-  @JsonKey(name: 'correct_answer')
-  String? get correctAnswer;
-  @override
-  @JsonKey(name: 'explanation')
-  String? get explanation;
+  @JsonKey(name: 'points')
+  int? get points;
 
   /// Create a copy of LessonsDetail
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LessonsDetailImplCopyWith<_$LessonsDetailImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+Option _$OptionFromJson(Map<String, dynamic> json) {
+  return _Option.fromJson(json);
+}
+
+/// @nodoc
+mixin _$Option {
+  @JsonKey(name: 'option_id')
+  int? get optionId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'option_text')
+  String? get optionText => throw _privateConstructorUsedError;
+  @JsonKey(name: 'is_correct')
+  bool? get isCorrect => throw _privateConstructorUsedError;
+  @JsonKey(name: 'option_order')
+  int? get optionOrder => throw _privateConstructorUsedError;
+
+  /// Serializes this Option to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of Option
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $OptionCopyWith<Option> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $OptionCopyWith<$Res> {
+  factory $OptionCopyWith(Option value, $Res Function(Option) then) =
+      _$OptionCopyWithImpl<$Res, Option>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'option_id') int? optionId,
+      @JsonKey(name: 'option_text') String? optionText,
+      @JsonKey(name: 'is_correct') bool? isCorrect,
+      @JsonKey(name: 'option_order') int? optionOrder});
+}
+
+/// @nodoc
+class _$OptionCopyWithImpl<$Res, $Val extends Option>
+    implements $OptionCopyWith<$Res> {
+  _$OptionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of Option
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? optionId = freezed,
+    Object? optionText = freezed,
+    Object? isCorrect = freezed,
+    Object? optionOrder = freezed,
+  }) {
+    return _then(_value.copyWith(
+      optionId: freezed == optionId
+          ? _value.optionId
+          : optionId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      optionText: freezed == optionText
+          ? _value.optionText
+          : optionText // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isCorrect: freezed == isCorrect
+          ? _value.isCorrect
+          : isCorrect // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      optionOrder: freezed == optionOrder
+          ? _value.optionOrder
+          : optionOrder // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$OptionImplCopyWith<$Res> implements $OptionCopyWith<$Res> {
+  factory _$$OptionImplCopyWith(
+          _$OptionImpl value, $Res Function(_$OptionImpl) then) =
+      __$$OptionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'option_id') int? optionId,
+      @JsonKey(name: 'option_text') String? optionText,
+      @JsonKey(name: 'is_correct') bool? isCorrect,
+      @JsonKey(name: 'option_order') int? optionOrder});
+}
+
+/// @nodoc
+class __$$OptionImplCopyWithImpl<$Res>
+    extends _$OptionCopyWithImpl<$Res, _$OptionImpl>
+    implements _$$OptionImplCopyWith<$Res> {
+  __$$OptionImplCopyWithImpl(
+      _$OptionImpl _value, $Res Function(_$OptionImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of Option
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? optionId = freezed,
+    Object? optionText = freezed,
+    Object? isCorrect = freezed,
+    Object? optionOrder = freezed,
+  }) {
+    return _then(_$OptionImpl(
+      optionId: freezed == optionId
+          ? _value.optionId
+          : optionId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      optionText: freezed == optionText
+          ? _value.optionText
+          : optionText // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isCorrect: freezed == isCorrect
+          ? _value.isCorrect
+          : isCorrect // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      optionOrder: freezed == optionOrder
+          ? _value.optionOrder
+          : optionOrder // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$OptionImpl implements _Option {
+  const _$OptionImpl(
+      {@JsonKey(name: 'option_id') this.optionId,
+      @JsonKey(name: 'option_text') this.optionText,
+      @JsonKey(name: 'is_correct') this.isCorrect,
+      @JsonKey(name: 'option_order') this.optionOrder});
+
+  factory _$OptionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$OptionImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'option_id')
+  final int? optionId;
+  @override
+  @JsonKey(name: 'option_text')
+  final String? optionText;
+  @override
+  @JsonKey(name: 'is_correct')
+  final bool? isCorrect;
+  @override
+  @JsonKey(name: 'option_order')
+  final int? optionOrder;
+
+  @override
+  String toString() {
+    return 'Option(optionId: $optionId, optionText: $optionText, isCorrect: $isCorrect, optionOrder: $optionOrder)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$OptionImpl &&
+            (identical(other.optionId, optionId) ||
+                other.optionId == optionId) &&
+            (identical(other.optionText, optionText) ||
+                other.optionText == optionText) &&
+            (identical(other.isCorrect, isCorrect) ||
+                other.isCorrect == isCorrect) &&
+            (identical(other.optionOrder, optionOrder) ||
+                other.optionOrder == optionOrder));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, optionId, optionText, isCorrect, optionOrder);
+
+  /// Create a copy of Option
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$OptionImplCopyWith<_$OptionImpl> get copyWith =>
+      __$$OptionImplCopyWithImpl<_$OptionImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$OptionImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _Option implements Option {
+  const factory _Option(
+      {@JsonKey(name: 'option_id') final int? optionId,
+      @JsonKey(name: 'option_text') final String? optionText,
+      @JsonKey(name: 'is_correct') final bool? isCorrect,
+      @JsonKey(name: 'option_order') final int? optionOrder}) = _$OptionImpl;
+
+  factory _Option.fromJson(Map<String, dynamic> json) = _$OptionImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'option_id')
+  int? get optionId;
+  @override
+  @JsonKey(name: 'option_text')
+  String? get optionText;
+  @override
+  @JsonKey(name: 'is_correct')
+  bool? get isCorrect;
+  @override
+  @JsonKey(name: 'option_order')
+  int? get optionOrder;
+
+  /// Create a copy of Option
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$OptionImplCopyWith<_$OptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

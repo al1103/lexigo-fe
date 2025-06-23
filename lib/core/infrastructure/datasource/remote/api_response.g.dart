@@ -47,8 +47,8 @@ _$PayloadPageableDtoImpl<T> _$$PayloadPageableDtoImplFromJson<T>(
   T Function(Object? json) fromJsonT,
 ) =>
     _$PayloadPageableDtoImpl<T>(
-      data:
-          (json['data'] as List<dynamic>?)?.map(fromJsonT).toList() ?? const [],
+      contents: (json['contents'] as List<dynamic>?)?.map(fromJsonT).toList() ??
+          const [],
       pagination: json['pagination'] == null
           ? null
           : PageableModelDto.fromJson(
@@ -60,7 +60,7 @@ Map<String, dynamic> _$$PayloadPageableDtoImplToJson<T>(
   Object? Function(T value) toJsonT,
 ) =>
     <String, dynamic>{
-      'data': instance.data.map(toJsonT).toList(),
+      'contents': instance.contents.map(toJsonT).toList(),
       'pagination': instance.pagination,
     };
 

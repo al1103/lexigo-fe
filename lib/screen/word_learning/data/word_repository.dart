@@ -9,4 +9,9 @@ mixin WordRepository {
   Future<ApiResponse<PayloadPageableDto<LessonsDetail>>> getLessonDetails(
     int id,
   );
+  Future<ApiResponse<dynamic>> submitAnswer({
+    required int sessionId,
+    required int questionId,
+    required int selectedOptionId,
+  });
 }

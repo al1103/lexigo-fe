@@ -12,7 +12,6 @@ part 'scan_object_repository_impl.g.dart';
 class ScanObjectRepositoryImpl implements ScanObjectRepository {
   const ScanObjectRepositoryImpl(this._apiService);
   final ApiService _apiService;
-
   @override
   Future<List<DetectionResult>> getScanObjects(
     File image,
@@ -29,9 +28,16 @@ class ScanObjectRepositoryImpl implements ScanObjectRepository {
         throw Exception('Image file is too large (max 10MB)');
       }
 
+      // Log image info before sending to backend
+      print('🚀 Sending image to backend:');
+      print('   Path: ${image.path}');
+      print('   Size: ${(fileSize / 1024).toStringAsFixed(2)} KB');
+
       final response = await _apiService.analyzeImage(
         image,
       );
+
+      print('✅ Backend response received');
 
       // Handle different response structures
       if (response.data != null) {
@@ -40,9 +46,11 @@ class ScanObjectRepositoryImpl implements ScanObjectRepository {
         return [];
       }
     } on Exception catch (e) {
+      print('❌ Repository error: $e');
       // Re-throw known exceptions
       rethrow;
     } catch (e) {
+      print('❌ Unknown repository error: $e');
       // Wrap unknown errors
       throw Exception('Failed to analyze image: $e');
     }
