@@ -77,7 +77,7 @@ class CuteCard extends StatelessWidget {
                   ),
                   if (isActive)
                     BoxShadow(
-                      color: activeColor.withOpacity(0.3),
+                      color: activeColor.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -140,10 +140,9 @@ class CuteBubbleCard extends StatelessWidget {
               : null,
           boxShadow: hasShadow
               ? [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
+                  const BoxShadow(
                     blurRadius: 10,
-                    offset: const Offset(0, 3),
+                    offset: Offset(0, 3),
                     spreadRadius: 1,
                   ),
                 ]
@@ -243,26 +242,30 @@ class BubbleTipPainter extends CustomPainter {
     if (direction == BubbleTipDirection.down) {
       if (!flipped) {
         // Bottom left pointing down
-        path.moveTo(0, 0);
-        path.lineTo(size.width, 0);
-        path.lineTo(0, size.height);
+        path
+          ..moveTo(0, 0)
+          ..lineTo(size.width, 0)
+          ..lineTo(0, size.height);
       } else {
         // Bottom right pointing down
-        path.moveTo(0, 0);
-        path.lineTo(size.width, 0);
-        path.lineTo(size.width, size.height);
+        path
+          ..moveTo(0, 0)
+          ..lineTo(size.width, 0)
+          ..lineTo(size.width, size.height);
       }
     } else {
       if (!flipped) {
         // Top left pointing up
-        path.moveTo(0, size.height);
-        path.lineTo(size.width, size.height);
-        path.lineTo(0, 0);
+        path
+          ..moveTo(0, size.height)
+          ..lineTo(size.width, size.height)
+          ..lineTo(0, 0);
       } else {
         // Top right pointing up
-        path.moveTo(0, size.height);
-        path.lineTo(size.width, size.height);
-        path.lineTo(size.width, 0);
+        path
+          ..moveTo(0, size.height)
+          ..lineTo(size.width, size.height)
+          ..lineTo(size.width, 0);
       }
     }
 
@@ -305,7 +308,7 @@ class CuteMenuCard extends StatelessWidget {
         height: size,
         decoration: BoxDecoration(
           color: isActive && gradientColors == null
-              ? activeColor.withOpacity(0.2)
+              ? activeColor.withValues(alpha: 0.2)
               : (gradientColors == null ? backgroundColor : null),
           gradient: gradientColors != null && !isActive
               ? LinearGradient(
@@ -316,8 +319,8 @@ class CuteMenuCard extends StatelessWidget {
               : (gradientColors != null && isActive
                   ? LinearGradient(
                       colors: [
-                        activeColor.withOpacity(0.2),
-                        activeColor.withOpacity(0.3),
+                        activeColor.withValues(alpha: 0.2),
+                        activeColor.withValues(alpha: 0.3),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,

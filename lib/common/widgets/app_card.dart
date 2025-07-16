@@ -54,7 +54,7 @@ class AppCard extends StatelessWidget {
         boxShadow: elevation != null && elevation! > 0
             ? [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.5),
                   blurRadius: elevation! * 2,
                   offset: Offset(0, elevation! / 2),
                 ),

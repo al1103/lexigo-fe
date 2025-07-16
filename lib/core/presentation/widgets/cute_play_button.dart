@@ -39,7 +39,7 @@ class CutePlayButton extends StatelessWidget {
           color: backgroundColor,
           boxShadow: [
             BoxShadow(
-              color: backgroundColor.withOpacity(0.4),
+              color: backgroundColor..withValues(alpha: 0.4),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -115,7 +115,7 @@ class CutePlayButtonResponsive extends StatelessWidget {
           color: backgroundColor,
           boxShadow: [
             BoxShadow(
-              color: backgroundColor.withOpacity(0.4),
+              color: backgroundColor..withValues(alpha: 0.4),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),

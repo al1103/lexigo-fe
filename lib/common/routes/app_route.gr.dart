@@ -33,6 +33,18 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ChatScreen(),
       );
     },
+    EditProfileRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const EditProfileScreen(),
+      );
+    },
+    HistoryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const HistoryScreen(),
+      );
+    },
     HomeRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -53,6 +65,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const LevelSelectionScreen(),
+      );
+    },
+    MainWrapperRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const MainWrapperScreen(),
       );
     },
     ProfileRoute.name: (routeData) {
@@ -89,6 +107,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    RankingRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const RankingScreen(),
+      );
+    },
     RegisterRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -113,6 +137,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SignUpPage(),
       );
     },
+    SpeakingLevelSelectionRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const SpeakingLevelSelectionScreen(),
+      );
+    },
     SpeakingResultRoute.name: (routeData) {
       final args = routeData.argsAs<SpeakingResultRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -127,9 +157,15 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     SpeakingRoute.name: (routeData) {
+      final args = routeData.argsAs<SpeakingRouteArgs>(
+          orElse: () => const SpeakingRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const SpeakingScreen(),
+        child: SpeakingScreen(
+          key: args.key,
+          levelCode: args.levelCode,
+          levelName: args.levelName,
+        ),
       );
     },
     VocabularyRoute.name: (routeData) {
@@ -205,6 +241,34 @@ class ChatRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [EditProfileScreen]
+class EditProfileRoute extends PageRouteInfo<void> {
+  const EditProfileRoute({List<PageRouteInfo>? children})
+      : super(
+          EditProfileRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'EditProfileRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [HistoryScreen]
+class HistoryRoute extends PageRouteInfo<void> {
+  const HistoryRoute({List<PageRouteInfo>? children})
+      : super(
+          HistoryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'HistoryRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [HomeScreen]
 class HomeRoute extends PageRouteInfo<void> {
   const HomeRoute({List<PageRouteInfo>? children})
@@ -266,6 +330,20 @@ class LevelSelectionRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'LevelSelectionRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [MainWrapperScreen]
+class MainWrapperRoute extends PageRouteInfo<void> {
+  const MainWrapperRoute({List<PageRouteInfo>? children})
+      : super(
+          MainWrapperRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'MainWrapperRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -384,6 +462,20 @@ class QuizRouteArgs {
 }
 
 /// generated route for
+/// [RankingScreen]
+class RankingRoute extends PageRouteInfo<void> {
+  const RankingRoute({List<PageRouteInfo>? children})
+      : super(
+          RankingRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'RankingRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [RegisterScreen]
 class RegisterRoute extends PageRouteInfo<void> {
   const RegisterRoute({List<PageRouteInfo>? children})
@@ -435,6 +527,20 @@ class SignUpRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'SignUpRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SpeakingLevelSelectionScreen]
+class SpeakingLevelSelectionRoute extends PageRouteInfo<void> {
+  const SpeakingLevelSelectionRoute({List<PageRouteInfo>? children})
+      : super(
+          SpeakingLevelSelectionRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SpeakingLevelSelectionRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -494,16 +600,45 @@ class SpeakingResultRouteArgs {
 
 /// generated route for
 /// [SpeakingScreen]
-class SpeakingRoute extends PageRouteInfo<void> {
-  const SpeakingRoute({List<PageRouteInfo>? children})
-      : super(
+class SpeakingRoute extends PageRouteInfo<SpeakingRouteArgs> {
+  SpeakingRoute({
+    Key? key,
+    String? levelCode,
+    String? levelName,
+    List<PageRouteInfo>? children,
+  }) : super(
           SpeakingRoute.name,
+          args: SpeakingRouteArgs(
+            key: key,
+            levelCode: levelCode,
+            levelName: levelName,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'SpeakingRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<SpeakingRouteArgs> page =
+      PageInfo<SpeakingRouteArgs>(name);
+}
+
+class SpeakingRouteArgs {
+  const SpeakingRouteArgs({
+    this.key,
+    this.levelCode,
+    this.levelName,
+  });
+
+  final Key? key;
+
+  final String? levelCode;
+
+  final String? levelName;
+
+  @override
+  String toString() {
+    return 'SpeakingRouteArgs{key: $key, levelCode: $levelCode, levelName: $levelName}';
+  }
 }
 
 /// generated route for

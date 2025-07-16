@@ -65,7 +65,7 @@ class AppToast {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.4),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -100,7 +100,6 @@ class AppToast {
     _fToast!.showToast(
       child: toast,
       gravity: ToastGravity.CENTER,
-      toastDuration: const Duration(seconds: 2),
     );
   }
 
@@ -181,7 +180,7 @@ class AppToast {
             if (onTap != null)
               Icon(
                 Icons.arrow_forward_ios,
-                color: config.textColor.withOpacity(0.5),
+                color: config.textColor.withValues(alpha: 0.5),
                 size: 14,
               ),
           ],
@@ -202,8 +201,8 @@ class AppToast {
         return _ToastConfig(
           backgroundColor: const Color(0xFFF0FDF4),
           borderColor: const Color(0xFF10B981),
-          shadowColor: const Color(0xFF10B981).withOpacity(0.2),
-          iconBackgroundColor: const Color(0xFF10B981).withOpacity(0.1),
+          shadowColor: const Color(0xFF10B981).withValues(alpha: 0.4),
+          iconBackgroundColor: const Color(0xFF10B981)..withValues(alpha: 0.1),
           iconColor: const Color(0xFF10B981),
           titleColor: const Color(0xFF065F46),
           textColor: const Color(0xFF047857),
@@ -213,8 +212,8 @@ class AppToast {
         return _ToastConfig(
           backgroundColor: const Color(0xFFFEF2F2),
           borderColor: const Color(0xFFEF4444),
-          shadowColor: const Color(0xFFEF4444).withOpacity(0.2),
-          iconBackgroundColor: const Color(0xFFEF4444).withOpacity(0.1),
+          shadowColor: const Color(0xFFEF4444).withValues(alpha: 0.4),
+          iconBackgroundColor: const Color(0xFFEF4444)..withValues(alpha: 0.1),
           iconColor: const Color(0xFFEF4444),
           titleColor: const Color(0xFF991B1B),
           textColor: const Color(0xFFDC2626),
@@ -224,8 +223,8 @@ class AppToast {
         return _ToastConfig(
           backgroundColor: const Color(0xFFFEFBF3),
           borderColor: const Color(0xFFF59E0B),
-          shadowColor: const Color(0xFFF59E0B).withOpacity(0.2),
-          iconBackgroundColor: const Color(0xFFF59E0B).withOpacity(0.1),
+          shadowColor: const Color(0xFFF59E0B).withValues(alpha: 0.4),
+          iconBackgroundColor: const Color(0xFFF59E0B)..withValues(alpha: 0.1),
           iconColor: const Color(0xFFF59E0B),
           titleColor: const Color(0xFF92400E),
           textColor: const Color(0xFFD97706),
@@ -235,8 +234,8 @@ class AppToast {
         return _ToastConfig(
           backgroundColor: const Color(0xFFF0F9FF),
           borderColor: const Color(0xFF3B82F6),
-          shadowColor: const Color(0xFF3B82F6).withOpacity(0.2),
-          iconBackgroundColor: const Color(0xFF3B82F6).withOpacity(0.1),
+          shadowColor: const Color(0xFF3B82F6)..withValues(alpha: 0.2),
+          iconBackgroundColor: const Color(0xFF3B82F6)..withValues(alpha: 0.1),
           iconColor: const Color(0xFF3B82F6),
           titleColor: const Color(0xFF1E40AF),
           textColor: const Color(0xFF2563EB),

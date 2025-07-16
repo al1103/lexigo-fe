@@ -46,12 +46,6 @@ class DetectionOverlayPainter extends CustomPainter {
       imageOffset = Offset((size.width - actualImageDisplaySize.width) / 2, 0);
     }
 
-    debugPrint(
-      '   Actual image display size: ${actualImageDisplaySize.width} x ${actualImageDisplaySize.height}',
-    );
-    debugPrint('   Image offset: ${imageOffset.dx}, ${imageOffset.dy}');
-
-    // Sort detections by area (largest first, smallest last)
     final sortedDetections = [...detections]..sort(
         (a, b) => _calculateArea(b.boundingPoly.vertices)
             .compareTo(_calculateArea(a.boundingPoly.vertices)),
@@ -63,6 +57,7 @@ class DetectionOverlayPainter extends CustomPainter {
       final color = _getColorForIndex(i);
 
       debugPrint(
+        // ignore: lines_longer_than_80_chars
         '   Drawing: ${detection.name} (Area: ${_calculateArea(detection.boundingPoly.vertices)})',
       );
       _drawDetection(
@@ -86,6 +81,7 @@ class DetectionOverlayPainter extends CustomPainter {
       area -= vertices[j].x * vertices[i].y;
     }
 
+    // ignore: join_return_with_assignment
     area = area.abs() / 2.0;
     return area;
   }
@@ -146,14 +142,15 @@ class DetectionOverlayPainter extends CustomPainter {
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
-    canvas.drawCircle(Offset(centerX, centerY), 10, centerPaint);
+    canvas
+      ..drawCircle(Offset(centerX, centerY), 10, centerPaint)
 
-    // Vẽ điểm tâm
-    canvas.drawCircle(
-      Offset(centerX, centerY),
-      4,
-      Paint()..color = color.withOpacity(0.8),
-    );
+      // Vẽ điểm tâm
+      ..drawCircle(
+        Offset(centerX, centerY),
+        4,
+        Paint()..color = color.withValues(alpha: 0.8),
+      );
 
     // Vẽ đường viền hình chữ nhật
     final path = Path()
@@ -164,7 +161,7 @@ class DetectionOverlayPainter extends CustomPainter {
       ..close();
 
     final strokePaint = Paint()
-      ..color = color.withOpacity(1)
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0
       ..strokeCap = StrokeCap.round;
@@ -177,8 +174,6 @@ class DetectionOverlayPainter extends CustomPainter {
     Offset position,
     Color color,
   ) {
-    final confidence =
-        showConfidence ? ' (${(detection.score * 100).toInt()}%)' : '';
     final labelText = detection.name;
 
     final textPainter = TextPainter(
@@ -197,9 +192,7 @@ class DetectionOverlayPainter extends CustomPainter {
         ),
       ),
       textDirection: TextDirection.ltr,
-    );
-
-    textPainter.layout();
+    )..layout();
 
     // Background
     final backgroundRect = RRect.fromRectAndRadius(
@@ -212,18 +205,18 @@ class DetectionOverlayPainter extends CustomPainter {
       const Radius.circular(6),
     );
 
-    canvas.drawRRect(
-      backgroundRect,
-      Paint()..color = color.withOpacity(0.9),
-    );
-
-    canvas.drawRRect(
-      backgroundRect,
-      Paint()
-        ..color = Colors.white.withOpacity(0.8)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1,
-    );
+    canvas
+      ..drawRRect(
+        backgroundRect,
+        Paint()..color = color.withValues(alpha: 0.9),
+      )
+      ..drawRRect(
+        backgroundRect,
+        Paint()
+          ..color = Colors.white.withValues(alpha: 0.8)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1,
+      );
 
     // Text
     textPainter.paint(

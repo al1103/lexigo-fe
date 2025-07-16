@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:file_picker/file_picker.dart';
@@ -71,10 +70,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       // Phát hiện ngôn ngữ nguồn và dịch sang tiếng Việt
       final translation = await _translator.translate(text, to: 'vi');
 
-      print('Dịch từ "$text" sang "${translation.text}"');
       return translation.text;
     } catch (e) {
-      print('Lỗi khi dịch: $e');
       return null;
     }
   }
@@ -94,34 +91,27 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       'de': 'Deutsch',
     };
 
-    try {
-      // Phát hiện ngôn ngữ nguồn
-      final detected = await _translator.translate(text);
-      final sourceLanguage = detected.sourceLanguage.code;
+    // Phát hiện ngôn ngữ nguồn
+    final detected = await _translator.translate(text);
+    final sourceLanguage = detected.sourceLanguage.code;
 
-      print('Ngôn ngữ được phát hiện: $sourceLanguage');
+    for (final langCode in languages) {
+      // Bỏ qua nếu là ngôn ngữ nguồn
+      if (langCode == sourceLanguage) continue;
 
-      for (final langCode in languages) {
-        // Bỏ qua nếu là ngôn ngữ nguồn
-        if (langCode == sourceLanguage) continue;
-
-        try {
-          final translation = await _translator.translate(text, to: langCode);
-          results[languageNames[langCode]!] = translation.text;
-        } catch (e) {
-          print('Lỗi khi dịch sang $langCode: $e');
-          results[languageNames[langCode]!] = 'Không thể dịch';
-        }
+      try {
+        final translation = await _translator.translate(text, to: langCode);
+        results[languageNames[langCode]!] = translation.text;
+      } catch (e) {
+        results[languageNames[langCode]!] = 'Không thể dịch';
       }
-    } catch (e) {
-      print('Lỗi khi phát hiện ngôn ngữ: $e');
     }
 
     return results;
   }
 
   void _showTopicSelection() {
-    showDialog(
+    showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (context) => TopicSelectionDialog(
@@ -299,7 +289,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   void _showMultiTranslateDialog() {
     final textController = TextEditingController();
 
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Row(
@@ -332,7 +322,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             onPressed: () async {
               if (textController.text.trim().isNotEmpty) {
                 Navigator.pop(context);
-                _showTranslationResults(textController.text.trim());
+                await _showTranslationResults(textController.text.trim());
               }
             },
             child: const Text('Dịch'),
@@ -344,7 +334,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   // Hiển thị kết quả dịch nhiều ngôn ngữ
   Future<void> _showTranslationResults(String text) async {
-    showDialog(
+    await showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (context) => const AlertDialog(
@@ -365,7 +355,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       if (mounted) {
         Navigator.pop(context); // Đóng loading dialog
 
-        showDialog(
+        await showDialog<void>(
           context: context,
           builder: (context) => AlertDialog(
             title: const Row(
@@ -442,9 +432,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF06B6D4).withOpacity(0.05),
+        color: const Color(0xFF06B6D4).withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFF06B6D4).withOpacity(0.2)),
+        border:
+            Border.all(color: const Color(0xFF06B6D4).withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -494,9 +485,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     String originalText,
     Map<String, String?> translations,
   ) {
-    final buffer = StringBuffer();
-    buffer.writeln('📝 Văn bản gốc: $originalText\n');
-    buffer.writeln('🌍 Bản dịch đa ngôn ngữ:');
+    final buffer = StringBuffer()
+      ..writeln('📝 Văn bản gốc: $originalText\n')
+      ..writeln('🌍 Bản dịch đa ngôn ngữ:');
 
     translations.forEach((language, translation) {
       buffer.writeln('• $language: ${translation ?? "Lỗi dịch"}');
@@ -536,9 +527,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color..withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: color.withOpacity(0.2)),
+              border: Border.all(color: color.withValues(alpha: 0.2)),
             ),
             child: Icon(icon, color: color, size: 28),
           ),
@@ -596,6 +587,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         author: _aiBot,
         createdAt: DateTime.now().millisecondsSinceEpoch,
         id: _uuid.v4(),
+        // ignore: leading_newlines_in_multiline_strings
         text: '''📄 I received your file: "$fileName"
 
 While I can't open files directly, I can help you with:
@@ -650,14 +642,13 @@ Is there specific content you'd like help with? 📝''',
       tween: Tween(begin: 0, end: 1),
       builder: (context, value, child) {
         final delay = index * 0.2;
-        final animValue = (value - delay).clamp(0.0, 1.0);
-        final opacity = sin(animValue * pi * 2) * 0.5 + 0.5;
+        (value - delay).clamp(0.0, 1.0);
 
         return Container(
           width: 8,
           height: 8,
-          decoration: BoxDecoration(
-            color: const Color(0xFF6366F1).withOpacity(opacity),
+          decoration: const BoxDecoration(
+            color: Color(0xFF6366F1),
             shape: BoxShape.circle,
           ),
         );
@@ -675,7 +666,7 @@ Is there specific content you'd like help with? 📝''',
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              const Color(0xFF6366F1).withOpacity(0.1),
+              const Color(0xFF6366F1)..withValues(alpha: 0.1),
               Colors.white,
             ],
             stops: const [0.0, 0.3],
@@ -757,10 +748,10 @@ Is there specific content you'd like help with? 📝''',
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFF6366F1).withOpacity(0.1),
+        color: const Color(0xFF6366F1)..withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: const Color(0xFF6366F1).withOpacity(0.3),
+          color: const Color(0xFF6366F1).withValues(alpha: 0.3),
         ),
       ),
       child: Row(
@@ -865,7 +856,7 @@ Is there specific content you'd like help with? 📝''',
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black..withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -886,19 +877,20 @@ Is there specific content you'd like help with? 📝''',
                   ),
                 ),
                 // Hiển thị bản dịch nếu được bật
-                if (_translationVisible[message.id] == true) ...[
+                if (_translationVisible[message.id] ?? false) ...[
                   const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: isSentByUser
-                          ? Colors.white.withOpacity(0.2)
-                          : const Color(0xFF06B6D4).withOpacity(0.1),
+                          ? Colors.white.withValues(alpha: 0.2)
+                          : const Color(0xFF06B6D4)
+                        ..withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: isSentByUser
-                            ? Colors.white.withOpacity(0.3)
-                            : const Color(0xFF06B6D4).withOpacity(0.3),
+                            ? Colors.white.withValues(alpha: 0.3)
+                            : const Color(0xFF06B6D4).withValues(alpha: 0.3),
                       ),
                     ),
                     child: Column(
@@ -910,7 +902,7 @@ Is there specific content you'd like help with? 📝''',
                               Icons.translate,
                               size: 14,
                               color: isSentByUser
-                                  ? Colors.white.withOpacity(0.8)
+                                  ? Colors.white.withValues(alpha: 0.8)
                                   : const Color(0xFF06B6D4),
                             ),
                             const SizedBox(width: 4),
@@ -920,7 +912,7 @@ Is there specific content you'd like help with? 📝''',
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 color: isSentByUser
-                                    ? Colors.white.withOpacity(0.8)
+                                    ? Colors.white.withValues(alpha: 0.8)
                                     : const Color(0xFF06B6D4),
                               ),
                             ),
@@ -928,7 +920,7 @@ Is there specific content you'd like help with? 📝''',
                         ),
                         const SizedBox(height: 6),
                         // Hiển thị loading hoặc bản dịch
-                        if (_isTranslating[message.id] == true)
+                        if (_isTranslating[message.id] ?? false)
                           Row(
                             children: [
                               SizedBox(
@@ -938,7 +930,7 @@ Is there specific content you'd like help with? 📝''',
                                   strokeWidth: 2,
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                     isSentByUser
-                                        ? Colors.white.withOpacity(0.8)
+                                        ? Colors.white.withValues(alpha: 0.8)
                                         : const Color(0xFF06B6D4),
                                   ),
                                 ),
@@ -948,7 +940,7 @@ Is there specific content you'd like help with? 📝''',
                                 'Đang dịch...',
                                 style: TextStyle(
                                   color: isSentByUser
-                                      ? Colors.white.withOpacity(0.7)
+                                      ? Colors.white.withValues(alpha: 0.7)
                                       : Colors.grey[600],
                                   fontSize: 13,
                                   fontStyle: FontStyle.italic,
@@ -961,7 +953,7 @@ Is there specific content you'd like help with? 📝''',
                             _translatedMessages[message.id] ?? 'Không thể dịch',
                             style: TextStyle(
                               color: isSentByUser
-                                  ? Colors.white.withOpacity(0.9)
+                                  ? Colors.white.withValues(alpha: 0.9)
                                   : const Color(0xFF1F2937),
                               fontSize: 15,
                               fontWeight: FontWeight.w400,
@@ -987,7 +979,7 @@ Is there specific content you'd like help with? 📝''',
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black..withValues(alpha: 0.1),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -998,18 +990,18 @@ Is there specific content you'd like help with? 📝''',
                     children: [
                       IconButton(
                         icon: Icon(
-                          _isTranslating[message.id] == true
+                          _isTranslating[message.id] ?? false
                               ? Icons.hourglass_empty
                               : Icons.translate,
                           size: 18,
-                          color: _translationVisible[message.id] == true
+                          color: _translationVisible[message.id] ?? false
                               ? const Color(0xFF059669) // Màu xanh khi đã dịch
                               : const Color(0xFF06B6D4),
                         ),
-                        onPressed: _isTranslating[message.id] == true
+                        onPressed: _isTranslating[message.id] ?? false
                             ? null
                             : () => _toggleTranslation(message),
-                        tooltip: _translationVisible[message.id] == true
+                        tooltip: _translationVisible[message.id] ?? false
                             ? 'Ẩn bản dịch'
                             : 'Hiển thị bản dịch',
                       ),
@@ -1184,7 +1176,7 @@ Is there specific content you'd like help with? 📝''',
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black..withValues(alpha: 0.1),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -1197,8 +1189,9 @@ Is there specific content you'd like help with? 📝''',
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: isSentByUser
-                    ? Colors.white.withOpacity(0.2)
-                    : const Color(0xFF6366F1).withOpacity(0.1),
+                    ? Colors.white.withValues(alpha: 0.2)
+                    : const Color(0xFF6366F1)
+                  ..withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
@@ -1228,7 +1221,7 @@ Is there specific content you'd like help with? 📝''',
                     _formatFileSize(message.size.toInt()),
                     style: TextStyle(
                       color: isSentByUser
-                          ? Colors.white.withOpacity(0.8)
+                          ? Colors.white.withValues(alpha: 0.8)
                           : Colors.grey[600],
                       fontSize: 12,
                     ),
@@ -1338,7 +1331,7 @@ Is there specific content you'd like help with? 📝''',
   }
 
   void _explainMessage(types.TextMessage message) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Row(
@@ -1390,7 +1383,6 @@ Is there specific content you'd like help with? 📝''',
                 'Từ vựng',
                 _getMockVocabulary(message.text),
               ),
-              _buildExplanationItem('🌟', 'Mẹo', _getMockTips(message.text)),
             ],
           ),
         ),
@@ -1419,9 +1411,10 @@ Is there specific content you'd like help with? 📝''',
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: const Color(0xFF8B5CF6).withOpacity(0.05),
+          color: const Color(0xFF8B5CF6).withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: const Color(0xFF8B5CF6).withOpacity(0.2)),
+          border:
+              Border.all(color: const Color(0xFF8B5CF6).withValues(alpha: 0.2)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1448,22 +1441,28 @@ Is there specific content you'd like help with? 📝''',
   }
 
   String _getMockPurpose(String text) {
-    if (text.contains('?'))
+    if (text.contains('?')) {
       return 'Đây là câu hỏi tìm kiếm thông tin hoặc làm rõ vấn đề.';
-    if (text.contains('Hello') || text.contains('Hi'))
+    }
+    if (text.contains('Hello') || text.contains('Hi')) {
       return 'Đây là lời chào để bắt đầu cuộc trò chuyện.';
-    if (text.contains('Thank'))
+    }
+    if (text.contains('Thank')) {
       return 'Đây là cách thể hiện lòng biết ơn và sự cảm kích.';
+    }
     return 'Tin nhắn này cung cấp thông tin hoặc tiếp tục luồng hội thoại.';
   }
 
   String _getMockGrammar(String text) {
-    if (text.contains('?'))
+    if (text.contains('?')) {
       return 'Sử dụng cấu trúc nghi vấn với từ hỏi + động từ phụ + chủ ngữ.';
-    if (text.contains('can'))
+    }
+    if (text.contains('can')) {
       return 'Động từ khuyết thiếu "can" thể hiện khả năng hoặc sự cho phép.';
-    if (text.contains('Hello'))
+    }
+    if (text.contains('Hello')) {
       return 'Thì hiện tại đơn với cấu trúc chào hỏi cơ bản.';
+    }
     return 'Sử dụng cấu trúc câu tiếng Anh chuẩn: Chủ ngữ + Động từ + Tân ngữ.';
   }
 
@@ -1471,27 +1470,20 @@ Is there specific content you'd like help with? 📝''',
     final words = text.toLowerCase().split(' ');
     final highlights = <String>[];
 
-    if (words.contains('hello'))
+    if (words.contains('hello')) {
       highlights.add('"Hello" - lời chào thông dụng');
+    }
     if (words.contains('help')) highlights.add('"Help" - giúp đỡ, hỗ trợ');
-    if (words.contains('thank'))
+    if (words.contains('thank')) {
       highlights.add('"Thank" - cảm ơn, bày tỏ lòng biết ơn');
-    if (words.contains('question'))
+    }
+    if (words.contains('question')) {
       highlights.add('"Question" - câu hỏi tìm kiếm câu trả lời');
+    }
 
     return highlights.isEmpty
         ? 'Từ vựng hàng ngày thông dụng trong hội thoại thường.'
         : highlights.join('\n');
-  }
-
-  String _getMockTips(String text) {
-    if (text.contains('?'))
-      return 'Thực hành ngữ điệu câu hỏi - giọng nên lên cao ở cuối câu.';
-    if (text.contains('Hello'))
-      return 'Hãy nhớ giao tiếp bằng mắt khi chào hỏi ai đó.';
-    if (text.contains('Thank'))
-      return 'Luôn kèm theo nụ cười khi nói "thank you" trong giao tiếp trực tiếp.';
-    return 'Chú ý đến ngữ cảnh và giọng điệu để phù hợp với tình huống.';
   }
 
   String _formatFileSize(int bytes) {

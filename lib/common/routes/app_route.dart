@@ -7,15 +7,20 @@ import 'package:lexigo/common/routes/route_path.dart';
 import 'package:lexigo/quiz/presentation/pages/quiz_result_page.dart';
 import 'package:lexigo/review/presentation/pages/review_page.dart';
 import 'package:lexigo/screen/chat/chat_screen.dart';
+import 'package:lexigo/screen/history/history_screen.dart';
 import 'package:lexigo/screen/home/home_screen.dart';
 import 'package:lexigo/screen/lesson_detail_screen.dart';
 import 'package:lexigo/screen/level_selection/level_selection_screen.dart';
+import 'package:lexigo/screen/main_wrapper_screen.dart';
+import 'package:lexigo/screen/profile/edit_profile_screen.dart';
 import 'package:lexigo/screen/profile/profile_screen.dart';
 import 'package:lexigo/screen/progress_screen.dart';
+import 'package:lexigo/screen/ranking/ranking_screen.dart';
 import 'package:lexigo/screen/register_screen.dart';
 import 'package:lexigo/screen/scan_objects/screens/camera_screen.dart';
 import 'package:lexigo/screen/scan_objects/screens/word_detail_screen.dart';
 import 'package:lexigo/screen/speaking/model/speaking_result.dart';
+import 'package:lexigo/screen/speaking/speaking_level_selection_screen.dart';
 import 'package:lexigo/screen/speaking/speaking_result_screen.dart';
 import 'package:lexigo/screen/speaking/speaking_screen.dart';
 import 'package:lexigo/screen/vocabulary_screen.dart';
@@ -45,6 +50,14 @@ class AppRouter extends _$AppRouter {
         path: '/home',
       ),
       AutoRoute(
+        page: HistoryRoute.page,
+        path: '/history',
+      ),
+      AutoRoute(
+        page: RankingRoute.page,
+        path: '/ranking',
+      ),
+      AutoRoute(
         page: ProfileRoute.page,
         path: '/profile',
       ),
@@ -64,7 +77,6 @@ class AppRouter extends _$AppRouter {
         page: SpeakingRoute.page,
         path: '/speaking',
       ),
-
       AutoRoute(
         page: LevelSelectionRoute.page,
         path: '/levelSelection',
@@ -73,10 +85,6 @@ class AppRouter extends _$AppRouter {
         path: '/camera',
         page: CameraRoute.page,
       ),
-      // AutoRoute(
-      //   path: '/preview',
-      //   page: ImagePreviewRoute.page,
-      // ),
       AutoRoute(
         page: QuizResultRoute.page,
         path: '/quiz-result',

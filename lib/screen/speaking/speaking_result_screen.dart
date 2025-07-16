@@ -47,9 +47,9 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
 
   Color get scoreColor {
     final score = widget.speakingResult.overallScore ?? 0;
-    if (score >= 80) return const Color(0xFF10B981);
-    if (score >= 60) return const Color(0xFFF59E0B);
-    return const Color(0xFFEF4444);
+    if (score >= 80) return const Color(0xFF34D399);
+    if (score >= 60) return const Color(0xFFFBBF24);
+    return const Color(0xFFF87171);
   }
 
   @override
@@ -101,13 +101,21 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
       width: double.infinity,
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFFE0E7FF),
+            Color(0xFFFDF2F8),
+          ], // very light purple to very light pink
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+            color: const Color(0xFF6366F1)
+                .withValues(alpha: 0.08), // lighter shadow
+            blurRadius: 28,
+            offset: const Offset(0, 12),
           ),
         ],
       ),
@@ -123,7 +131,8 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
                 child: CircularProgressIndicator(
                   value: score / 100,
                   strokeWidth: 10,
-                  backgroundColor: Colors.grey[200],
+                  backgroundColor:
+                      Colors.grey.withValues(alpha: 0.2), // lighter
                   valueColor: AlwaysStoppedAnimation<Color>(scoreColor),
                 ),
               ),
@@ -131,18 +140,25 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
                 children: [
                   Text(
                     '$score%',
-                    style: TextStyle(
-                      fontSize: 32,
+                    style: const TextStyle(
+                      fontSize: 38,
                       fontWeight: FontWeight.w900,
-                      color: scoreColor,
+                      color: Color(0xFF374151), // dark gray
+                      letterSpacing: -1,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black12,
+                          blurRadius: 6,
+                        ),
+                      ],
                     ),
                   ),
-                  Text(
+                  const Text(
                     'Score',
                     style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                      color: Color(0xFF6B7280), // neutral gray
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -156,15 +172,22 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
-                color: scoreColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
+                color:
+                    const Color(0xFF6366F1).withValues(alpha: 0.1), // lighter
+                borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
                 widget.speakingResult.accuracyLevel!,
-                style: TextStyle(
-                  fontSize: 16,
+                style: const TextStyle(
+                  fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: scoreColor,
+                  color: Color(0xFF6366F1),
+                  shadows: [
+                    Shadow(
+                      color: Colors.black12,
+                      blurRadius: 4,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -177,11 +200,18 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFFFAFAFA),
+            Color(0xFFFFFDF7),
+          ], // very light gray to very light yellow
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -192,14 +222,14 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
         children: [
           const Row(
             children: [
-              Icon(Icons.text_fields, color: Color(0xFF6366F1), size: 20),
+              Icon(Icons.text_fields, color: Color(0xFF8B5CF6), size: 20),
               SizedBox(width: 8),
               Text(
                 'Text Comparison',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF1F2937),
+                  color: Color(0xFF374151),
                 ),
               ),
             ],
@@ -236,7 +266,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF1F2937),
+                    color: Color(0xFF374151),
                   ),
                 ),
               ],
@@ -267,9 +297,11 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1), // lighter
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(
+          color: color.withValues(alpha: 0.2), // lighter
+        ), // reduced opacity
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -288,7 +320,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF1F2937),
+              color: Color(0xFF374151),
             ),
           ),
         ],
@@ -301,7 +333,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1), // lighter
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -340,11 +372,18 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFFFAFAFA),
+            Color(0xFFFFFDF7),
+          ], // very light gray to very light yellow
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -355,20 +394,20 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
         children: [
           const Row(
             children: [
-              Icon(Icons.assessment, color: Color(0xFFF59E0B), size: 20),
+              Icon(Icons.assessment, color: Color(0xFF8B5CF6), size: 20),
               SizedBox(width: 8),
               Text(
                 'Word Analysis',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF1F2937),
+                  color: Color(0xFF374151),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          ...wordAnalysis.map((analysis) => _buildWordItem(analysis)),
+          ...wordAnalysis.map(_buildWordItem),
         ],
       ),
     );
@@ -386,9 +425,9 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        color: color.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: color.withValues(alpha: 0.25)), // lighter
       ),
       child: Row(
         children: [
@@ -397,15 +436,22 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                colors: [
+                  color,
+                  color.withValues(alpha: 0.8),
+                ], // softer gradient
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Center(
               child: Text(
                 '$score',
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 14,
+                  fontSize: 15,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -432,7 +478,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1F2937),
+                        color: Color(0xFF374151),
                       ),
                     ),
                   ],
@@ -463,7 +509,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.2),
+                      color: color.withValues(alpha: 0.15), // lighter
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
@@ -499,12 +545,12 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
               label: const Text('Try Again'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
-                foregroundColor: const Color(0xFF6366F1),
+                foregroundColor: const Color(0xFF8B5CF6),
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                elevation: 4,
+                elevation: 2,
               ),
             ),
           ),
@@ -518,13 +564,13 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
               icon: const Icon(Icons.arrow_forward),
               label: const Text('Continue'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6366F1),
+                backgroundColor: const Color(0xFF8B5CF6),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                elevation: 4,
+                elevation: 2,
               ),
             ),
           ),

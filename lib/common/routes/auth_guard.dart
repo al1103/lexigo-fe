@@ -12,7 +12,7 @@ class AuthGuard extends AutoRouteGuard {
     } else {
       // we redirect the user to our login page
       // router.push(LoginRoute(onResult: (success) {
-      //   // if success == true the navigation will be resumed
+      //   // if success ?? false the navigation will be resumed
       //   // else it will be aborted
       //   resolver.next(success);
       // }));

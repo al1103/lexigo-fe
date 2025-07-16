@@ -12,18 +12,30 @@ class ChatController extends _$ChatController {
   }
 
   Future<String?> chatAI(String message, {bool? isReset}) async {
-    final response = await ref.read(chatRepositoryProvider).chatAI(
-          message,
-          isReset: isReset,
-        );
+    print('🚀 ChatController.chatAI called with:');
+    print(
+        '   Message: ${message.substring(0, message.length.clamp(0, 100))}...');
+    print('   isReset: $isReset');
 
-    return response;
+    try {
+      final response = await ref.read(chatRepositoryProvider).chatAI(
+            message,
+            isReset: isReset,
+          );
+
+      print(
+          '✅ ChatController received response: ${response.substring(0, response.length.clamp(0, 100))}...');
+      return response;
+    } catch (e) {
+      print('❌ ChatController error: $e');
+      rethrow;
+    }
   }
 
   Future<String> fetchTranslatedText(String text) async {
     try {
       // Use Google Translate's internal API endpoint instead of web scraping
-      final encodedText = Uri.encodeComponent(text);
+      Uri.encodeComponent(text);
       final response = await http.get(
         Uri.parse(
           'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=vi&dt=t&q=hello',

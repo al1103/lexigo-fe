@@ -44,7 +44,7 @@ class QuizResultPage extends ConsumerWidget {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black..withValues(alpha: 0.1),
                   blurRadius: 20,
                   offset: const Offset(0, 4),
                 ),
@@ -159,7 +159,6 @@ class _QuestionResultCardState extends ConsumerState<QuestionResultCard> {
   void initState() {
     super.initState();
     // Load bookmark status from provider/storage
-    // isBookmarked = ref.read(bookmarkProvider).isBookmarked(widget.result.questionId);
   }
 
   void _toggleBookmark() {
@@ -171,7 +170,6 @@ class _QuestionResultCardState extends ConsumerState<QuestionResultCard> {
     // if (isBookmarked) {
     //   ref.read(bookmarkProvider.notifier).addBookmark(widget.result);
     // } else {
-    //   ref.read(bookmarkProvider.notifier).removeBookmark(widget.result.questionId);
     // }
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -201,13 +199,13 @@ class _QuestionResultCardState extends ConsumerState<QuestionResultCard> {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isCorrect
-              ? const Color(0xFF10B981).withOpacity(0.3)
-              : const Color(0xFFEF4444).withOpacity(0.3),
+              ? const Color(0xFF10B981).withValues(alpha: 0.3)
+              : const Color(0xFFEF4444).withValues(alpha: 0.3),
           width: 2,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -290,11 +288,13 @@ class _QuestionResultCardState extends ConsumerState<QuestionResultCard> {
               Color borderColor;
 
               if (isCorrectAnswer) {
-                backgroundColor = const Color(0xFF10B981).withOpacity(0.1);
+                backgroundColor = const Color(0xFF10B981)
+                  ..withValues(alpha: 0.1);
                 textColor = const Color(0xFF065F46);
                 borderColor = const Color(0xFF10B981);
               } else if (isUserAnswer && !isCorrect) {
-                backgroundColor = const Color(0xFFEF4444).withOpacity(0.1);
+                backgroundColor = const Color(0xFFEF4444)
+                  ..withValues(alpha: 0.1);
                 textColor = const Color(0xFF991B1B);
                 borderColor = const Color(0xFFEF4444);
               } else {
@@ -371,10 +371,10 @@ class _QuestionResultCardState extends ConsumerState<QuestionResultCard> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF3B82F6).withOpacity(0.05),
+                  color: const Color(0xFF3B82F6).withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: const Color(0xFF3B82F6).withOpacity(0.2),
+                    color: const Color(0xFF3B82F6).withValues(alpha: 0.4),
                   ),
                 ),
                 child: Row(

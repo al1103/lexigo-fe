@@ -100,7 +100,7 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
@@ -128,7 +128,7 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
@@ -147,7 +147,6 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
   }
 
   Widget _buildLessonsContent(List<LessonsModel>? lessonsModel) {
-    print('Lessons Model: $lessonsModel');
     if (lessonsModel == null || lessonsModel.isEmpty) {
       return _buildEmptyState();
     }
@@ -223,14 +222,16 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
             boxShadow: [
               BoxShadow(
                 color: isActive
-                    ? levelColor.withOpacity(0.15)
-                    : Colors.grey.withOpacity(0.05),
+                    ? levelColor.withValues(alpha: 0.15)
+                    : Colors.grey.withValues(alpha: 0.5),
                 blurRadius: isActive ? 15 : 5,
                 offset: const Offset(0, 5),
               ),
             ],
             border: Border.all(
-              color: isActive ? levelColor.withOpacity(0.3) : Colors.grey[300]!,
+              color: isActive
+                  ? levelColor.withValues(alpha: 0.3)
+                  : Colors.grey[300]!,
               width: 1.5,
             ),
           ),
@@ -241,8 +242,9 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color:
-                      isActive ? levelColor.withOpacity(0.1) : Colors.grey[200],
+                  color: isActive
+                      ? levelColor.withValues(alpha: 0.1)
+                      : Colors.grey[200],
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Center(
@@ -288,7 +290,7 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: levelColor.withOpacity(0.1),
+                              color: levelColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -508,7 +510,7 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
   }
 
   void _showNotAvailableDialog(LessonsModel level) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

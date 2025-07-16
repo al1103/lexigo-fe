@@ -49,7 +49,7 @@ class CuteAvatar extends StatelessWidget {
                   : null,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black..withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -164,7 +164,7 @@ class CuteAvatar extends StatelessWidget {
           borderRadius: BorderRadius.circular(size * 0.3),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black..withValues(alpha: 0.1),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -250,7 +250,7 @@ class CuteAvatarBadge extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black..withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -285,9 +285,6 @@ class CountryBadge extends StatelessWidget {
   }
 
   String _getEmojiFlag(String countryCode) {
-    // Convert country code to emoji flag
-    // Each letter in the country code is represented by a Unicode Regional Indicator Symbol
-    // These are in the range 0x1F1E6 to 0x1F1FF (A-Z)
     final firstChar = countryCode.toUpperCase().codeUnitAt(0) - 0x41 + 0x1F1E6;
     final secondChar = countryCode.toUpperCase().codeUnitAt(1) - 0x41 + 0x1F1E6;
 

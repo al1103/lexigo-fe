@@ -25,7 +25,6 @@ class _QuizScreenState extends State<QuizScreen> {
   final Map<int, int> _selectedAnswers = {}; // questionId -> selectedOptionId
   bool _isSubmitted = false;
   int _score = 0;
-  bool _isQuizCompleted = false;
 
   @override
   void initState() {
@@ -233,11 +232,9 @@ class _QuizScreenState extends State<QuizScreen> {
     final scorePercentage = (_score / _quiz!.questions.length) * 100;
     final isPassed = scorePercentage >= _quiz!.passingScore;
 
-    setState(() {
-      _isQuizCompleted = true;
-    });
+    setState(() {});
 
-    showDialog(
+    showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (context) => Dialog(
@@ -325,7 +322,6 @@ class _QuizScreenState extends State<QuizScreen> {
                       _selectedAnswers.clear();
                       _isSubmitted = false;
                       _score = 0;
-                      _isQuizCompleted = false;
                     });
                   }
                 },
@@ -398,15 +394,15 @@ class _QuizScreenState extends State<QuizScreen> {
           var textColor = AppColors.textPrimary;
 
           if (showCorrect) {
-            backgroundColor = AppColors.green.withOpacity(0.1);
+            backgroundColor = AppColors.green..withValues(alpha: 0.1);
             borderColor = AppColors.green;
             textColor = AppColors.green;
           } else if (showIncorrect) {
-            backgroundColor = AppColors.error.withOpacity(0.1);
+            backgroundColor = AppColors.error..withValues(alpha: 0.1);
             borderColor = AppColors.error;
             textColor = AppColors.error;
           } else if (isSelected) {
-            backgroundColor = AppColors.primary.withOpacity(0.1);
+            backgroundColor = AppColors.primary..withValues(alpha: 0.1);
             borderColor = AppColors.primary;
             textColor = AppColors.primary;
           }
@@ -487,7 +483,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   : () {},
               backgroundColor: _selectedAnswers.containsKey(question.id)
                   ? AppColors.primary
-                  : AppColors.primary.withOpacity(0.5),
+                  : AppColors.primary.withValues(alpha: 0.5),
               width: 200,
             ),
           )
@@ -626,7 +622,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           color: Colors.white,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withValues(alpha: 0.5),
                               blurRadius: 10,
                               offset: const Offset(0, -5),
                             ),

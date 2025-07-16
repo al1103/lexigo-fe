@@ -14,9 +14,6 @@ Raw<AppRouter> appRouter(Ref ref) => AppRouter();
 @Riverpod(keepAlive: true)
 ApiService apiService(Ref ref) => ApiService(ref);
 
-// @Riverpod()
-// SecuredStorageService securedStorageService(Ref ref) => SecuredStorageService();
-
 @Riverpod(keepAlive: true)
 SharedPreferences sharedPreferences(Ref ref) {
   throw UnimplementedError();

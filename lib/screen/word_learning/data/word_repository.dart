@@ -14,4 +14,9 @@ mixin WordRepository {
     required int questionId,
     required int selectedOptionId,
   });
+
+  Future<ApiResponse<void>> bookmarkWord({
+    required int wordId,
+    String? notes,
+  });
 }

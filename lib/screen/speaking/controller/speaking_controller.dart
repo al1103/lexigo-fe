@@ -16,6 +16,7 @@ class SpeakingController extends _$SpeakingController {
   Future<SpeakingResult?> checkSpeaking(
     File audioFile,
     String referenceText,
+    String wordId,
   ) async {
     // Set loading state
     state = const AsyncValue.loading();
@@ -23,7 +24,7 @@ class SpeakingController extends _$SpeakingController {
     try {
       final response = await ref
           .read(speakingRepositoryProvider)
-          .checkSpeaking(audioFile, referenceText);
+          .checkSpeaking(audioFile, referenceText, wordId);
 
       final result = response.data;
 

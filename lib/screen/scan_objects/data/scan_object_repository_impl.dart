@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lexigo/core/infrastructure/datasource/remote/api_service.dart';
-import 'package:lexigo/injection/di.dart';
 import 'package:lexigo/screen/scan_objects/models/detection_result.dart';
 import 'package:lexigo/screen/scan_objects/models/scan_object_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -28,16 +27,9 @@ class ScanObjectRepositoryImpl implements ScanObjectRepository {
         throw Exception('Image file is too large (max 10MB)');
       }
 
-      // Log image info before sending to backend
-      print('🚀 Sending image to backend:');
-      print('   Path: ${image.path}');
-      print('   Size: ${(fileSize / 1024).toStringAsFixed(2)} KB');
-
       final response = await _apiService.analyzeImage(
         image,
       );
-
-      print('✅ Backend response received');
 
       // Handle different response structures
       if (response.data != null) {
@@ -45,13 +37,9 @@ class ScanObjectRepositoryImpl implements ScanObjectRepository {
       } else {
         return [];
       }
-    } on Exception catch (e) {
-      print('❌ Repository error: $e');
-      // Re-throw known exceptions
+    } on Exception {
       rethrow;
     } catch (e) {
-      print('❌ Unknown repository error: $e');
-      // Wrap unknown errors
       throw Exception('Failed to analyze image: $e');
     }
   }

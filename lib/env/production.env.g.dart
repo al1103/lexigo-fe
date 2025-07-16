@@ -12,13 +12,13 @@ final class _Env {
   static const String appMode = '\'\'';
 
   static const List<int> _enviedkeyapiKey = <int>[
-    3985903095,
-    4232792862,
+    644814255,
+    1876618535,
   ];
 
   static const List<int> _envieddataapiKey = <int>[
-    3985903056,
-    4232792889,
+    644814216,
+    1876618496,
   ];
 
   static final String apiKey = String.fromCharCodes(List<int>.generate(
@@ -27,5 +27,6 @@ final class _Env {
     growable: false,
   ).map((int i) => _envieddataapiKey[i] ^ _enviedkeyapiKey[i]));
 
-  static const String apiUrl = 'http://192.168.31.225:3000/api';
+  static const String apiUrl =
+      'https://src-unauthorized-strings-searches.trycloudflare.com/api';
 }

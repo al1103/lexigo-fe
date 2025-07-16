@@ -6,7 +6,7 @@ part of 'api_client.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter
 
 class _ApiClient implements ApiClient {
   _ApiClient(
@@ -20,6 +20,94 @@ class _ApiClient implements ApiClient {
   String? baseUrl;
 
   final ParseErrorLogger? errorLogger;
+
+  @override
+  Future<ApiResponse<LoginResponse>> login(
+    String email,
+    String password,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = {
+      'email': email,
+      'password': password,
+    };
+    final _options = _setStreamType<ApiResponse<LoginResponse>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/login',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<LoginResponse> _value;
+    try {
+      _value = ApiResponse<LoginResponse>.fromJson(
+        _result.data!,
+        (json) => LoginResponse.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApiResponse<LoginResponse>> updateUserProfile(
+    String fullName,
+    String email,
+    String avatarUrl,
+    String username,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = {
+      'full_name': fullName,
+      'email': email,
+      'avatar_url': avatarUrl,
+      'username': username,
+    };
+    final _options = _setStreamType<ApiResponse<LoginResponse>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/profile',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<LoginResponse> _value;
+    try {
+      _value = ApiResponse<LoginResponse>.fromJson(
+        _result.data!,
+        (json) => LoginResponse.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
 
   @override
   Future<ApiResponse<List<DetectionResult>>> analyzeImage(File image) async {
@@ -74,6 +162,7 @@ class _ApiClient implements ApiClient {
   Future<ApiResponse<SpeakingResult>> checkSpeaking(
     File audioFile,
     String referenceText,
+    String wordId,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -89,6 +178,10 @@ class _ApiClient implements ApiClient {
     _data.fields.add(MapEntry(
       'reference_text',
       referenceText,
+    ));
+    _data.fields.add(MapEntry(
+      'word_id',
+      wordId,
     ));
     final _options = _setStreamType<ApiResponse<SpeakingResult>>(Options(
       method: 'POST',
@@ -130,7 +223,11 @@ class _ApiClient implements ApiClient {
     final queryParameters = <String, dynamic>{};
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final _data = {'prompt': message};
+    final _data = {
+      'prompt': message,
+      'is_reset': isReset,
+    };
+    _data.removeWhere((k, v) => v == null);
     final _options = _setStreamType<ApiResponse<String>>(Options(
       method: 'POST',
       headers: _headers,
@@ -247,14 +344,15 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<ApiResponse<PayloadPageableDto<VocabularyModel>>> getVocabulary(
-    String? search,
-    int? page,
+  Future<ApiResponse<PayloadPageableDto<VocabularyModel>>>
+      getLevelVocabularyDetails(
+    String level,
+    int? limit,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'search': search,
-      r'page': page,
+      r'difficulty_level': level,
+      r'limit': limit,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -268,7 +366,7 @@ class _ApiClient implements ApiClient {
     )
                 .compose(
                   _dio.options,
-                  '/vocabulary',
+                  '/speaking/words',
                   queryParameters: queryParameters,
                   data: _data,
                 )
@@ -285,6 +383,47 @@ class _ApiClient implements ApiClient {
         (json) => PayloadPageableDto<VocabularyModel>.fromJson(
           json as Map<String, dynamic>,
           (json) => VocabularyModel.fromJson(json as Map<String, dynamic>),
+        ),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApiResponse<PayloadPageableDto<LessonsModel>>>
+      getLevelVocabulary() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options =
+        _setStreamType<ApiResponse<PayloadPageableDto<LessonsModel>>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/speaking/levels',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<PayloadPageableDto<LessonsModel>> _value;
+    try {
+      _value = ApiResponse<PayloadPageableDto<LessonsModel>>.fromJson(
+        _result.data!,
+        (json) => PayloadPageableDto<LessonsModel>.fromJson(
+          json as Map<String, dynamic>,
+          (json) => LessonsModel.fromJson(json as Map<String, dynamic>),
         ),
       );
     } on Object catch (e, s) {
@@ -393,6 +532,369 @@ class _ApiClient implements ApiClient {
         .compose(
           _dio.options,
           '/quiz/submit-answer',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<void> _value;
+    try {
+      _value = ApiResponse<void>.fromJson(
+        _result.data!,
+        (json) => () {}(),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApiResponse<void>> bookmarkWord(
+    int wordId,
+    String? notes,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = {
+      'word_id': wordId,
+      'notes': notes,
+    };
+    _data.removeWhere((k, v) => v == null);
+    final _options = _setStreamType<ApiResponse<void>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/quiz/bookmark',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<void> _value;
+    try {
+      _value = ApiResponse<void>.fromJson(
+        _result.data!,
+        (json) => () {}(),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApiResponse<PayloadPageableDto<QuizBookmark>>> getBookmark({
+    int page = 1,
+    int limit = 10,
+    String? search,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'page': page,
+      r'limit': limit,
+      r'search': search,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options =
+        _setStreamType<ApiResponse<PayloadPageableDto<QuizBookmark>>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/quiz/bookmarks',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<PayloadPageableDto<QuizBookmark>> _value;
+    try {
+      _value = ApiResponse<PayloadPageableDto<QuizBookmark>>.fromJson(
+        _result.data!,
+        (json) => PayloadPageableDto<QuizBookmark>.fromJson(
+          json as Map<String, dynamic>,
+          (json) => QuizBookmark.fromJson(json as Map<String, dynamic>),
+        ),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApiResponse<UserInfoModel>> getUserProfile() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ApiResponse<UserInfoModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/profile',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<UserInfoModel> _value;
+    try {
+      _value = ApiResponse<UserInfoModel>.fromJson(
+        _result.data!,
+        (json) => UserInfoModel.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApiResponse<PayloadPageableDto<LeaderboardUser>>>
+      getGlobalLeaderboard() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options =
+        _setStreamType<ApiResponse<PayloadPageableDto<LeaderboardUser>>>(
+            Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+                .compose(
+                  _dio.options,
+                  '/ranking/leaderboard/global',
+                  queryParameters: queryParameters,
+                  data: _data,
+                )
+                .copyWith(
+                    baseUrl: _combineBaseUrls(
+                  _dio.options.baseUrl,
+                  baseUrl,
+                )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<PayloadPageableDto<LeaderboardUser>> _value;
+    try {
+      _value = ApiResponse<PayloadPageableDto<LeaderboardUser>>.fromJson(
+        _result.data!,
+        (json) => PayloadPageableDto<LeaderboardUser>.fromJson(
+          json as Map<String, dynamic>,
+          (json) => LeaderboardUser.fromJson(json as Map<String, dynamic>),
+        ),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApiResponse<PayloadPageableDto<LeaderboardUser>>>
+      getWeeklyLeaderboard() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options =
+        _setStreamType<ApiResponse<PayloadPageableDto<LeaderboardUser>>>(
+            Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+                .compose(
+                  _dio.options,
+                  '/ranking/leaderboard/weekly',
+                  queryParameters: queryParameters,
+                  data: _data,
+                )
+                .copyWith(
+                    baseUrl: _combineBaseUrls(
+                  _dio.options.baseUrl,
+                  baseUrl,
+                )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<PayloadPageableDto<LeaderboardUser>> _value;
+    try {
+      _value = ApiResponse<PayloadPageableDto<LeaderboardUser>>.fromJson(
+        _result.data!,
+        (json) => PayloadPageableDto<LeaderboardUser>.fromJson(
+          json as Map<String, dynamic>,
+          (json) => LeaderboardUser.fromJson(json as Map<String, dynamic>),
+        ),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApiResponse<PayloadPageableDto<LeaderboardUser>>>
+      getMonthlyLeaderboard() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options =
+        _setStreamType<ApiResponse<PayloadPageableDto<LeaderboardUser>>>(
+            Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+                .compose(
+                  _dio.options,
+                  '/ranking/leaderboard/monthly',
+                  queryParameters: queryParameters,
+                  data: _data,
+                )
+                .copyWith(
+                    baseUrl: _combineBaseUrls(
+                  _dio.options.baseUrl,
+                  baseUrl,
+                )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<PayloadPageableDto<LeaderboardUser>> _value;
+    try {
+      _value = ApiResponse<PayloadPageableDto<LeaderboardUser>>.fromJson(
+        _result.data!,
+        (json) => PayloadPageableDto<LeaderboardUser>.fromJson(
+          json as Map<String, dynamic>,
+          (json) => LeaderboardUser.fromJson(json as Map<String, dynamic>),
+        ),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApiResponse<MyRank>> getMyAllRankings() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ApiResponse<MyRank>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/ranking/my-all-rankings',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<MyRank> _value;
+    try {
+      _value = ApiResponse<MyRank>.fromJson(
+        _result.data!,
+        (json) => MyRank.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApiResponse<QuotesModel>> getDailyQuotes() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ApiResponse<QuotesModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/quotes/daily',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<QuotesModel> _value;
+    try {
+      _value = ApiResponse<QuotesModel>.fromJson(
+        _result.data!,
+        (json) => QuotesModel.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ApiResponse<void>> submitSpeakingResult() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ApiResponse<void>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/speaking/submit-result',
           queryParameters: queryParameters,
           data: _data,
         )

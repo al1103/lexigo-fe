@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lexigo/auth/domain/value_objects.dart';
 import 'package:lexigo/auth/presentation/auth_controller.dart';
 import 'package:lexigo/common/routes/app_route.dart';
 import 'package:lexigo/common/routes/route_path.dart';
@@ -19,8 +18,8 @@ class SignInPage extends ConsumerStatefulWidget {
 class _SignInPageState extends ConsumerState<SignInPage>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
-  Username _username = Username('kminchelle');
-  Password _password = Password('0lelplR');
+  String _email = 'admin';
+  String _password = 'dsđs';
   bool _obscurePassword = true;
 
   late AnimationController _animationController;
@@ -49,7 +48,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
   Widget build(BuildContext context) {
     ref.listen(authControllerProvider, (previous, next) {
       switch (next) {
-        case AsyncError():
+        case AsyncError(:final error):
           _showSnackBar('Invalid credentials. Please try again.');
         case AsyncData():
           context.router.pushAndPopUntil(
@@ -110,11 +109,11 @@ class _SignInPageState extends ConsumerState<SignInPage>
       decoration: BoxDecoration(
         color: const Color(0xFF007AFF),
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: const Color(0xFF007AFF).withOpacity(0.3),
+            color: Color(0x4D007AFF),
             blurRadius: 20,
-            offset: const Offset(0, 8),
+            offset: Offset(0, 8),
           ),
         ],
       ),
@@ -153,7 +152,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
     );
   }
 
-  Widget _buildForm(AsyncValue authState) {
+  Widget _buildForm(AsyncValue<void> authState) {
     return Form(
       key: _formKey,
       child: Column(
@@ -161,15 +160,11 @@ class _SignInPageState extends ConsumerState<SignInPage>
         children: [
           // Email field
           _buildTextField(
-            label: 'Email or Username',
-            icon: Icons.person_outline,
-            initialValue: _username.value,
+            label: 'Email',
+            icon: Icons.email_outlined,
+            initialValue: _email,
             keyboardType: TextInputType.emailAddress,
-            onSaved: (value) => _username = Username(value ?? ''),
-            validator: (value) {
-              final verify = Username(value ?? '');
-              return verify.isValid() ? null : 'Please enter a valid username';
-            },
+            onSaved: (value) => _email = value ?? '',
           ),
 
           const SizedBox(height: 20),
@@ -179,7 +174,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
             label: 'Password',
             icon: Icons.lock_outline,
             obscureText: _obscurePassword,
-            initialValue: _password.value,
+            initialValue: _password,
             suffixIcon: IconButton(
               onPressed: () {
                 setState(() {
@@ -194,11 +189,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
                 size: 20,
               ),
             ),
-            onSaved: (value) => _password = Password(value ?? ''),
-            validator: (value) {
-              final verify = Password(value ?? '');
-              return verify.isValid() ? null : 'Please enter a valid password';
-            },
+            onSaved: (value) => _password = value ?? '',
           ),
 
           const SizedBox(height: 16),
@@ -318,11 +309,11 @@ class _SignInPageState extends ConsumerState<SignInPage>
       height: 52,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: const Color(0xFF007AFF).withOpacity(0.3),
+            color: Color(0x4D007AFF), // 30% opacity
             blurRadius: 8,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -390,17 +381,11 @@ class _SignInPageState extends ConsumerState<SignInPage>
   }
 
   void _signIn() {
-    if (_formKey.currentState?.validate() ?? false) {
-      _formKey.currentState?.save();
-      // ref.read(authControllerProvider.notifier).signInWithUsernameAndPassword(
-      //       username: _username.value,
-      //       password: _password.value,
-      //     );
-      context.router.pushAndPopUntil(
-        const HomeRoute(),
-        predicate: (route) => false,
-      );
-    }
+    _formKey.currentState?.save();
+    ref.read(authControllerProvider.notifier).signIn(
+          _email,
+          _password,
+        );
   }
 
   void _showSnackBar(String message) {

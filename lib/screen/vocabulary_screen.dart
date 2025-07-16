@@ -133,7 +133,7 @@ class VocabularyScreen extends StatelessWidget {
                                 index == 0 ? AppColors.primary : Colors.white,
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: AppColors.primary.withOpacity(0.3),
+                              color: AppColors.primary..withValues(alpha: 0.3),
                             ),
                           ),
                           child: Center(

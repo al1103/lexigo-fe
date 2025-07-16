@@ -7,7 +7,7 @@ part of 'speaking_controller.dart';
 // **************************************************************************
 
 String _$speakingControllerHash() =>
-    r'e3f530da92142eab947b47531f85ad3428df91ee';
+    r'0016f42dd8cb3ea844ff437c06ae639ed96cae2d';
 
 /// See also [SpeakingController].
 @ProviderFor(SpeakingController)

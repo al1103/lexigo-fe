@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lexigo/screen/chat/controller/chat_controller.dart';
@@ -9,7 +11,7 @@ class TopicSelectionDialog extends ConsumerStatefulWidget {
     super.key,
   });
 
-  final Function(ChatTopic topic, String? aiResponse) onTopicSelected;
+  final void Function(ChatTopic topic, String? aiResponse) onTopicSelected;
 
   @override
   ConsumerState<TopicSelectionDialog> createState() =>
@@ -53,6 +55,7 @@ class _TopicSelectionDialogState extends ConsumerState<TopicSelectionDialog>
         description: 'Custom learning topic',
         emoji: '🎯',
         welcomeMessage:
+            // ignore: leading_newlines_in_multiline_strings
             '''🎯 Welcome to your custom learning topic: ${_customTopicController.text.trim()}!
 
 I'm excited to help you learn about this specific topic. I can assist you with:
@@ -70,206 +73,302 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final maxHeight = screenSize.height * 0.85; // Max 85% of screen height
+
     return Dialog(
       backgroundColor: Colors.transparent,
       child: ScaleTransition(
         scale: _scaleAnimation,
         child: Container(
-          constraints: const BoxConstraints(maxHeight: 700),
+          constraints: BoxConstraints(
+            maxHeight: maxHeight,
+            maxWidth: 500,
+            minHeight: 400,
+          ),
           margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(32),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
+                color: Colors.black.withValues(alpha: 0.15),
+                blurRadius: 30,
+                offset: const Offset(0, 15),
               ),
             ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Header
+              // Header with gradient background
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(32, 32, 32, 24),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF667EEA),
+                      Color(0xFF764BA2),
+                      Color(0xFF8B5CF6),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(32),
+                    topRight: Radius.circular(32),
+                  ),
+                ),
                 child: Column(
                   children: [
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Icon(
-                        Icons.chat_bubble_outline,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
                     const Text(
-                      'Choose Your Learning Focus',
+                      'Choose Your Learning Path',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1F2937),
+                        color: Colors.white,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Select a topic or create your own',
+                      'Personalize your English learning experience',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.grey[600],
+                        color: Colors.white.withValues(alpha: 0.9),
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),
               ),
 
-              // Toggle between preset topics and custom input
+              // Content area with scrolling support
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: [
+                      // Modern toggle buttons
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF8FAFC),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: const Color(0xFFE2E8F0),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _isCustomTopicMode = false;
+                                    _customTopicController.clear();
+                                  });
+                                },
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
+                                  decoration: BoxDecoration(
+                                    color: !_isCustomTopicMode
+                                        ? Colors.white
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: !_isCustomTopicMode
+                                        ? [
+                                            BoxShadow(
+                                              color: Colors.black
+                                                ..withValues(alpha: 0.1),
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ]
+                                        : null,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.auto_awesome,
+                                        size: 18,
+                                        color: !_isCustomTopicMode
+                                            ? const Color(0xFF6366F1)
+                                            : const Color(0xFF64748B),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Popular Topics',
+                                        style: TextStyle(
+                                          color: !_isCustomTopicMode
+                                              ? const Color(0xFF6366F1)
+                                              : const Color(0xFF64748B),
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _isCustomTopicMode = true;
+                                    _selectedTopic = null;
+                                  });
+                                },
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
+                                  decoration: BoxDecoration(
+                                    color: _isCustomTopicMode
+                                        ? Colors.white
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: _isCustomTopicMode
+                                        ? [
+                                            BoxShadow(
+                                              color: Colors.black
+                                                ..withValues(alpha: 0.1),
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ]
+                                        : null,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.edit_outlined,
+                                        size: 18,
+                                        color: _isCustomTopicMode
+                                            ? const Color(0xFF6366F1)
+                                            : const Color(0xFF64748B),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Custom Topic',
+                                        style: TextStyle(
+                                          color: _isCustomTopicMode
+                                              ? const Color(0xFF6366F1)
+                                              : const Color(0xFF64748B),
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Content area that adapts to available space
+                      Expanded(
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          child: _isCustomTopicMode
+                              ? _buildCustomTopicInput()
+                              : _buildPresetTopics(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Action buttons with modern design
               Container(
-                margin: const EdgeInsets.only(bottom: 16),
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                 child: Row(
                   children: [
                     Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isCustomTopicMode = false;
-                            _customTopicController.clear();
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: !_isCustomTopicMode
-                                ? const Color(0xFF6366F1)
-                                : Colors.grey[100],
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(12),
-                              bottomLeft: Radius.circular(12),
-                            ),
+                      child: TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                          child: Text(
-                            'Preset Topics',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: !_isCustomTopicMode
-                                  ? Colors.white
-                                  : Colors.grey[600],
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            ),
+                        ),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Color(0xFF64748B),
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
                     ),
+                    const SizedBox(width: 16),
                     Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isCustomTopicMode = true;
-                            _selectedTopic = null;
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: _isCustomTopicMode
-                                ? const Color(0xFF6366F1)
-                                : Colors.grey[100],
-                            borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(12),
-                              bottomRight: Radius.circular(12),
+                      flex: 2,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: _effectiveSelectedTopic != null
+                              ? const LinearGradient(
+                                  colors: [
+                                    Color(0xFF6366F1),
+                                    Color(0xFF8B5CF6),
+                                  ],
+                                )
+                              : null,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: ElevatedButton(
+                          onPressed: _effectiveSelectedTopic != null
+                              ? () async {
+                                  await _handleTopicSelection();
+                                }
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: _effectiveSelectedTopic != null
+                                ? Colors.transparent
+                                : const Color(0xFFE2E8F0),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 18),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
                             ),
+                            elevation: 0,
+                            shadowColor: Colors.transparent,
                           ),
-                          child: Text(
-                            'Custom Topic',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: _isCustomTopicMode
-                                  ? Colors.white
-                                  : Colors.grey[600],
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.rocket_launch, size: 20),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Start Learning',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: _effectiveSelectedTopic != null
+                                      ? Colors.white
+                                      : const Color(0xFF94A3B8),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
                   ],
                 ),
-              ),
-
-              // Content area
-              Flexible(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  child: _isCustomTopicMode
-                      ? _buildCustomTopicInput()
-                      : _buildPresetTopics(),
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Action Buttons
-              Row(
-                children: [
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    flex: 2,
-                    child: ElevatedButton(
-                      onPressed: _effectiveSelectedTopic != null
-                          ? () async {
-                              await _handleTopicSelection();
-                            }
-                          : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF6366F1),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: const Text(
-                        'Start Learning',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ],
           ),
@@ -282,11 +381,12 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
     return GridView.builder(
       key: const ValueKey('preset'),
       shrinkWrap: true,
+      physics: const BouncingScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 1.1,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 0.95,
       ),
       itemCount: ChatTopic.topics.length,
       itemBuilder: (context, index) {
@@ -300,48 +400,107 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
             });
           },
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.all(16),
+            duration: const Duration(milliseconds: 300),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: isSelected
-                  ? const Color(0xFF6366F1).withOpacity(0.1)
-                  : Colors.grey[50],
-              borderRadius: BorderRadius.circular(16),
+              gradient: isSelected
+                  ? const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFF6366F1),
+                        Color(0xFF8B5CF6),
+                      ],
+                    )
+                  : null,
+              color: isSelected ? null : const Color(0xFFF8FAFC),
+              borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: isSelected ? const Color(0xFF6366F1) : Colors.grey[200]!,
-                width: isSelected ? 2 : 1,
+                color:
+                    isSelected ? Colors.transparent : const Color(0xFFE2E8F0),
+                width: 2,
               ),
+              boxShadow: isSelected
+                  ? [
+                      BoxShadow(
+                        color: const Color(0xFF6366F1).withValues(alpha: 0.3),
+                        blurRadius: 15,
+                        offset: const Offset(0, 8),
+                      ),
+                    ]
+                  : [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.5),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  topic.emoji,
-                  style: const TextStyle(fontSize: 32),
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? Colors.white.withValues(alpha: 0.2)
+                        : const Color(0xFF6366F1)
+                      ..withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Center(
+                    child: Text(
+                      topic.emoji,
+                      style: const TextStyle(fontSize: 24),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 Text(
                   topic.title,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: isSelected
-                        ? const Color(0xFF6366F1)
-                        : const Color(0xFF1F2937),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: isSelected ? Colors.white : const Color(0xFF1E293B),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   topic.description,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.grey[600],
+                    fontSize: 12,
+                    color: isSelected
+                        ? Colors.white.withValues(alpha: 0.9)
+                        : const Color(0xFF64748B),
+                    height: 1.3,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
+                if (isSelected) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      'Selected',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -353,100 +512,191 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
   Widget _buildCustomTopicInput() {
     return Container(
       key: const ValueKey('custom'),
-      padding: const EdgeInsets.all(20),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          // Hero section
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF6366F1).withOpacity(0.1),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFFF8FAFC),
+                  Color(0xFFE2E8F0),
+                ],
+              ),
               borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: const Color(0xFFE2E8F0),
+                width: 2,
+              ),
             ),
             child: Column(
               children: [
-                const Text(
-                  '🎯',
-                  style: TextStyle(fontSize: 48),
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: const Icon(
+                    Icons.lightbulb_outline,
+                    color: Colors.white,
+                    size: 24,
+                  ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 const Text(
-                  'Create Your Own Topic',
+                  'Your Unique Learning Journey',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1F2937),
+                    color: Color(0xFF1E293B),
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 Text(
-                  'Enter what you want to learn about',
+                  "Tell us what you're passionate about",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 13,
                     color: Colors.grey[600],
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 24),
-          TextField(
-            controller: _customTopicController,
-            onChanged: (value) => setState(() {}),
-            decoration: InputDecoration(
-              hintText: 'e.g., Cooking, Sports, Technology...',
-              prefixIcon: const Icon(
-                Icons.edit,
-                color: Color(0xFF6366F1),
+
+          const SizedBox(height: 20),
+
+          // Input field
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.5),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: TextField(
+              controller: _customTopicController,
+              onChanged: (value) => setState(() {}),
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF1E293B),
               ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Colors.grey[300]!),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Colors.grey[300]!),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: const BorderSide(
-                  color: Color(0xFF6366F1),
-                  width: 2,
+              decoration: InputDecoration(
+                hintText: 'e.g., Space exploration, Cooking, Business...',
+                hintStyle: TextStyle(
+                  color: Colors.grey[400],
+                  fontSize: 15,
+                ),
+                prefixIcon: Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.edit_outlined,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(18),
+                  borderSide: BorderSide.none,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(18),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(18),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF6366F1),
+                    width: 2,
+                  ),
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 16,
                 ),
               ),
-              filled: true,
-              fillColor: Colors.grey[50],
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 16,
-              ),
-            ),
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
             ),
           ),
+
           const SizedBox(height: 16),
+
+          // Confirmation message
           if (_customTopicController.text.trim().isNotEmpty)
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.green[50],
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.green[200]!),
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.green[50]!,
+                    Colors.green[100]!,
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: Colors.green[200]!,
+                  width: 2,
+                ),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.check_circle, color: Colors.green[600], size: 20),
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.green[500],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.check,
+                      color: Colors.white,
+                      size: 16,
+                    ),
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: Text(
-                      'Ready to learn about "${_customTopicController.text.trim()}"',
-                      style: TextStyle(
-                        color: Colors.green[700],
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Perfect Choice!',
+                          style: TextStyle(
+                            color: Colors.green[700],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Ready to explore "${_customTopicController.text.trim()}"',
+                          style: TextStyle(
+                            color: Colors.green[600],
+                            fontSize: 12,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -461,30 +711,69 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
     final selectedTopic = _effectiveSelectedTopic!;
 
     // Show loading
-    showDialog(
+    showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black..withValues(alpha: 0.1),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CircularProgressIndicator(
-                color: Color(0xFF6366F1),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Preparing your ${selectedTopic.title} lesson...',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                  ),
+                  borderRadius: BorderRadius.circular(20),
                 ),
+                child: const Icon(
+                  Icons.psychology_outlined,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(height: 24),
+              const SizedBox(
+                width: 50,
+                height: 50,
+                child: CircularProgressIndicator(
+                  color: Color(0xFF6366F1),
+                  strokeWidth: 3,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Preparing your ${selectedTopic.title} journey...',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF1E293B),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Creating personalized content just for you',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+                textAlign: TextAlign.center,
               ),
             ],
           ),
@@ -504,29 +793,62 @@ Include specific vocabulary, phrases, and conversation starters related to this 
 '''
           : selectedTopic.welcomeMessage;
 
-      // Get AI response
-      final aiResponse = await ref.read(chatControllerProvider.notifier).chatAI(
-            contextMessage,
-            isReset: true,
-          );
+      // Get AI response with timeout
+      String? aiResponse;
+      try {
+        print('🚀 Starting API call for topic: ${selectedTopic.title}');
 
-      // Close loading dialog
-      Navigator.of(context).pop();
+        aiResponse = await ref
+            .read(chatControllerProvider.notifier)
+            .chatAI(
+              contextMessage,
+              isReset: true,
+            )
+            .timeout(
+          const Duration(seconds: 30),
+          onTimeout: () {
+            print('⏰ API call timeout after 30 seconds');
+            throw TimeoutException(
+              'API call timed out',
+              const Duration(seconds: 30),
+            );
+          },
+        );
 
-      // Close topic dialog
-      Navigator.of(context).pop();
+        print('✅ API Response received successfully');
+      } catch (apiError) {
+        print('❌ API Error: $apiError');
+        aiResponse = null;
+      }
 
-      // Pass topic and AI response
-      widget.onTopicSelected(selectedTopic, aiResponse);
+      // Close loading dialog first
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+
+      // Then close topic dialog
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+
+      // Pass topic and AI response (hoặc fallback message nếu API lỗi)
+      final fallbackResponse = aiResponse ?? selectedTopic.welcomeMessage;
+      widget.onTopicSelected(selectedTopic, fallbackResponse);
     } catch (e) {
+      print('❌ General Error: $e');
+
       // Close loading dialog
-      Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
 
       // Close topic dialog
-      Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
 
       // Pass topic with fallback
-      widget.onTopicSelected(selectedTopic, null);
+      widget.onTopicSelected(selectedTopic, selectedTopic.welcomeMessage);
     }
   }
 }

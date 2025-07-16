@@ -40,7 +40,8 @@ class ProgressScreen extends StatelessWidget {
                             children: [
                               CircleAvatar(
                                 radius: 30,
-                                backgroundColor: Colors.white.withOpacity(0.2),
+                                backgroundColor:
+                                    Colors.white.withValues(alpha: 0.4),
                                 child: const CircleAvatar(
                                   radius: 28,
                                   backgroundColor: AppColors.primaryDark,
@@ -62,7 +63,8 @@ class ProgressScreen extends StatelessWidget {
                                     Text(
                                       'Your Level',
                                       style: AppTextStyles.bodyMedium.copyWith(
-                                        color: Colors.white.withOpacity(0.7),
+                                        color:
+                                            Colors.white.withValues(alpha: 0.7),
                                       ),
                                     ),
                                     const SizedBox(height: 8),
@@ -81,14 +83,14 @@ class ProgressScreen extends StatelessWidget {
                           Text(
                             'Next level: 250 more points needed',
                             style: AppTextStyles.bodySmall.copyWith(
-                              color: Colors.white.withOpacity(0.7),
+                              color: Colors.white.withValues(alpha: 0.7),
                             ),
                           ),
                           const SizedBox(height: 8),
                           Container(
                             height: 8,
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.4),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Row(
@@ -111,7 +113,7 @@ class ProgressScreen extends StatelessWidget {
                               vertical: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.4),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
@@ -196,7 +198,7 @@ class ProgressScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.4),
               shape: BoxShape.circle,
             ),
             child: Icon(

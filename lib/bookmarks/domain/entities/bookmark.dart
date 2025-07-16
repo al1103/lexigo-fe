@@ -1,50 +1,22 @@
-class Bookmark {
-  const Bookmark({
-    required this.id,
-    required this.word,
-    required this.pronunciation,
-    required this.definition,
-    required this.example,
-    required this.wordType,
-    required this.difficultyLevel,
-    required this.createdAt,
-    required this.userId,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  factory Bookmark.fromJson(Map<String, dynamic> json) {
-    return Bookmark(
-      id: json['id'] as String,
-      word: json['word'] as String,
-      pronunciation: json['pronunciation'] as String? ?? '',
-      definition: json['definition'] as String,
-      example: json['example'] as String? ?? '',
-      wordType: json['wordType'] as String? ?? '',
-      difficultyLevel: json['difficultyLevel'] as String? ?? '',
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      userId: json['userId'] as String,
-    );
-  }
-  final String id;
-  final String word;
-  final String pronunciation;
-  final String definition;
-  final String example;
-  final String wordType;
-  final String difficultyLevel;
-  final DateTime createdAt;
-  final String userId;
+part 'bookmark.freezed.dart';
+part 'bookmark.g.dart';
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'word': word,
-      'pronunciation': pronunciation,
-      'definition': definition,
-      'example': example,
-      'wordType': wordType,
-      'difficultyLevel': difficultyLevel,
-      'createdAt': createdAt.toIso8601String(),
-      'userId': userId,
-    };
-  }
+@freezed
+class QuizBookmark with _$QuizBookmark {
+  const factory QuizBookmark({
+    @JsonKey(name: 'id') int? id,
+    @JsonKey(name: 'notes') String? notes,
+    @JsonKey(name: 'bookmarked_at') DateTime? bookmarkedAt,
+    @JsonKey(name: 'word_id') int? wordId,
+    @JsonKey(name: 'word') String? word,
+    @JsonKey(name: 'meaning') String? meaning,
+    @JsonKey(name: 'pronunciation') String? pronunciation,
+    @JsonKey(name: 'example_sentence') String? exampleSentence,
+    @JsonKey(name: 'difficulty_level') String? difficultyLevel,
+  }) = _QuizBookmark;
+
+  factory QuizBookmark.fromJson(Map<String, dynamic> json) =>
+      _$QuizBookmarkFromJson(json);
 }

@@ -15,7 +15,6 @@ class LevelLessonController extends _$LevelLessonController {
     try {
       final response =
           await ref.read(levelLessonRepositoryImplProvider).getListLessons();
-      print('Response: $response');
 
       if (response.data != null) {
         return response.data;

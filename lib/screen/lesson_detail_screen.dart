@@ -121,7 +121,7 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
   }
 
   void _showCompletionDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.background,
@@ -261,7 +261,7 @@ class _LessonDetailScreenState extends State<LessonDetailScreen> {
                   // Navigate to quiz screen
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    MaterialPageRoute<QuizScreen>(
                       builder: (context) => const QuizScreen(quizId: 1),
                     ),
                   );

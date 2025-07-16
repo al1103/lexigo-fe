@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lexigo/bookmarks/domain/entities/bookmark.dart';
 import 'package:lexigo/bookmarks/presentation/controllers/bookmarks_controller.dart';
+import 'package:lexigo/common/widgets/common_tab_bar.dart';
 
 @RoutePage()
 class BookmarksPage extends ConsumerStatefulWidget {
@@ -46,6 +47,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
 
     return Scaffold(
       backgroundColor: Colors.white,
+      bottomNavigationBar: const CommonTabBar(),
       appBar: _buildAppBar(),
       body: FadeTransition(
         opacity: _fadeAnimation,
@@ -57,7 +59,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
             // Content
             Expanded(
               child: bookmarksState.when(
-                data: (bookmarks) => _buildBookmarksList(bookmarks),
+                data: _buildBookmarksList,
                 loading: _buildLoadingState,
                 error: (error, stack) => _buildErrorState(error.toString()),
               ),
@@ -73,6 +75,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
       backgroundColor: Colors.white,
       elevation: 0,
       leading: IconButton(
+        // ignore: deprecated_member_use
         onPressed: () => context.router.pop(),
         icon: const Icon(
           Icons.arrow_back_ios_new,
@@ -158,13 +161,17 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
     );
   }
 
-  Widget _buildBookmarksList(List<Bookmark> bookmarks) {
+  Widget _buildBookmarksList(List<QuizBookmark> bookmarks) {
     // Filter bookmarks based on search query
     final filteredBookmarks = bookmarks.where((bookmark) {
-      return bookmark.word.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          bookmark.definition
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase());
+      return (bookmark.word
+                  ?.toLowerCase()
+                  .contains(_searchQuery.toLowerCase()) ??
+              false) ||
+          (bookmark.meaning
+                  ?.toLowerCase()
+                  .contains(_searchQuery.toLowerCase()) ??
+              false);
     }).toList();
 
     if (filteredBookmarks.isEmpty) {
@@ -181,18 +188,17 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
     );
   }
 
-  Widget _buildBookmarkCard(Bookmark bookmark, int index) {
+  Widget _buildBookmarkCard(QuizBookmark bookmark, int index) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: const Color(0xFFE5E7EB)),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
             blurRadius: 8,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
@@ -211,19 +217,19 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
               children: [
                 Row(
                   children: [
-                    // Word type badge
-                    if (bookmark.wordType.isNotEmpty)
+                    // Difficulty level badge (replacing word type)
+                    if (bookmark.difficultyLevel?.isNotEmpty ?? false)
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: _getWordTypeColor(bookmark.wordType),
+                          color: _getDifficultyColor(bookmark.difficultyLevel!),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
-                          bookmark.wordType,
+                          bookmark.difficultyLevel!,
                           style: GoogleFonts.inter(
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
@@ -250,7 +256,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
 
                 // Word
                 Text(
-                  bookmark.word,
+                  bookmark.word ?? 'Unknown word',
                   style: GoogleFonts.inter(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
@@ -261,7 +267,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
                 const SizedBox(height: 4),
 
                 // Pronunciation
-                if (bookmark.pronunciation.isNotEmpty)
+                if (bookmark.pronunciation?.isNotEmpty ?? false)
                   Text(
                     '/${bookmark.pronunciation}/',
                     style: GoogleFonts.inter(
@@ -274,9 +280,9 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
 
                 const SizedBox(height: 8),
 
-                // Definition
+                // Meaning (replacing definition)
                 Text(
-                  bookmark.definition,
+                  bookmark.meaning ?? 'No meaning available',
                   style: GoogleFonts.inter(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
@@ -289,34 +295,35 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
 
                 const SizedBox(height: 12),
 
-                // Footer with date and level
+                // Footer with date
                 Row(
                   children: [
-                    // Difficulty level
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _getDifficultyColor(bookmark.difficultyLevel),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        bookmark.difficultyLevel,
-                        style: GoogleFonts.inter(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
+                    // Example sentence indicator
+                    if (bookmark.exampleSentence?.isNotEmpty ?? false)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF10B981),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          'Example',
+                          style: GoogleFonts.inter(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
 
                     const Spacer(),
 
                     // Bookmark date
                     Text(
-                      _formatDate(bookmark.createdAt),
+                      _formatDate(bookmark.bookmarkedAt ?? DateTime.now()),
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
@@ -341,7 +348,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
           Icon(
             Icons.bookmark_border,
             size: 64,
-            color: const Color(0xFF9CA3AF).withOpacity(0.5),
+            color: const Color(0xFF9CA3AF).withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
@@ -369,6 +376,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
             ElevatedButton(
               onPressed: () {
                 // Navigate to learning page
+                // ignore: deprecated_member_use
                 context.router.pop();
               },
               style: ElevatedButton.styleFrom(
@@ -413,7 +421,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
           Icon(
             Icons.error_outline,
             size: 64,
-            color: const Color(0xFFEF4444).withOpacity(0.5),
+            color: const Color(0xFFEF4444).withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
@@ -438,7 +446,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
           ElevatedButton(
             onPressed: () {
               // Retry loading bookmarks
-              ref.refresh(bookmarksControllerProvider);
+              ref.invalidate(bookmarksControllerProvider);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF007AFF),
@@ -466,7 +474,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
   }
 
   void _showSortBottomSheet() {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -514,8 +522,8 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
     );
   }
 
-  void _showBookmarkDetail(Bookmark bookmark) {
-    showModalBottomSheet(
+  void _showBookmarkDetail(QuizBookmark bookmark) {
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -550,7 +558,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
                   children: [
                     Expanded(
                       child: Text(
-                        bookmark.word,
+                        bookmark.word ?? 'Unknown word',
                         style: GoogleFonts.inter(
                           fontSize: 28,
                           fontWeight: FontWeight.w700,
@@ -572,7 +580,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
                 const SizedBox(height: 8),
 
                 // Pronunciation and type
-                if (bookmark.pronunciation.isNotEmpty)
+                if (bookmark.pronunciation?.isNotEmpty ?? false)
                   Text(
                     '/${bookmark.pronunciation}/',
                     style: GoogleFonts.inter(
@@ -585,9 +593,9 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
 
                 const SizedBox(height: 16),
 
-                // Definition
+                // Meaning
                 Text(
-                  bookmark.definition,
+                  bookmark.meaning ?? 'No meaning available',
                   style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.w400,
@@ -599,7 +607,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
                 const SizedBox(height: 24),
 
                 // Example if available
-                if (bookmark.example.isNotEmpty) ...[
+                if (bookmark.exampleSentence?.isNotEmpty ?? false) ...[
                   Text(
                     'Example',
                     style: GoogleFonts.inter(
@@ -617,7 +625,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
                       border: Border.all(color: const Color(0xFFE5E7EB)),
                     ),
                     child: Text(
-                      bookmark.example,
+                      bookmark.exampleSentence!,
                       style: GoogleFonts.inter(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
@@ -636,11 +644,11 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
     );
   }
 
-  void _removeBookmark(Bookmark bookmark) {
+  void _removeBookmark(QuizBookmark bookmark) {
     // Show confirmation dialog
-    showDialog(
+    showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (BuildContext dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -653,7 +661,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
           ),
         ),
         content: Text(
-          'Are you sure you want to remove "${bookmark.word}" from your bookmarks?',
+          'Are you sure you want to remove "${bookmark.word ?? 'this word'}" from your bookmarks?',
           style: GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.w400,
@@ -662,7 +670,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text(
               'Cancel',
               style: GoogleFonts.inter(
@@ -673,12 +681,16 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
             ),
           ),
           TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ref
-                  .read(bookmarksControllerProvider.notifier)
-                  .removeBookmark(bookmark.id);
-              _showSnackBar('Bookmark removed');
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              try {
+                await ref
+                    .read(bookmarksControllerProvider.notifier)
+                    .removeBookmark(bookmark.id ?? 0);
+                _showSnackBar('Bookmark removed');
+              } catch (e) {
+                _showSnackBar('Remove bookmark feature is coming soon!');
+              }
             },
             child: Text(
               'Remove',
@@ -692,21 +704,6 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
         ],
       ),
     );
-  }
-
-  Color _getWordTypeColor(String type) {
-    switch (type.toLowerCase()) {
-      case 'noun':
-        return const Color(0xFF3B82F6);
-      case 'verb':
-        return const Color(0xFF10B981);
-      case 'adjective':
-        return const Color(0xFFF59E0B);
-      case 'adverb':
-        return const Color(0xFF8B5CF6);
-      default:
-        return const Color(0xFF6B7280);
-    }
   }
 
   Color _getDifficultyColor(String difficulty) {

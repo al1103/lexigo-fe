@@ -121,8 +121,8 @@ class _CuteButtonState extends State<CuteButton>
                     boxShadow: [
                       BoxShadow(
                         color: _isPressed
-                            ? widget.backgroundColor.withOpacity(0.3)
-                            : widget.backgroundColor.withOpacity(0.4),
+                            ? widget.backgroundColor.withValues(alpha: 0.3)
+                            : widget.backgroundColor.withValues(alpha: 0.4),
                         spreadRadius: _isPressed ? 0 : 1,
                         blurRadius: _isPressed ? 4 : 6,
                         offset: _isPressed
@@ -292,8 +292,9 @@ class _CuteIconButtonState extends State<CuteIconButton>
                     boxShadow: [
                       BoxShadow(
                         color: _isPressed
-                            ? Colors.black.withOpacity(0.05)
-                            : Colors.black.withOpacity(0.1),
+                            ? Colors.black.withValues(alpha: 0.5)
+                            : Colors.black
+                          ..withValues(alpha: 0.1),
                         spreadRadius: _isPressed ? 0 : 1,
                         blurRadius: _isPressed ? 3 : 6,
                         offset: _isPressed

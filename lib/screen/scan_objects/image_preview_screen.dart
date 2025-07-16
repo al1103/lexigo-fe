@@ -48,7 +48,7 @@
 //                   borderRadius: BorderRadius.circular(20),
 //                   boxShadow: [
 //                     BoxShadow(
-//                       color: Colors.black.withOpacity(0.5),
+//                       color: Colors.black.withValues(alpha: 0.5),
 //                       blurRadius: 20,
 //                     ),
 //                   ],
@@ -69,7 +69,7 @@
 //           // Loading overlay
 //           if (scanState.isLoading)
 //             ColoredBox(
-//               color: Colors.black.withOpacity(0.7),
+//               color: Colors.black.withValues(alpha: 0.7),
 //               child: const Center(
 //                 child: Column(
 //                   mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +94,7 @@
 //                 children: [
 //                   Container(
 //                     decoration: BoxDecoration(
-//                       color: Colors.black.withOpacity(0.7),
+//                       color: Colors.black.withValues(alpha: 0.7),
 //                       borderRadius: BorderRadius.circular(25),
 //                     ),
 //                     child: IconButton(
@@ -120,7 +120,7 @@
 //                 gradient: LinearGradient(
 //                   begin: Alignment.topCenter,
 //                   end: Alignment.bottomCenter,
-//                   colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
+//                   colors: [Colors.transparent, Colors.black.withValues(alpha: 0.8)],
 //                 ),
 //               ),
 //               child: SafeArea(
@@ -209,7 +209,7 @@
 
 //     final result = results.first; // Take first result
 
-//     // showDialog(
+//     // showDialog<void>(
 //     //   context: context,
 //     //   barrierDismissible: false,
 //     //   builder: (context) => AlertDialog(
@@ -231,7 +231,7 @@
 //     //         mainAxisSize: MainAxisSize.min,
 //     //         crossAxisAlignment: CrossAxisAlignment.start,
 //     //         children: [
-//     //           if (result.description.isNotEmpty == true) ...[
+//     //           if (result.description.isNotEmpty ?? false) ...[
 //     //             Text(
 //     //               result.description,
 //     //               style: const TextStyle(fontSize: 16),

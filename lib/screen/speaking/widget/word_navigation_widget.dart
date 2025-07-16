@@ -18,17 +18,17 @@ class WordNavigationWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.95),
+        color: Colors.white.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.5)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 30,
             offset: const Offset(0, 15),
           ),
           BoxShadow(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             blurRadius: 15,
             offset: const Offset(0, -5),
           ),
@@ -54,7 +54,7 @@ class WordNavigationWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF667EEA).withOpacity(0.3),
+                  color: const Color(0xFF667EEA).withValues(alpha: 0.3),
                   blurRadius: 15,
                   offset: const Offset(0, 6),
                 ),
@@ -76,7 +76,7 @@ class WordNavigationWidget extends StatelessWidget {
                   height: 2,
                   margin: const EdgeInsets.symmetric(vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(1),
                   ),
                 ),
@@ -85,7 +85,7 @@ class WordNavigationWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                   ),
                 ),
               ],
@@ -124,21 +124,21 @@ class WordNavigationWidget extends StatelessWidget {
             gradient: isEnabled
                 ? LinearGradient(
                     colors: [
-                      const Color(0xFF667EEA).withOpacity(0.1),
-                      const Color(0xFF764BA2).withOpacity(0.1),
+                      const Color(0xFF667EEA).withValues(alpha: 0.1),
+                      const Color(0xFF764BA2).withValues(alpha: 0.1),
                     ],
                   )
                 : LinearGradient(
                     colors: [
-                      Colors.grey.withOpacity(0.05),
-                      Colors.grey.withOpacity(0.1),
+                      Colors.grey.withValues(alpha: 0.5),
+                      Colors.grey.withValues(alpha: 0.1),
                     ],
                   ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: isEnabled
-                  ? const Color(0xFF667EEA).withOpacity(0.2)
-                  : Colors.grey.withOpacity(0.2),
+                  ? const Color(0xFF667EEA).withValues(alpha: 0.2)
+                  : Colors.grey.withValues(alpha: 0.2),
               width: 1.5,
             ),
           ),
@@ -161,8 +161,8 @@ class WordNavigationWidget extends StatelessWidget {
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
                         color: isEnabled
-                            ? const Color(0xFF667EEA).withOpacity(0.1)
-                            : Colors.grey.withOpacity(0.1),
+                            ? const Color(0xFF667EEA).withValues(alpha: 0.1)
+                            : Colors.grey.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -179,8 +179,8 @@ class WordNavigationWidget extends StatelessWidget {
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
                         color: isEnabled
-                            ? const Color(0xFF667EEA).withOpacity(0.1)
-                            : Colors.grey.withOpacity(0.1),
+                            ? const Color(0xFF667EEA).withValues(alpha: 0.1)
+                            : Colors.grey.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(

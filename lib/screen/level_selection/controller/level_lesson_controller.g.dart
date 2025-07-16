@@ -7,7 +7,7 @@ part of 'level_lesson_controller.dart';
 // **************************************************************************
 
 String _$levelLessonControllerHash() =>
-    r'3d5fdf350bc2b318c95f442f84433f716955339c';
+    r'06f28ae76c6fa5465c62118d31b16ee7b8049efc';
 
 /// See also [LevelLessonController].
 @ProviderFor(LevelLessonController)

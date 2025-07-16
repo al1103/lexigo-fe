@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lexigo/core/infrastructure/datasource/remote/api_response.dart';
 import 'package:lexigo/core/infrastructure/datasource/remote/api_service.dart';
-import 'package:lexigo/injection/di.dart';
 import 'package:lexigo/screen/scan_objects/data/smart_word_repository.dart';
 import 'package:lexigo/screen/scan_objects/models/smart_word_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

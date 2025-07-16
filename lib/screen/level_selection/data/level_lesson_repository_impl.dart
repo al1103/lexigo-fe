@@ -1,6 +1,5 @@
 import 'package:lexigo/core/infrastructure/datasource/remote/api_response.dart';
 import 'package:lexigo/core/infrastructure/datasource/remote/api_service.dart';
-import 'package:lexigo/injection/di.dart';
 import 'package:lexigo/screen/level_selection/model/lessons_model.dart';
 import 'package:lexigo/screen/level_selection/model/level_lesson_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

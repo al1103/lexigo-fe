@@ -73,7 +73,7 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withValues(alpha: 0.5),
                       blurRadius: 20,
                     ),
                   ],
@@ -97,7 +97,7 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
           // Loading overlay
           if (_isAnalyzing)
             ColoredBox(
-              color: Colors.black.withOpacity(0.7),
+              color: Colors.black.withValues(alpha: 0.7),
               child: const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

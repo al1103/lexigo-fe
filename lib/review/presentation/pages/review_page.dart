@@ -101,13 +101,13 @@ class ReviewPage extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: const Color(0xFF3B82F6).withOpacity(0.1),
+                color: const Color(0x1A3B82F6), // 10% opacity blue
                 borderRadius: BorderRadius.circular(32),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.bookmark_border,
                 size: 80,
-                color: const Color(0xFF3B82F6).withOpacity(0.7),
+                color: Color(0xFF3B82F6),
               ),
             ),
             const SizedBox(height: 24),
@@ -175,7 +175,7 @@ class ReviewPage extends ConsumerWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF3B82F6).withOpacity(0.3),
+                color: const Color(0xFF3B82F6).withValues(alpha: 0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -186,7 +186,7 @@ class ReviewPage extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
@@ -212,7 +212,7 @@ class ReviewPage extends ConsumerWidget {
                     Text(
                       _getStatsText(bookmarks),
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 14,
                       ),
                     ),
@@ -300,7 +300,7 @@ class ReviewPage extends ConsumerWidget {
   }
 
   void _showClearAllDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -340,7 +340,7 @@ class ReviewPage extends ConsumerWidget {
     WidgetRef ref,
     List<BookmarkedQuestion> bookmarks,
   ) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -440,7 +440,7 @@ class ReviewPage extends ConsumerWidget {
     }
 
     // Convert to QuestionResult format and navigate to practice quiz
-    final practiceQuestions = questions
+    questions
         .map(
           (bookmark) => QuestionResult(
             questionId: bookmark.id,
@@ -454,8 +454,7 @@ class ReviewPage extends ConsumerWidget {
         )
         .toList();
 
-    // Navigate to practice mode (reuse quiz result page or create new practice page)
-    context.router.pushNamed('/practice-quiz'); // You'll need to implement this
+    context.router.pushNamed('/practice-quiz');
   }
 }
 
@@ -499,13 +498,13 @@ class _BookmarkCardState extends State<BookmarkCard> {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: widget.bookmark.wasCorrect
-              ? const Color(0xFF10B981).withOpacity(0.3)
-              : const Color(0xFFEF4444).withOpacity(0.3),
+              ? const Color(0xFF10B981).withValues(alpha: 0.3)
+              : const Color(0xFFEF4444).withValues(alpha: 0.3),
           width: 2,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -524,8 +523,8 @@ class _BookmarkCardState extends State<BookmarkCard> {
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: widget.bookmark.wasCorrect
-                        ? const Color(0xFF10B981).withOpacity(0.1)
-                        : const Color(0xFFEF4444).withOpacity(0.1),
+                        ? const Color(0xFF10B981).withValues(alpha: 0.1)
+                        : const Color(0xFFEF4444).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -604,12 +603,14 @@ class _BookmarkCardState extends State<BookmarkCard> {
               IconData? icon;
 
               if (isCorrectAnswer) {
-                backgroundColor = const Color(0xFF10B981).withOpacity(0.1);
+                backgroundColor =
+                    const Color(0xFF10B981).withValues(alpha: 0.1);
                 textColor = const Color(0xFF065F46);
                 borderColor = const Color(0xFF10B981);
                 icon = Icons.check_circle;
               } else if (isUserAnswer && !widget.bookmark.wasCorrect) {
-                backgroundColor = const Color(0xFFEF4444).withOpacity(0.1);
+                backgroundColor =
+                    const Color(0xFFEF4444).withValues(alpha: 0.1);
                 textColor = const Color(0xFF991B1B);
                 borderColor = const Color(0xFFEF4444);
                 icon = Icons.cancel;
@@ -659,7 +660,7 @@ class _BookmarkCardState extends State<BookmarkCard> {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: borderColor.withOpacity(0.2),
+                          color: borderColor.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
@@ -682,10 +683,10 @@ class _BookmarkCardState extends State<BookmarkCard> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF3B82F6).withOpacity(0.05),
+                  color: const Color(0xFF3B82F6).withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: const Color(0xFF3B82F6).withOpacity(0.2),
+                    color: const Color(0xFF3B82F6).withValues(alpha: 0.2),
                   ),
                 ),
                 child: Row(
@@ -720,7 +721,7 @@ class _BookmarkCardState extends State<BookmarkCard> {
                   color: const Color(0xFFFEF3C7),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: const Color(0xFFF59E0B).withOpacity(0.3),
+                    color: const Color(0xFFF59E0B).withValues(alpha: 0.3),
                   ),
                 ),
                 child: Column(

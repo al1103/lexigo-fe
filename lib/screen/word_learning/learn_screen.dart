@@ -31,9 +31,6 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
   // Thêm để track kết quả
   final List<QuizResult> _quizResults = [];
 
-  // Thêm để track bookmarks
-  final Set<int> _bookmarkedQuestions = <int>{};
-
   // Thêm sessionId cho quiz - trong thực tế có thể lấy từ API start quiz
   final int sessionId = 8;
 
@@ -88,8 +85,9 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
         setState(() {
           _isSpeaking = false;
         });
-        _speakingController.stop();
-        _speakingController.reset();
+        _speakingController
+          ..stop()
+          ..reset();
       }
     };
 
@@ -98,9 +96,9 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
         setState(() {
           _isSpeaking = false;
         });
-        _speakingController.stop();
-        _speakingController.reset();
-        print('TTS Error: $error');
+        _speakingController
+          ..stop()
+          ..reset();
       }
     };
   }
@@ -126,7 +124,7 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
           (option) => {
             'text': option.optionText ?? '',
             'isCorrect': option.isCorrect ?? false,
-            'optionId': option.optionId,
+            'optionId': option.id, // Updated to use id instead of optionId
             'optionOrder': option.optionOrder,
           },
         )
@@ -234,7 +232,7 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
@@ -267,19 +265,9 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
-                    if (_bookmarkedQuestions.isNotEmpty) ...[
-                      Text(
-                        ' • ${_bookmarkedQuestions.length} Bookmarked',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white.withOpacity(0.8),
-                        ),
-                      ),
-                    ],
                   ],
                 ),
               ],
@@ -288,7 +276,7 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Text(
@@ -327,7 +315,7 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: const Color(0xFF6366F1).withOpacity(0.1),
+              color: const Color(0xFF6366F1).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
@@ -355,14 +343,14 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
               ),
               // Bookmark button
               GestureDetector(
-                onTap: () => _toggleBookmark(currentQuestion),
+                onTap: () async => _toggleBookmark(currentQuestion),
                 child: Container(
                   width: 40,
                   height: 40,
                   margin: const EdgeInsets.only(right: 8),
                   decoration: BoxDecoration(
                     color: _isBookmarked(currentQuestion)
-                        ? const Color(0xFF6366F1).withOpacity(0.1)
+                        ? const Color(0xFF6366F1).withValues(alpha: 0.1)
                         : Colors.grey[100],
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
@@ -390,8 +378,11 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
                   return Transform.scale(
                     scale: _isSpeaking ? _speakingAnimation.value : 1.0,
                     child: GestureDetector(
-                      onTap: () =>
-                          _playAudio(currentQuestion.questionText ?? ''),
+                      onTap: () => _playAudio(
+                        currentQuestion.word?.word ??
+                            currentQuestion.questionText ??
+                            '',
+                      ),
                       child: Container(
                         width: 48,
                         height: 48,
@@ -413,7 +404,7 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
                               color: (_isSpeaking
                                       ? const Color(0xFF10B981)
                                       : const Color(0xFF6366F1))
-                                  .withOpacity(0.4),
+                                  .withValues(alpha: 0.4),
                               blurRadius: _isSpeaking ? 16 : 8,
                               offset: const Offset(0, 4),
                             ),
@@ -431,53 +422,6 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
               ),
             ],
           ),
-          if (currentQuestion.word != null &&
-              currentQuestion.meaning != null) ...[
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xFF6366F1).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                children: [
-                  if (currentQuestion.word != null) ...[
-                    Text(
-                      'Word: ${currentQuestion.word!}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF6366F1),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                  ],
-                  if (currentQuestion.meaning != null) ...[
-                    Text(
-                      'Meaning: ${currentQuestion.meaning!}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF6366F1),
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ],
-                  if (currentQuestion.pronunciation != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      'Pronunciation: ${currentQuestion.pronunciation!}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF6366F1),
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ],
         ],
       ),
     );
@@ -496,111 +440,190 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
 
         Color getBackgroundColor() {
           if (!showResult) {
-            return isSelected ? const Color(0xFF6366F1) : Colors.white;
+            return isSelected
+                ? const Color(0xFF6366F1).withValues(alpha: 0.1)
+                : Colors.white;
           }
-          if (isCorrect) return const Color(0xFF10B981);
-          if (isSelected && !isCorrect) return const Color(0xFFEF4444);
-          return Colors.white;
+          if (isCorrect) return const Color(0xFF10B981).withValues(alpha: 0.1);
+          if (isSelected && !isCorrect) {
+            return const Color(0xFFEF4444).withValues(alpha: 0.1);
+          }
+          return Colors.grey[50]!;
         }
 
         Color getTextColor() {
           if (!showResult) {
-            return isSelected ? Colors.white : const Color(0xFF1F2937);
+            return isSelected
+                ? const Color(0xFF6366F1)
+                : const Color(0xFF1F2937);
           }
-          if (isCorrect || (isSelected && !isCorrect)) return Colors.white;
-          return const Color(0xFF1F2937);
+          if (isCorrect) return const Color(0xFF065F46);
+          if (isSelected && !isCorrect) return const Color(0xFF991B1B);
+          return const Color(0xFF6B7280);
+        }
+
+        Color getBorderColor() {
+          if (!showResult) {
+            return isSelected ? const Color(0xFF6366F1) : Colors.grey[200]!;
+          }
+          if (isCorrect) return const Color(0xFF10B981);
+          if (isSelected && !isCorrect) return const Color(0xFFEF4444);
+          return Colors.grey[200]!;
         }
 
         return Expanded(
           child: Container(
             margin: const EdgeInsets.only(bottom: 12),
-            child: GestureDetector(
-              onTap: isAnswerSubmitted
-                  ? null
-                  : () {
-                      setState(() {
-                        selectedAnswerIndex = index;
-                        isAnswerSubmitted = true;
-                      });
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: isAnswerSubmitted
+                    ? null
+                    : () {
+                        setState(() {
+                          selectedAnswerIndex = index;
+                          isAnswerSubmitted = true;
+                        });
 
-                      // Lưu kết quả câu hỏi
-                      _saveQuestionResult(currentQuestion, index, isCorrect);
-                    },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: getBackgroundColor(),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: getBackgroundColor() == Colors.white
-                        ? Colors.grey[200]!
-                        : getBackgroundColor(),
-                    width: 2,
+                        // Lưu kết quả câu hỏi
+                        _saveQuestionResult(currentQuestion, index, isCorrect);
+                      },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeInOut,
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                  decoration: BoxDecoration(
+                    color: getBackgroundColor(),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: getBorderColor(),
+                      width: 2,
+                    ),
+                    boxShadow: [
+                      if (isSelected && !showResult) ...[
+                        BoxShadow(
+                          color: const Color(0xFF6366F1).withValues(alpha: 0.3),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                          spreadRadius: 2,
+                        ),
+                      ] else if (showResult && isCorrect) ...[
+                        BoxShadow(
+                          color: const Color(0xFF10B981).withValues(alpha: 0.3),
+                          blurRadius: 16,
+                          offset: const Offset(0, 6),
+                          spreadRadius: 1,
+                        ),
+                      ] else if (showResult && isSelected && !isCorrect) ...[
+                        BoxShadow(
+                          color: const Color(0xFFEF4444).withValues(alpha: 0.3),
+                          blurRadius: 16,
+                          offset: const Offset(0, 6),
+                          spreadRadius: 1,
+                        ),
+                      ] else ...[
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ],
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: getBackgroundColor().withOpacity(0.2),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: getTextColor() == Colors.white
-                            ? Colors.white.withOpacity(0.2)
-                            : const Color(0xFF6366F1).withOpacity(0.1),
-                        border: Border.all(
-                          color: getTextColor() == Colors.white
-                              ? Colors.white
-                              : const Color(0xFF6366F1),
-                          width: 2,
+                  child: Row(
+                    children: [
+                      // Leading icon/indicator
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        width: 24,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: showResult
+                              ? (isCorrect
+                                  ? Colors.white
+                                  : isSelected && !isCorrect
+                                      ? Colors.white
+                                      : Colors.transparent)
+                              : (isSelected
+                                  ? Colors.white
+                                  : const Color(0xFF6366F1)
+                                      .withValues(alpha: 0.1)),
+                          border: Border.all(
+                            color: showResult
+                                ? Colors.transparent
+                                : (isSelected
+                                    ? Colors.white
+                                    : const Color(0xFF6366F1)),
+                            width: 2,
+                          ),
                         ),
-                      ),
-                      child: showResult && isCorrect
-                          ? const Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 18,
-                            )
-                          : showResult && isSelected && !isCorrect
-                              ? const Icon(
-                                  Icons.close,
-                                  color: Colors.white,
-                                  size: 18,
-                                )
-                              : Center(
-                                  child: Text(
-                                    String.fromCharCode(
-                                      65 + index,
-                                    ), // A, B, C, D
-                                    style: TextStyle(
-                                      color: getTextColor(),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                        child: showResult
+                            ? Icon(
+                                isCorrect
+                                    ? Icons.check_rounded
+                                    : isSelected && !isCorrect
+                                        ? Icons.close_rounded
+                                        : Icons.radio_button_unchecked,
+                                color: isCorrect
+                                    ? const Color(0xFF10B981)
+                                    : isSelected && !isCorrect
+                                        ? const Color(0xFFEF4444)
+                                        : Colors.grey[400],
+                                size: 16,
+                              )
+                            : isSelected
+                                ? const Icon(
+                                    Icons.radio_button_checked,
+                                    color: Color(0xFF6366F1),
+                                    size: 16,
+                                  )
+                                : Icon(
+                                    Icons.radio_button_unchecked,
+                                    color: Colors.grey[400],
+                                    size: 16,
                                   ),
-                                ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Text(
-                        option['text'] as String,
-                        style: TextStyle(
-                          color: getTextColor(),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                      ),
+                      const SizedBox(width: 16),
+                      // Answer text
+                      Expanded(
+                        child: Text(
+                          option['text'] as String,
+                          style: TextStyle(
+                            color: getTextColor(),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            height: 1.4,
+                            letterSpacing: 0.1,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                      // Trailing indicator for results
+                      if (showResult) ...[
+                        const SizedBox(width: 12),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withValues(alpha: 0.2),
+                          ),
+                          child: Icon(
+                            isCorrect
+                                ? Icons.verified_rounded
+                                : isSelected && !isCorrect
+                                    ? Icons.error_rounded
+                                    : Icons.help_outline_rounded,
+                            color: Colors.white,
+                            size: 16,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -666,11 +689,11 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
             ),
             // Bookmark button
             GestureDetector(
-              onTap: () => _toggleBookmark(currentQuestion),
+              onTap: () async => _toggleBookmark(currentQuestion),
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -747,27 +770,72 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
       correctAnswerIndex: correctAnswerIndex,
       userAnswerIndex: userAnswerIndex,
       isCorrect: isCorrect,
-      explanation: question.meaning ?? question.word,
+      explanation: question.word?.meaning ??
+          question.word?.word ??
+          'No explanation available',
     );
 
     _quizResults.add(result);
   }
 
+  // Thêm để track bookmarks locally
+  final Set<int> _localBookmarks = <int>{};
+
   // Thêm bookmark methods
   bool _isBookmarked(LessonsDetail question) {
-    return _bookmarkedQuestions.contains(question.questionId);
+    // Kiểm tra local bookmark trước, sau đó mới kiểm tra từ API
+    if (question.word?.id != null &&
+        _localBookmarks.contains(question.word!.id)) {
+      return true;
+    }
+    return question.word?.isBookmarked ?? false;
   }
 
-  void _toggleBookmark(LessonsDetail question) {
+  Future<void> _toggleBookmark(LessonsDetail question) async {
+    if (question.word?.id == null) return;
+
+    final wordId = question.word!.id!;
+    final isCurrentlyBookmarked = _isBookmarked(question);
+    final newBookmarkState = !isCurrentlyBookmarked;
+
+    // Update local state immediately for UI responsiveness
     setState(() {
-      if (_bookmarkedQuestions.contains(question.questionId)) {
-        _bookmarkedQuestions.remove(question.questionId);
-        _showSnackBar('Removed from bookmarks', Icons.bookmark_border);
+      if (newBookmarkState) {
+        _localBookmarks.add(wordId);
       } else {
-        _bookmarkedQuestions.add(question.questionId!);
-        _showSnackBar('Added to bookmarks', Icons.bookmark);
+        _localBookmarks.remove(wordId);
       }
     });
+
+    try {
+      // Call the bookmark API
+      await ref
+          .read(wordControllerProvider(widget.levelId ?? 1).notifier)
+          .bookmarkWord(
+            wordId: wordId,
+            notes: newBookmarkState ? 'Bookmarked during learning' : null,
+          );
+
+      // Show success message
+      _showSnackBar(
+        newBookmarkState ? 'Added to bookmarks' : 'Removed from bookmarks',
+        newBookmarkState ? Icons.bookmark : Icons.bookmark_border,
+      );
+
+      // No need to invalidate here since we're tracking locally
+    } catch (e) {
+      // Revert local state on error
+      setState(() {
+        if (newBookmarkState) {
+          _localBookmarks.remove(wordId);
+        } else {
+          _localBookmarks.add(wordId);
+        }
+      });
+
+      // Show error message
+      _showSnackBar('Failed to update bookmark', Icons.error);
+    }
   }
 
   void _showSnackBar(String message, IconData icon) {
@@ -811,10 +879,7 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
                   questionId: currentQuestion.questionId!,
                   selectedOptionId: selectedOptionId,
                 );
-            print('Answer submitted successfully');
           } catch (e) {
-            print('Failed to submit answer: $e');
-            // Hiển thị thông báo lỗi cho user
             _showSnackBar('Failed to submit answer', Icons.error);
           }
         }
@@ -827,10 +892,9 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
         currentQuestionIndex++;
         selectedAnswerIndex = -1;
         isAnswerSubmitted = false;
+        _localBookmarks.clear();
       });
-      print('Next question: ${currentQuestionIndex + 1}/${wordData.length}');
     } else {
-      print('Quiz completed: ${wordData?.length ?? 0} questions total');
       _showCompletionDialog();
     }
   }
@@ -840,8 +904,6 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
         ref.read(wordControllerProvider(widget.levelId ?? 1)).value;
     final totalQuestions = wordData?.length ?? 0;
     final score = _quizResults.where((result) => result.isCorrect).length;
-
-    print('Showing completion dialog for $totalQuestions questions');
 
     showDialog<void>(
       context: context,
@@ -865,7 +927,7 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF6366F1).withOpacity(0.1),
+                color: const Color(0xFF6366F1).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
@@ -1014,7 +1076,7 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(
@@ -1046,7 +1108,6 @@ class _WordLearningScreenState extends ConsumerState<WordLearningScreen>
         );
       }
     } catch (e) {
-      print('TTS Error: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

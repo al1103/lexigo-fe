@@ -25,7 +25,7 @@ class AsyncWidget<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return value.when(
       data: (data) {
-        if (isEmpty?.call(data) == true) {
+        if (isEmpty?.call(data) ?? false) {
           return empty ??
               const EmptyState(
                 icon: Icons.inbox,

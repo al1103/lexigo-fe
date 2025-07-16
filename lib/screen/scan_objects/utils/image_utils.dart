@@ -18,13 +18,8 @@ class ImageUtils {
         throw Exception('Could not decode image');
       }
 
-      debugPrint(
-          '🔲 Original image for analysis: ${decodedImage.width} x ${decodedImage.height}');
-
       // Apply orientation correction first
       decodedImage = img.bakeOrientation(decodedImage);
-      debugPrint(
-          '🔲 After orientation correction: ${decodedImage.width} x ${decodedImage.height}');
 
       // Crop to square
       final minDimension = decodedImage.width < decodedImage.height
@@ -33,9 +28,6 @@ class ImageUtils {
 
       final x = (decodedImage.width - minDimension) ~/ 2;
       final y = (decodedImage.height - minDimension) ~/ 2;
-
-      debugPrint(
-          '🔲 Cropping to square: ${minDimension}x$minDimension from position ($x, $y)');
 
       decodedImage = img.copyCrop(
         decodedImage,
@@ -56,9 +48,6 @@ class ImageUtils {
 
       final squareImageFile = File(squareImagePath);
       await squareImageFile.writeAsBytes(squareImageBytes);
-
-      debugPrint(
-          '🔲 Square image saved: ${decodedImage.width} x ${decodedImage.height} -> $squareImagePath');
 
       return squareImageFile;
     } catch (e) {

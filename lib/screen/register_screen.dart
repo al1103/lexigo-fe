@@ -118,7 +118,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Container(
                           width: double.infinity,
                           padding: const EdgeInsets.all(12),
-                          color: AppColors.error.withOpacity(0.1),
+                          color: AppColors.error..withValues(alpha: 0.1),
                           child: Text(
                             _errorMessage!,
                             style: const TextStyle(

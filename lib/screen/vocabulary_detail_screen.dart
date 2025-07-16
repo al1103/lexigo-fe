@@ -349,7 +349,7 @@
 //           width: double.infinity,
 //           padding: const EdgeInsets.all(12),
 //           decoration: BoxDecoration(
-//             color: color.withOpacity(0.2),
+//             color: color.withValues(alpha: 0.4),
 //             border: Border.all(
 //               width: 2,
 //             ),
@@ -467,7 +467,7 @@
 //           ),
 //           const SizedBox(height: 8),
 //           BrutalistCard(
-//             backgroundColor: AppColors.brutalistBlue.withOpacity(0.1),
+//             backgroundColor: AppColors.brutalistBlue..withValues(alpha: 0.1),
 //             child: const Column(
 //               crossAxisAlignment: CrossAxisAlignment.start,
 //               children: [
@@ -556,7 +556,7 @@
 //                   text: 'Reveal Translation',
 //                   onPressed: () {
 //                     // Show translation logic
-//                     showDialog(
+//                     showDialog<void>(
 //                       context: context,
 //                       builder: (context) => AlertDialog(
 //                         backgroundColor: AppColors.background,

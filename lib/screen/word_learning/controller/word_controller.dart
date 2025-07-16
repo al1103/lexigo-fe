@@ -8,10 +8,13 @@ part 'word_controller.g.dart';
 class WordController extends _$WordController {
   @override
   Future<List<LessonsDetail>> build(int? id) async {
-    final response =
-        await ref.read(wordRepositoryImplProvider).getLessonDetails(id!);
-
-    return response.data?.contents ?? [];
+    try {
+      final response =
+          await ref.read(wordRepositoryImplProvider).getLessonDetails(id!);
+      return response.data?.contents ?? [];
+    } catch (e) {
+      return [];
+    }
   }
 
   Future<void> submitAnswer({
@@ -19,15 +22,20 @@ class WordController extends _$WordController {
     required int questionId,
     required int selectedOptionId,
   }) async {
-    try {
-      await ref.read(wordRepositoryImplProvider).submitAnswer(
-            sessionId: sessionId,
-            questionId: questionId,
-            selectedOptionId: selectedOptionId,
-          );
-    } catch (e) {
-      // Handle error silently or show notification
-      print('Error submitting answer: $e');
-    }
+    await ref.read(wordRepositoryImplProvider).submitAnswer(
+          sessionId: sessionId,
+          questionId: questionId,
+          selectedOptionId: selectedOptionId,
+        );
+  }
+
+  Future<void> bookmarkWord({
+    required int wordId,
+    String? notes,
+  }) async {
+    await ref.read(wordRepositoryImplProvider).bookmarkWord(
+          wordId: wordId,
+          notes: notes,
+        );
   }
 }

@@ -44,24 +44,12 @@ class _SquareImageWidgetState extends State<SquareImageWidget> {
       // Decode and process the image
       var decodedImage = img.decodeImage(imageBytes);
       if (decodedImage != null) {
-        debugPrint(
-            '📷 Original image size: ${decodedImage.width} x ${decodedImage.height}');
-
-        // Apply orientation correction first
-        decodedImage = img.bakeOrientation(decodedImage);
-        debugPrint(
-            '📷 After orientation correction: ${decodedImage.width} x ${decodedImage.height}');
-
-        // Crop to square
         final minDimension = decodedImage.width < decodedImage.height
             ? decodedImage.width
             : decodedImage.height;
 
         final x = (decodedImage.width - minDimension) ~/ 2;
         final y = (decodedImage.height - minDimension) ~/ 2;
-
-        debugPrint(
-            '📷 Cropping to square: ${minDimension}x${minDimension} from position ($x, $y)');
 
         decodedImage = img.copyCrop(
           decodedImage,
@@ -77,15 +65,9 @@ class _SquareImageWidgetState extends State<SquareImageWidget> {
           _correctedImageBytes = correctedBytes;
           _imageLoaded = true;
         });
-
-        debugPrint(
-          '📷 Final square image: ${decodedImage.width} x ${decodedImage.height}',
-        );
       }
     } catch (e) {
-      debugPrint('❌ Error loading square image: $e');
-      // Fallback to original loading method
-      _loadImageFallback();
+      await _loadImageFallback();
     }
   }
 

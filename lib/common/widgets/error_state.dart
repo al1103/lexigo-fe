@@ -40,7 +40,7 @@ class ErrorState extends StatelessWidget {
             Icon(
               icon ?? Icons.error_outline,
               size: 80,
-              color: AppColors.error.withOpacity(0.7),
+              color: AppColors.error.withValues(alpha: 0.7),
             ),
             const SizedBox(height: 24),
             Text(

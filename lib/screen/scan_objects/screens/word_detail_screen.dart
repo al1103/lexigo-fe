@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lexigo/screen/scan_objects/controller/smart_word_controller.dart';
 import 'package:lexigo/screen/scan_objects/models/smart_word_model.dart';
@@ -23,11 +24,12 @@ class _WordDetailScreenState extends ConsumerState<WordDetailScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  late FlutterTts _flutterTts;
 
   @override
   void initState() {
     super.initState();
-
+    _flutterTts = FlutterTts();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -56,6 +58,7 @@ class _WordDetailScreenState extends ConsumerState<WordDetailScreen>
   @override
   void dispose() {
     _animationController.dispose();
+    _flutterTts.stop();
     super.dispose();
   }
 
@@ -176,7 +179,7 @@ class _WordDetailScreenState extends ConsumerState<WordDetailScreen>
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.1),
+              color: Colors.red..withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(24),
             ),
             child: const Icon(
@@ -280,13 +283,13 @@ class _WordDetailScreenState extends ConsumerState<WordDetailScreen>
           const SizedBox(height: 32),
 
           // Pronunciations
-          if (smartWord.pronunciations?.isNotEmpty == true)
+          if (smartWord.pronunciations?.isNotEmpty ?? false)
             _buildPronunciationsSection(smartWord.pronunciations!),
 
           const SizedBox(height: 32),
 
           // Meanings
-          if (smartWord.meanings?.isNotEmpty == true)
+          if (smartWord.meanings?.isNotEmpty ?? false)
             _buildMeaningsSection(smartWord.meanings!),
 
           const SizedBox(height: 32),
@@ -300,6 +303,16 @@ class _WordDetailScreenState extends ConsumerState<WordDetailScreen>
     );
   }
 
+  Future<void> _speakText(String? text) async {
+    if (text == null || text.isEmpty) {
+      _showSnackBar('No pronunciation available.');
+      return;
+    }
+    await _flutterTts.setLanguage('en-US');
+    await _flutterTts.setSpeechRate(0.45);
+    await _flutterTts.speak(text);
+  }
+
   Widget _buildWordHeader(SmartWord smartWord) {
     return Container(
       padding: const EdgeInsets.all(24),
@@ -308,7 +321,7 @@ class _WordDetailScreenState extends ConsumerState<WordDetailScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -323,7 +336,7 @@ class _WordDetailScreenState extends ConsumerState<WordDetailScreen>
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF007AFF).withOpacity(0.1),
+                  color: const Color(0xFF007AFF)..withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
@@ -357,9 +370,8 @@ class _WordDetailScreenState extends ConsumerState<WordDetailScreen>
                 ),
               ),
               IconButton(
-                onPressed: () {
-                  // Play pronunciation
-                  _showSnackBar('Playing pronunciation...');
+                onPressed: () async {
+                  await _speakText(smartWord.word ?? widget.word);
                 },
                 icon: const Icon(
                   Icons.volume_up,
@@ -405,7 +417,7 @@ class _WordDetailScreenState extends ConsumerState<WordDetailScreen>
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: const Color(0xFF007AFF).withOpacity(0.1),
+              color: const Color(0xFF007AFF)..withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(
@@ -431,17 +443,15 @@ class _WordDetailScreenState extends ConsumerState<WordDetailScreen>
               ],
             ),
           ),
-          if (pronunciation.audio != null)
-            IconButton(
-              onPressed: () {
-                // Play audio
-                _showSnackBar('Playing audio...');
-              },
-              icon: const Icon(
-                Icons.play_circle_outline,
-                color: Color(0xFF007AFF),
-              ),
+          IconButton(
+            onPressed: () async {
+              await _speakText(pronunciation.ipa);
+            },
+            icon: const Icon(
+              Icons.play_circle_outline,
+              color: Color(0xFF007AFF),
             ),
+          ),
         ],
       ),
     );
@@ -478,7 +488,7 @@ class _WordDetailScreenState extends ConsumerState<WordDetailScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -494,7 +504,7 @@ class _WordDetailScreenState extends ConsumerState<WordDetailScreen>
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF007AFF).withOpacity(0.1),
+                  color: const Color(0xFF007AFF)..withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
@@ -541,7 +551,7 @@ class _WordDetailScreenState extends ConsumerState<WordDetailScreen>
                   width: 20,
                   height: 20,
                   decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.1),
+                    color: Colors.green..withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: const Icon(
@@ -576,7 +586,7 @@ class _WordDetailScreenState extends ConsumerState<WordDetailScreen>
                   width: 20,
                   height: 20,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF007AFF).withOpacity(0.1),
+                    color: const Color(0xFF007AFF)..withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: const Icon(
@@ -603,7 +613,7 @@ class _WordDetailScreenState extends ConsumerState<WordDetailScreen>
           ],
 
           // Examples
-          if (meaning.examples?.isNotEmpty == true) ...[
+          if (meaning.examples?.isNotEmpty ?? false) ...[
             Text(
               'Examples',
               style: GoogleFonts.inter(

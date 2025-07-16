@@ -1,5 +1,5 @@
-import 'package:lexigo/auth/domain/value_objects.dart';
 import 'package:lexigo/auth/infrastructure/auth_repository_impl.dart';
+import 'package:lexigo/auth/infrastructure/token_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_controller.g.dart';
@@ -11,13 +11,18 @@ class AuthController extends _$AuthController {
     return null;
   }
 
-  Future<void> signIn(Username username, Password password) async {
+  Future<void> signIn(String email, String password) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => ref.read(authRepositoryProvider).signIn(
-            username.value,
-            password.value,
-          ),
+      () async {
+        final token = await ref.read(authRepositoryProvider).signIn(
+              email,
+              password,
+            );
+
+        // Lưu token vào SharedPreferences
+        await ref.read(tokenServiceProvider).saveToken(token);
+      },
     );
   }
 }

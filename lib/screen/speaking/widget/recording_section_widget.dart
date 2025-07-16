@@ -69,7 +69,7 @@ class RecordingSectionWidget extends StatelessWidget {
             border: Border.all(color: Colors.red.shade100, width: 2),
             boxShadow: [
               BoxShadow(
-                color: Colors.red.withOpacity(0.2),
+                color: Colors.red.withValues(alpha: 0.4),
                 blurRadius: 25,
                 offset: const Offset(0, 12),
                 spreadRadius: 2,
@@ -135,7 +135,7 @@ class RecordingSectionWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(3),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.red.withOpacity(0.3),
+                          color: Colors.red..withValues(alpha: 0.3),
                           blurRadius: 4,
                           offset: const Offset(0, 2),
                         ),
@@ -169,7 +169,7 @@ class RecordingSectionWidget extends StatelessWidget {
             border: Border.all(color: Colors.orange.shade200, width: 2),
             boxShadow: [
               BoxShadow(
-                color: Colors.orange.withOpacity(0.2),
+                color: Colors.orange.withValues(alpha: 0.4),
                 blurRadius: 15,
                 offset: const Offset(0, 8),
               ),
@@ -240,15 +240,15 @@ class RecordingSectionWidget extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   color: (isRecording
-                          ? Colors.red.shade400
-                          : const Color(0xFF667EEA))
-                      .withOpacity(0.4),
+                      ? Colors.red.shade400
+                      : const Color(0xFF667EEA))
+                    ..withValues(alpha: 0.4),
                   blurRadius: isRecording ? 30 : 25,
                   offset: const Offset(0, 8),
                   spreadRadius: isRecording ? 8 : 2,
                 ),
                 BoxShadow(
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withValues(alpha: 0.9),
                   blurRadius: 10,
                   offset: const Offset(0, -4),
                   spreadRadius: 2,
@@ -284,7 +284,7 @@ class RecordingSectionWidget extends StatelessWidget {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.4),
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -300,28 +300,6 @@ class RecordingSectionWidget extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildTip(String emoji, String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Text(emoji, style: const TextStyle(fontSize: 16)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade700,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

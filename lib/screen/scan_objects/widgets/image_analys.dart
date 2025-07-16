@@ -90,14 +90,10 @@ class _ImageAnalysisState extends ConsumerState<ImageAnalysis> {
           _correctedImageBytes = correctedBytes;
           _imageLoaded = true;
         });
-
-        debugPrint(
-          '📷 Loaded and cropped square image: ${_imageSize.width} x ${_imageSize.height}',
-        );
       }
     } catch (e) {
       debugPrint('❌ Error loading image: $e');
-      _loadImageFallback();
+      await _loadImageFallback();
     }
   }
 
@@ -138,10 +134,6 @@ class _ImageAnalysisState extends ConsumerState<ImageAnalysis> {
           _correctedImageBytes = croppedBytes;
           _imageLoaded = true;
         });
-
-        debugPrint(
-          '📷 Loaded image (fallback with cropping): ${_imageSize.width} x ${_imageSize.height}',
-        );
       } else {
         // Last resort - use original
         final codec = await ui.instantiateImageCodec(imageBytes);
@@ -155,10 +147,6 @@ class _ImageAnalysisState extends ConsumerState<ImageAnalysis> {
           _correctedImageBytes = imageBytes;
           _imageLoaded = true;
         });
-
-        debugPrint(
-          '📷 Loaded image (fallback original): ${_imageSize.width} x ${_imageSize.height}',
-        );
       }
     } catch (e) {
       debugPrint('❌ Error loading image: $e');
@@ -239,12 +227,6 @@ class _ImageAnalysisState extends ConsumerState<ImageAnalysis> {
                 ),
 
                 // Info panel
-                if (widget.detections.isNotEmpty)
-                  Positioned(
-                    top: 12,
-                    right: 12,
-                    child: _buildInfoPanel(),
-                  ),
               ],
             ),
           ),
@@ -255,115 +237,11 @@ class _ImageAnalysisState extends ConsumerState<ImageAnalysis> {
 
   // CHANGED: Navigate to WordDetailScreen instead of showing bottom sheet
   void _navigateToWordDetail(String word) {
-    print('Navigating to word detail for: $word');
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (context) => WordDetailScreen(word: word),
       ),
     );
-  }
-
-  Widget _buildInfoPanel() {
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 180),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.85),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF007AFF).withOpacity(0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.visibility,
-                  color: Color(0xFF007AFF),
-                  size: 14,
-                ),
-              ),
-              const SizedBox(width: 8),
-              const Text(
-                'Detected Words',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          ...widget.detections.asMap().entries.map((entry) {
-            final index = entry.key;
-            final detection = entry.value;
-            final color = _getColorForIndex(index);
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-              child: InkWell(
-                // ADDED: Make info panel items clickable too
-                onTap: () => _navigateToWordDetail(detection.name),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: color,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        detection.name,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 11,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Text(
-                      '${(detection.score * 100).toInt()}%',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
-                        fontSize: 10,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }),
-        ],
-      ),
-    );
-  }
-
-  Color _getColorForIndex(int index) {
-    final colors = [
-      Colors.red,
-      Colors.blue,
-      Colors.green,
-      Colors.orange,
-      Colors.purple,
-      Colors.cyan,
-      Colors.pink,
-      Colors.amber,
-    ];
-    return colors[index % colors.length];
   }
 
   @override

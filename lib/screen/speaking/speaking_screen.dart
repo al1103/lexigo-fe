@@ -4,9 +4,11 @@ import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:lexigo/core/infrastructure/datasource/remote/api_response.dart';
 import 'package:lexigo/product/domain/vocabulary_model.dart';
 import 'package:lexigo/screen/speaking/controller/speaking_controller.dart';
-import 'package:lexigo/screen/speaking/controller/vocabulary_controller.dart';
+import 'package:lexigo/screen/speaking/controller/vocabulary_level_detail_controller.dart';
 import 'package:lexigo/screen/speaking/speaking_result_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -14,7 +16,13 @@ import 'package:record/record.dart';
 
 @RoutePage()
 class SpeakingScreen extends ConsumerStatefulWidget {
-  const SpeakingScreen({super.key});
+  const SpeakingScreen({
+    super.key,
+    this.levelCode,
+    this.levelName,
+  });
+  final String? levelCode;
+  final String? levelName;
 
   @override
   ConsumerState<SpeakingScreen> createState() => _SpeakingScreenState();
@@ -23,7 +31,10 @@ class SpeakingScreen extends ConsumerStatefulWidget {
 class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
     with TickerProviderStateMixin {
   final _audioRecorder = AudioRecorder();
+  final _flutterTts = FlutterTts();
   bool _isRecording = false;
+  bool _isSpeaking = false;
+  // ignore: use_late_for_private_fields_and_variables
   String? _recordingPath;
   Timer? _recordingTimer;
   int _recordingDuration = 0;
@@ -42,6 +53,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
     super.initState();
     _initializeAnimations();
     _initializeRecorder();
+    _initializeTts();
     _loadVocabulary();
   }
 
@@ -62,10 +74,37 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
     }
   }
 
+  Future<void> _initializeTts() async {
+    await _flutterTts.setLanguage('en-US');
+    await _flutterTts.setSpeechRate(0.5); // Slower speech for learning
+    await _flutterTts.setVolume(0.8);
+    await _flutterTts.setPitch(1);
+
+    _flutterTts
+      ..setStartHandler(() {
+        setState(() {
+          _isSpeaking = true;
+        });
+      })
+      ..setCompletionHandler(() {
+        setState(() {
+          _isSpeaking = false;
+        });
+      })
+      ..setErrorHandler((msg) {
+        setState(() {
+          _isSpeaking = false;
+        });
+        _showErrorSnackBar('Text-to-speech error: $msg');
+      });
+  }
+
   Future<void> _loadVocabulary() async {
     try {
-      final controller = ref.read(vocabularyControllerProvider('', 1).notifier);
-      await controller.getVocabulary('', 1);
+      final levelCode = widget.levelCode ?? '';
+      if (levelCode.isNotEmpty) {
+        ref.invalidate(vocabularyLevelDetailControllerProvider(levelCode));
+      }
     } catch (e) {
       _showErrorSnackBar('Failed to load vocabulary');
     }
@@ -87,6 +126,9 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
         _targetWord = currentVocab.word ?? 'Hello';
         _ipa = _extractIPA(currentVocab.pronunciation);
       });
+
+      // Automatically speak the word when it changes
+      Future.delayed(const Duration(milliseconds: 500), _speakCurrentWord);
     }
   }
 
@@ -108,19 +150,30 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
         _recordingDuration = 0;
       });
 
+      // Bắt đầu animation mà không await
       _pulseController.repeat(reverse: true);
 
+      // Đảm bảo không có timer nào đang chạy trước khi tạo timer mới
+      _recordingTimer?.cancel();
+
+      // Tạo timer ngay lập tức để đếm giây
       _recordingTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (mounted) {
+        if (mounted && _isRecording) {
           setState(() {
             _recordingDuration++;
           });
           if (_recordingDuration >= _maxDuration) {
             _stopRecording();
           }
+        } else {
+          timer.cancel();
         }
       });
     } catch (e) {
+      setState(() {
+        _isRecording = false;
+        _recordingDuration = 0;
+      });
       _showErrorSnackBar('Failed to start recording');
     }
   }
@@ -129,9 +182,14 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
     if (!_isRecording) return;
 
     try {
+      // Huỷ timer trước
       _recordingTimer?.cancel();
-      _pulseController.stop();
-      _pulseController.reset();
+      _recordingTimer = null;
+
+      // Dừng animation
+      _pulseController
+        ..stop()
+        ..reset();
 
       final path = await _audioRecorder.stop();
       setState(() {
@@ -144,14 +202,18 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
 
         try {
           final controller = ref.read(speakingControllerProvider.notifier);
+          final currentVocabulary = _vocabularyList.isNotEmpty
+              ? _vocabularyList[_currentWordIndex]
+              : null;
+          final wordId = currentVocabulary?.id?.toString() ?? '0';
           final result =
-              await controller.checkSpeaking(File(path), _targetWord);
+              await controller.checkSpeaking(File(path), _targetWord, wordId);
 
           if (mounted) {
             Navigator.of(context).pop();
             if (result != null) {
-              Navigator.of(context).push(
-                MaterialPageRoute(
+              await Navigator.of(context).push(
+                MaterialPageRoute<void>(
                   builder: (context) => SpeakingResultScreen(
                     speakingResult: result,
                     recordingPath: path,
@@ -170,6 +232,15 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
         }
       }
     } catch (e) {
+      // Đảm bảo timer được huỷ ngay cả khi có lỗi
+      _recordingTimer?.cancel();
+      _recordingTimer = null;
+
+      // Dừng animation
+      _pulseController
+        ..stop()
+        ..reset();
+
       setState(() {
         _isRecording = false;
         _recordingDuration = 0;
@@ -188,17 +259,8 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
     }
   }
 
-  void _previousWord() {
-    if (_vocabularyList.isNotEmpty && _currentWordIndex > 0) {
-      setState(() {
-        _currentWordIndex--;
-      });
-      _updateCurrentWord();
-    }
-  }
-
   void _showProcessingDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (context) => Dialog(
@@ -227,21 +289,38 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
     );
   }
 
+  Future<void> _speakCurrentWord() async {
+    if (_isSpeaking) {
+      await _flutterTts.stop();
+      return;
+    }
+
+    if (_targetWord.isNotEmpty && _targetWord != 'Loading...') {
+      try {
+        await _flutterTts.speak(_targetWord);
+      } catch (e) {
+        _showErrorSnackBar('Failed to speak word');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final vocabularyState = ref.watch(vocabularyControllerProvider('', 1));
+    final levelCode = widget.levelCode ?? '';
+    final vocabularyState =
+        ref.watch(vocabularyLevelDetailControllerProvider(levelCode));
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        title: const Text('Speaking Practice'),
+        title: Text(widget.levelName ?? 'Speaking Practice'),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
       body: vocabularyState.when(
         data: _buildMainContent,
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
+        error: (Object error, StackTrace stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -260,50 +339,19 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
     );
   }
 
-  Widget _buildMainContent(dynamic data) {
-    if (data == null || data.data == null) {
-      return const Center(child: Text('No vocabulary available'));
-    }
+  Widget _buildMainContent(PayloadPageableDto<VocabularyModel> data) {
+    final vocabularyList = data.contents;
 
-    List<dynamic> rawList;
-    if (data.data is List) {
-      rawList = data.data as List<dynamic>;
-    } else {
-      return const Center(child: Text('Invalid data format'));
-    }
-
-    if (rawList.isEmpty) {
+    if (vocabularyList.isEmpty) {
       return const Center(child: Text('No vocabulary available'));
     }
 
     if (_vocabularyList.isEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
-          _vocabularyList = rawList
-              .where((item) => item != null)
-              .map<VocabularyModel>((item) {
-            if (item is VocabularyModel) {
-              return item;
-            }
-            if (item is Map<String, dynamic>) {
-              return VocabularyModel.fromJson(item);
-            }
-            try {
-              final itemMap = Map<String, dynamic>.from(item as Map);
-              return VocabularyModel.fromJson(itemMap);
-            } catch (e) {
-              debugPrint('Error converting item to VocabularyModel: $e');
-              // Return a default VocabularyModel if conversion fails
-              return const VocabularyModel(
-                id: 0,
-                word: 'Hello',
-                pronunciation: '/həˈloʊ/',
-                meaning: 'A greeting',
-              );
-            }
-          }).toList();
+          _vocabularyList = vocabularyList;
+          _updateCurrentWord();
         });
-        _updateCurrentWord();
       });
     }
 
@@ -313,137 +361,196 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
         children: [
           // Progress
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              gradient: const LinearGradient(
+                colors: [Color(0xFF6366F1), Color(0xFF667EEA)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
+                  color: const Color(0xFF6366F1).withValues(alpha: 0.15),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
             child: Text(
-              'Word ${_currentWordIndex + 1} of ${_vocabularyList.isNotEmpty ? _vocabularyList.length : rawList.length}',
+              'Word ${_currentWordIndex + 1} of ${vocabularyList.length}',
               style: const TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+                letterSpacing: 0.5,
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 28),
 
           // Word Card
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
+              gradient: const LinearGradient(
+                colors: [Color(0xFFEEF2FF), Color(0xFFF3F4F6)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(28),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 20,
+                  color: Colors.black.withValues(alpha: 0.07),
+                  blurRadius: 18,
+                  offset: const Offset(0, 8),
                 ),
               ],
             ),
             child: Column(
               children: [
-                Text(
-                  _targetWord,
-                  style: const TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.w900,
-                    color: Color(0xFF1F2937),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        _targetWord,
+                        style: const TextStyle(
+                          fontSize: 48,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFF6366F1),
+                          letterSpacing: -1,
+                        ),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Tooltip(
+                      message: _isSpeaking
+                          ? 'Stop pronunciation'
+                          : 'Hear pronunciation',
+                      child: GestureDetector(
+                        onTap: _speakCurrentWord,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: _isSpeaking
+                                ? const Color(0xFFEF4444)
+                                : const Color(0xFF6366F1),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: (_isSpeaking
+                                        ? const Color(0xFFEF4444)
+                                        : const Color(0xFF6366F1))
+                                    .withValues(alpha: 0.25),
+                                blurRadius: _isSpeaking ? 16 : 10,
+                                spreadRadius: _isSpeaking ? 4 : 2,
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            _isSpeaking
+                                ? Icons.volume_up
+                                : Icons.volume_up_outlined,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 Text(
                   _ipa,
                   style: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 22,
                     color: Color(0xFF6366F1),
                     fontFamily: 'monospace',
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 18),
                 if (_vocabularyList.isNotEmpty &&
                     _currentWordIndex < _vocabularyList.length &&
                     _vocabularyList[_currentWordIndex].meaning != null)
                   Text(
                     _vocabularyList[_currentWordIndex].meaning!,
                     style: const TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFF6B7280),
+                      fontSize: 18,
+                      color: Color(0xFF374151),
+                      fontWeight: FontWeight.w500,
                     ),
                     textAlign: TextAlign.center,
                   ),
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 18),
+
+          // TTS Instructions
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF6366F1).withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  size: 16,
+                  color: Color(0xFF6366F1),
+                ),
+                SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    'Tap the speaker icon to hear pronunciation',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF6366F1),
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 18),
 
           // Navigation
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                onPressed: _currentWordIndex > 0 ? _previousWord : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _currentWordIndex > 0
-                      ? const Color(0xFF6366F1)
-                      : Colors.grey[300],
-                  shape: const CircleBorder(),
-                  padding: const EdgeInsets.all(16),
-                ),
-                child: Icon(
-                  Icons.arrow_back,
-                  color: _currentWordIndex > 0 ? Colors.white : Colors.grey,
-                ),
+              const SizedBox(
+                width: 56,
+                height: 56,
               ),
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6366F1).withOpacity(0.1),
+                  color: const Color(0xFF6366F1).withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  '${_currentWordIndex + 1} / ${_vocabularyList.isNotEmpty ? _vocabularyList.length : rawList.length}',
+                  '${_currentWordIndex + 1} / ${vocabularyList.length}',
                   style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
                     color: Color(0xFF6366F1),
                   ),
                 ),
               ),
-              ElevatedButton(
-                onPressed: _currentWordIndex <
-                        (_vocabularyList.isNotEmpty
-                            ? _vocabularyList.length - 1
-                            : rawList.length - 1)
-                    ? _nextWord
-                    : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _currentWordIndex <
-                          (_vocabularyList.isNotEmpty
-                              ? _vocabularyList.length - 1
-                              : rawList.length - 1)
-                      ? const Color(0xFF6366F1)
-                      : Colors.grey[300],
-                  shape: const CircleBorder(),
-                  padding: const EdgeInsets.all(16),
-                ),
-                child: Icon(
-                  Icons.arrow_forward,
-                  color: _currentWordIndex <
-                          (_vocabularyList.isNotEmpty
-                              ? _vocabularyList.length - 1
-                              : rawList.length - 1)
-                      ? Colors.white
-                      : Colors.grey,
-                ),
+              const SizedBox(
+                width: 56,
+                height: 56,
               ),
             ],
           ),
@@ -453,12 +560,17 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
+              gradient: const LinearGradient(
+                colors: [Color(0xFF6366F1), Color(0xFF667EEA)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 20,
+                  color: const Color(0xFF6366F1).withValues(alpha: 0.15),
+                  blurRadius: 24,
+                  offset: const Offset(0, 8),
                 ),
               ],
             ),
@@ -470,24 +582,60 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.red,
+                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 16),
                   LinearProgressIndicator(
                     value: _recordingDuration / _maxDuration,
-                    backgroundColor: Colors.grey[300],
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
+                    backgroundColor: Colors.white.withValues(alpha: 0.2),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
                   const SizedBox(height: 24),
                 ] else ...[
-                  const Text(
-                    'Tap the microphone and speak clearly',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF6B7280),
-                    ),
+                  Column(
+                    children: [
+                      const Text(
+                        'Tap the microphone and speak clearly',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 12),
+                      GestureDetector(
+                        onTap: _speakCurrentWord,
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.replay,
+                                size: 16,
+                                color: Color(0xFF6366F1),
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                'Hear again',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xFF6366F1),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 24),
                 ],
@@ -502,18 +650,25 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
                           width: 80,
                           height: 80,
                           decoration: BoxDecoration(
-                            color: _isRecording
-                                ? Colors.red
-                                : const Color(0xFF6366F1),
+                            gradient: LinearGradient(
+                              colors: _isRecording
+                                  ? [Colors.red, Colors.redAccent]
+                                  : [
+                                      const Color(0xFF6366F1),
+                                      const Color(0xFF667EEA),
+                                    ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: (_isRecording
-                                        ? Colors.red
-                                        : const Color(0xFF6366F1))
-                                    .withOpacity(0.3),
-                                blurRadius: 20,
-                                spreadRadius: 5,
+                                color: _isRecording
+                                    ? Colors.red.withValues(alpha: 0.25)
+                                    : const Color(0xFF6366F1)
+                                        .withValues(alpha: 0.18),
+                                blurRadius: 24,
+                                spreadRadius: 6,
                               ),
                             ],
                           ),
@@ -535,7 +690,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF6B7280),
+                    color: Colors.white,
                   ),
                 ),
               ],
@@ -549,12 +704,22 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
 
   @override
   void dispose() {
+    // Dọn dẹp timer
     _recordingTimer?.cancel();
+    _recordingTimer = null;
+
+    // Dọn dẹp animation controller
     _pulseController.dispose();
+
+    // Dọn dẹp audio recorder
     if (_isRecording) {
       _audioRecorder.stop();
     }
     _audioRecorder.dispose();
+
+    // Dọn dẹp TTS
+    _flutterTts.stop();
+
     super.dispose();
   }
 }

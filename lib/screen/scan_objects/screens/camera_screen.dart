@@ -58,7 +58,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
     if (status.isDenied) {
       final result = await _showPermissionDialog();
       if (!result) {
-        if (mounted) context.router.pop();
+        if (mounted) await context.router.pop();
         return;
       }
 
@@ -68,7 +68,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
       } else if (permissionResult.isPermanentlyDenied) {
         await _showSettingsDialog();
       } else {
-        if (mounted) context.router.pop();
+        if (mounted) await context.router.pop();
       }
     } else if (status.isGranted) {
       await _initializeCamera();
@@ -92,7 +92,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF007AFF).withOpacity(0.1),
+                    color: const Color(0xFF007AFF).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: const Icon(
@@ -166,7 +166,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
   }
 
   Future<void> _showSettingsDialog() async {
-    await showDialog(
+    await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.white,
@@ -179,7 +179,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: const Color(0xFFEF4444).withOpacity(0.1),
+                color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: const Icon(
@@ -233,7 +233,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
             onPressed: () async {
               Navigator.of(context).pop();
               await openAppSettings();
-              if (mounted) context.router.pop();
+              if (mounted) await context.router.pop();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF007AFF),
@@ -284,7 +284,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
   }
 
   void _showErrorDialog(String message) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.white,
@@ -311,6 +311,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
+              // ignore: deprecated_member_use
               if (mounted) context.router.pop();
             },
             style: ElevatedButton.styleFrom(
@@ -419,18 +420,15 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
         _isCapturing = true;
       });
 
-      // Haptic feedback
-      HapticFeedback.mediumImpact();
+      await HapticFeedback.mediumImpact();
 
-      // Capture photo
       final photo = await _cameraController!.takePicture();
 
       debugPrint('📸 Photo captured: ${photo.path}');
 
-      // Navigate to ImagePreviewScreen
       if (mounted) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
+        await Navigator.of(context).push(
+          MaterialPageRoute<void>(
             builder: (context) => ImagePreviewScreen(
               imagePath: photo.path,
             ),
