@@ -2,5 +2,81 @@
     "@@locale": "en",
     "signIn": "Sign In",
     "signUpAppBarTitle": "Sign Up",
-    "signUpButtonText": "Sign Up"
+    "signUpButtonText": "Sign Up",
+    "bottomNavLearn": "Learn",
+    "bottomNavPractice": "Practice",
+    "bottomNavStories": "Stories",
+    "bottomNavProfile": "Profile",
+    "progressYourLevel": "Your Level",
+    "progressIntermediateLearner": "Intermediate Learner",
+    "progressNextLevel": "Next level: {points} more points needed",
+    "@progressNextLevel": {
+        "placeholders": {
+            "points": {}
+        }
+    },
+    "progressPoints": "{points} Points",
+    "@progressPoints": {
+        "placeholders": {
+            "points": {}
+        }
+    },
+    "progressLessons": "LessonsModel",
+    "progressVocabulary": "Vocabulary",
+    "progressStreak": "Streak",
+    "progressStudyTime": "Study Time",
+    "vocabularyQuizzes": "Quizzes",
+    "vocabularyGuest": "#Guest",
+    "vocabularyUserBi": "Bi",
+    "vocabularyJapaneseQuestion": "彼は社内の情報___から得た情報をわざと漏洩した。",
+    "vocabularyAnswerOption1": "視",
+    "vocabularyAnswerOption2": "網",
+    "vocabularyAnswerOption3": "派",
+    "vocabularyAnswerOption4": "圏",
+    "reviewTitle": "Bookmarks",
+    "reviewClearAll": "Clear all bookmarks",
+    "reviewErrorLoading": "Error loading bookmarks",
+    "reviewPracticeMode": "Practice Mode",
+    "reviewEmptyTitle": "No bookmarks yet",
+    "reviewEmptySubtitle": "Bookmark questions during quizzes\nto review them later",
+    "reviewTakeAQuiz": "Take a Quiz",
+    "reviewBookmarkedQuestions": "{count} Bookmarked Questions",
+    "@reviewBookmarkedQuestions": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+    "reviewStats": "{correct} correct • {incorrect} to review",
+    "@reviewStats": {
+        "placeholders": {
+            "correct": {},
+            "incorrect": {}
+        }
+    },
+    "reviewFilterAll": "All",
+    "reviewFilterCorrect": "Correct",
+    "reviewFilterIncorrect": "Incorrect",
+    "reviewClearAllDialogTitle": "Clear All Bookmarks",
+    "reviewClearAllDialogContent": "Are you sure you want to remove all bookmarked questions? This action cannot be undone.",
+    "reviewClearAllDialogCancel": "Cancel",
+    "reviewClearAllDialogClear": "Clear All",
+    "reviewAllBookmarksCleared": "All bookmarks cleared",
+    "reviewPracticeDialogTitle": "Practice Mode",
+    "reviewPracticeDialogContent": "Choose which questions to practice:",
+    "reviewPracticeAllBookmarks": "All Bookmarks",
+    "reviewPracticeIncorrectOnly": "Incorrect Only",
+    "reviewPracticeNoQuestions": "No questions available for practice",
+    "reviewCardCorrect": "Correct",
+    "reviewCardIncorrect": "Incorrect",
+    "reviewCardAddNote": "Add note",
+    "reviewCardRemoveBookmark": "Remove bookmark",
+    "reviewCardYourAnswer": "Your answer",
+    "reviewCardPersonalNote": "Personal Note",
+    "reviewCardHintText": "Add your personal note here...",
+    "reviewCardBookmarkedOn": "Bookmarked on {date}",
+    "@reviewCardBookmarkedOn": {
+        "placeholders": {
+            "date": {}
+        }
+    }
 }

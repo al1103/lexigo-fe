@@ -6,6 +6,7 @@ import 'package:lexigo/bookmarks/domain/entities/bookmark.dart';
 import 'package:lexigo/core/infrastructure/datasource/remote/api_end_point.dart';
 import 'package:lexigo/core/infrastructure/datasource/remote/api_response.dart';
 import 'package:lexigo/product/domain/vocabulary_model.dart';
+import 'package:lexigo/screen/grammar/model/grammar_model.dart';
 import 'package:lexigo/screen/home/model/quotes_model.dart';
 import 'package:lexigo/screen/level_selection/model/lessons_model.dart';
 import 'package:lexigo/screen/profile/user_info_model.dart';
@@ -126,4 +127,47 @@ abstract class ApiClient {
 
   @POST(ApiEndPoint.submitSpeakingResult)
   Future<ApiResponse<void>> submitSpeakingResult();
+
+  @GET(ApiEndPoint.grammar)
+  Future<ApiResponse<GrammarResponse>> getAllGrammarArticles(
+    @Query('page') int page,
+    @Query('limit') int limit,
+    @Query('difficulty') String? difficulty,
+    @Query('category') String? category,
+    @Query('search') String? search,
+  );
+
+  @GET(ApiEndPoint.grammarCategories)
+  Future<ApiResponse<List<GrammarCategory>>> getGrammarCategories();
+
+  @GET(ApiEndPoint.grammarPopular)
+  Future<ApiResponse<List<GrammarModel>>> getPopularGrammarArticles(
+    @Query('limit') int limit,
+  );
+
+  @GET(ApiEndPoint.grammarSearch)
+  Future<ApiResponse<GrammarResponse>> searchGrammarArticles(
+    @Query('keyword') String keyword,
+    @Query('page') int page,
+    @Query('limit') int limit,
+  );
+
+  @GET('${ApiEndPoint.grammarByCategory}/{category}')
+  Future<ApiResponse<GrammarResponse>> getGrammarArticlesByCategory(
+    @Path('category') String category,
+    @Query('page') int page,
+    @Query('limit') int limit,
+  );
+
+  @GET('${ApiEndPoint.grammarByDifficulty}/{difficulty}')
+  Future<ApiResponse<GrammarResponse>> getGrammarArticlesByDifficulty(
+    @Path('difficulty') String difficulty,
+    @Query('page') int page,
+    @Query('limit') int limit,
+  );
+
+  @GET('${ApiEndPoint.grammar}/{id}')
+  Future<ApiResponse<GrammarModel>> getGrammarArticleById(
+    @Path('id') int id,
+  );
 }

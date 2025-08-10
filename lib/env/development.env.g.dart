@@ -12,13 +12,13 @@ final class _Env {
   static const String appMode = '\'\'';
 
   static const List<int> _enviedkeyapiKey = <int>[
-    3185847423,
-    1549146388,
+    1207174024,
+    3205443679,
   ];
 
   static const List<int> _envieddataapiKey = <int>[
-    3185847384,
-    1549146419,
+    1207174063,
+    3205443704,
   ];
 
   static final String apiKey = String.fromCharCodes(List<int>.generate(
@@ -27,5 +27,6 @@ final class _Env {
     growable: false,
   ).map((int i) => _envieddataapiKey[i] ^ _enviedkeyapiKey[i]));
 
-  static const String apiUrl = 'http://192.168.31.225:3000/api';
+  static const String apiUrl =
+      'https://uzbekistan-monaco-loved-realistic.trycloudflare.com/api';
 }

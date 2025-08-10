@@ -9,7 +9,13 @@ class SignUpPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.of(context).signUpAppBarTitle)),
+      appBar:
+          AppBar(title: Text(AppLocalizations.of(context).signUpAppBarTitle)),
+      body: Column(
+        children: [
+          Text(AppLocalizations.of(context).signUpAppBarTitle),
+        ],
+      ),
     );
   }
 }

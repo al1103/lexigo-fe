@@ -2,12 +2,14 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:lexigo/common/routes/app_route.dart';
 import 'package:lexigo/gen/assets.gen.dart';
+import 'package:lexigo/l10n/generated/l10n.dart';
 
 class BottomNavigation extends StatelessWidget {
   const BottomNavigation({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
@@ -26,25 +28,25 @@ class BottomNavigation extends StatelessWidget {
         children: [
           _buildNavItem(
             context,
-            'Learn',
+            l10n.bottomNavLearn,
             Assets.icons.icLearn,
             const HomeRoute(),
           ),
           _buildNavItem(
             context,
-            'Practice',
+            l10n.bottomNavPractice,
             Assets.icons.icPractice,
             const ProfileRoute(),
           ),
           _buildNavItem(
             context,
-            'Stories',
+            l10n.bottomNavStories,
             Assets.icons.icStories,
             const ProfileRoute(),
           ),
           _buildNavItem(
             context,
-            'Profile',
+            l10n.bottomNavProfile,
             Assets.icons.icProfile,
             const ProfileRoute(),
           ),

@@ -6,6 +6,7 @@ import 'package:lexigo/core/presentation/widgets/cute_avatar.dart';
 import 'package:lexigo/core/presentation/widgets/cute_button.dart';
 import 'package:lexigo/core/presentation/widgets/cute_card.dart';
 import 'package:lexigo/core/presentation/widgets/cute_header.dart';
+import 'package:lexigo/l10n/generated/l10n.dart';
 
 @RoutePage()
 class VocabularyScreen extends StatelessWidget {
@@ -13,6 +14,7 @@ class VocabularyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -32,8 +34,8 @@ class VocabularyScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Quiz section header
-                    const Text(
-                      'Quizzes',
+                    Text(
+                      l10n.vocabularyQuizzes,
                       style: AppTextStyles.heading3,
                     ),
                     const SizedBox(height: 16),
@@ -56,7 +58,7 @@ class VocabularyScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      '#Guest',
+                                      l10n.vocabularyGuest,
                                       style: AppTextStyles.bodyMedium.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -106,7 +108,7 @@ class VocabularyScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      'Bi',
+                                      l10n.vocabularyUserBi,
                                       style: AppTextStyles.bodyMedium.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -133,7 +135,7 @@ class VocabularyScreen extends StatelessWidget {
                                 index == 0 ? AppColors.primary : Colors.white,
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: AppColors.primary..withValues(alpha: 0.3),
+                              color: AppColors.primary.withOpacity(0.3),
                             ),
                           ),
                           child: Center(
@@ -154,7 +156,7 @@ class VocabularyScreen extends StatelessWidget {
 
                     // Japanese quiz question
                     Text(
-                      '彼は社内の情報___から得た情報をわざと漏洩した。',
+                      l10n.vocabularyJapaneseQuestion,
                       style: AppTextStyles.bodyLarge.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -190,13 +192,13 @@ class VocabularyScreen extends StatelessWidget {
                     const SizedBox(height: 24),
 
                     // Answer options
-                    _buildAnswerOption('視', false),
+                    _buildAnswerOption(l10n.vocabularyAnswerOption1, false),
                     const SizedBox(height: 12),
-                    _buildAnswerOption('網', true),
+                    _buildAnswerOption(l10n.vocabularyAnswerOption2, true),
                     const SizedBox(height: 12),
-                    _buildAnswerOption('派', false),
+                    _buildAnswerOption(l10n.vocabularyAnswerOption3, false),
                     const SizedBox(height: 12),
-                    _buildAnswerOption('圏', false),
+                    _buildAnswerOption(l10n.vocabularyAnswerOption4, false),
 
                     const SizedBox(height: 24),
 

@@ -7,6 +7,8 @@ import 'package:lexigo/common/routes/route_path.dart';
 import 'package:lexigo/quiz/presentation/pages/quiz_result_page.dart';
 import 'package:lexigo/review/presentation/pages/review_page.dart';
 import 'package:lexigo/screen/chat/chat_screen.dart';
+import 'package:lexigo/screen/grammar/pages/grammar_detail_screen.dart';
+import 'package:lexigo/screen/grammar/pages/grammar_list_screen.dart';
 import 'package:lexigo/screen/history/history_screen.dart';
 import 'package:lexigo/screen/home/home_screen.dart';
 import 'package:lexigo/screen/lesson_detail_screen.dart';
@@ -96,6 +98,14 @@ class AppRouter extends _$AppRouter {
       AutoRoute(
         page: ReviewRoute.page,
         path: '/review',
+      ),
+      AutoRoute(
+        page: GrammarListRoute.page,
+        path: '/grammar',
+      ),
+      AutoRoute(
+        page: GrammarDetailRoute.page,
+        path: '/grammar-detail',
       ),
       RedirectRoute(path: '*', redirectTo: '/'),
     ];

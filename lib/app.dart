@@ -181,8 +181,8 @@ class _AppState extends ConsumerState<App> {
           ),
         ),
       ),
-      localizationsDelegates: S.localizationsDelegates,
-      supportedLocales: S.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: appRouter.config(),
     );
   }

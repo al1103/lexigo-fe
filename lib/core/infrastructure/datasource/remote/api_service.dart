@@ -11,6 +11,7 @@ import 'package:lexigo/core/infrastructure/datasource/remote/api_end_point.dart'
 import 'package:lexigo/core/infrastructure/datasource/remote/api_response.dart';
 import 'package:lexigo/env/env.dart';
 import 'package:lexigo/product/domain/vocabulary_model.dart';
+import 'package:lexigo/screen/grammar/model/grammar_model.dart';
 import 'package:lexigo/screen/home/model/quotes_model.dart';
 import 'package:lexigo/screen/level_selection/model/lessons_model.dart';
 import 'package:lexigo/screen/profile/user_info_model.dart';
@@ -239,6 +240,58 @@ class ApiService {
     } catch (e) {
       throw Exception('Failed to upload avatar: $e');
     }
+  }
+
+  // Grammar methods
+  Future<ApiResponse<GrammarResponse>> getAllGrammarArticles({
+    required int page,
+    required int limit,
+    String? difficulty,
+    String? category,
+    String? search,
+  }) async {
+    return _client.getAllGrammarArticles(
+        page, limit, difficulty, category, search);
+  }
+
+  Future<ApiResponse<List<GrammarCategory>>> getGrammarCategories() async {
+    return _client.getGrammarCategories();
+  }
+
+  Future<ApiResponse<List<GrammarModel>>> getPopularGrammarArticles({
+    required int limit,
+  }) async {
+    return _client.getPopularGrammarArticles(limit);
+  }
+
+  Future<ApiResponse<GrammarResponse>> searchGrammarArticles({
+    required String keyword,
+    required int page,
+    required int limit,
+  }) async {
+    return _client.searchGrammarArticles(keyword, page, limit);
+  }
+
+  Future<ApiResponse<GrammarResponse>> getGrammarArticlesByCategory({
+    required String category,
+    required int page,
+    required int limit,
+  }) async {
+    return _client.getGrammarArticlesByCategory(category, page, limit);
+  }
+
+  Future<ApiResponse<GrammarResponse>> getGrammarArticlesByDifficulty({
+    required String difficulty,
+    required int page,
+    required int limit,
+  }) async {
+    return _client.getGrammarArticlesByDifficulty(difficulty, page, limit);
+  }
+
+  Future<ApiResponse<GrammarModel>> getGrammarArticleById({
+    required int id,
+  }) async {
+    return _client.getGrammarArticleById(id);
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:lexigo/common/constants/colors.dart';
 import 'package:lexigo/common/constants/text_styles.dart';
 import 'package:lexigo/core/presentation/widgets/cute_card.dart';
 import 'package:lexigo/core/presentation/widgets/cute_header.dart';
+import 'package:lexigo/l10n/generated/l10n.dart';
 
 @RoutePage()
 class ProgressScreen extends StatelessWidget {
@@ -11,6 +12,7 @@ class ProgressScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -40,8 +42,7 @@ class ProgressScreen extends StatelessWidget {
                             children: [
                               CircleAvatar(
                                 radius: 30,
-                                backgroundColor:
-                                    Colors.white.withValues(alpha: 0.4),
+                                backgroundColor: Colors.white.withOpacity(0.4),
                                 child: const CircleAvatar(
                                   radius: 28,
                                   backgroundColor: AppColors.primaryDark,
@@ -61,15 +62,14 @@ class ProgressScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Your Level',
+                                      l10n.progressYourLevel,
                                       style: AppTextStyles.bodyMedium.copyWith(
-                                        color:
-                                            Colors.white.withValues(alpha: 0.7),
+                                        color: Colors.white.withOpacity(0.7),
                                       ),
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      'Intermediate Learner',
+                                      l10n.progressIntermediateLearner,
                                       style: AppTextStyles.heading3.copyWith(
                                         color: Colors.white,
                                       ),
@@ -81,16 +81,16 @@ class ProgressScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
                           Text(
-                            'Next level: 250 more points needed',
+                            l10n.progressNextLevel(250),
                             style: AppTextStyles.bodySmall.copyWith(
-                              color: Colors.white.withValues(alpha: 0.7),
+                              color: Colors.white.withOpacity(0.7),
                             ),
                           ),
                           const SizedBox(height: 8),
                           Container(
                             height: 8,
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.4),
+                              color: Colors.white.withOpacity(0.4),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Row(
@@ -113,7 +113,7 @@ class ProgressScreen extends StatelessWidget {
                               vertical: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.4),
+                              color: Colors.white.withOpacity(0.4),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
@@ -126,7 +126,7 @@ class ProgressScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  '750 Points',
+                                  l10n.progressPoints(750),
                                   style: AppTextStyles.bodyMedium.copyWith(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -151,25 +151,25 @@ class ProgressScreen extends StatelessWidget {
                       children: [
                         _buildStatCard(
                           icon: Icons.school,
-                          title: 'LessonsModel',
+                          title: l10n.progressLessons,
                           value: '7',
                           color: AppColors.yellow,
                         ),
                         _buildStatCard(
                           icon: Icons.menu_book,
-                          title: 'Vocabulary',
+                          title: l10n.progressVocabulary,
                           value: '120',
                           color: AppColors.green,
                         ),
                         _buildStatCard(
                           icon: Icons.local_fire_department,
-                          title: 'Streak',
+                          title: l10n.progressStreak,
                           value: '5 days',
                           color: AppColors.pink,
                         ),
                         _buildStatCard(
                           icon: Icons.timer,
-                          title: 'Study Time',
+                          title: l10n.progressStudyTime,
                           value: '3.5 hrs',
                           color: AppColors.purple,
                         ),
@@ -198,7 +198,7 @@ class ProgressScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.4),
+              color: color.withOpacity(0.4),
               shape: BoxShape.circle,
             ),
             child: Icon(

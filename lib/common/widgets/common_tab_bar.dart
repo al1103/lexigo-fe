@@ -39,7 +39,7 @@ class CommonTabBar extends StatelessWidget {
               context,
               'History',
               Assets.icons.icStories,
-              const HistoryRoute(),
+              const GrammarListRoute(),
             ),
             _buildTabItem(
               context,

@@ -39,6 +39,22 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const EditProfileScreen(),
       );
     },
+    GrammarDetailRoute.name: (routeData) {
+      final args = routeData.argsAs<GrammarDetailRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: GrammarDetailScreen(
+          id: args.id,
+          key: args.key,
+        ),
+      );
+    },
+    GrammarListRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const GrammarListScreen(),
+      );
+    },
     HistoryRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -250,6 +266,58 @@ class EditProfileRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'EditProfileRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [GrammarDetailScreen]
+class GrammarDetailRoute extends PageRouteInfo<GrammarDetailRouteArgs> {
+  GrammarDetailRoute({
+    required int id,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          GrammarDetailRoute.name,
+          args: GrammarDetailRouteArgs(
+            id: id,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'GrammarDetailRoute';
+
+  static const PageInfo<GrammarDetailRouteArgs> page =
+      PageInfo<GrammarDetailRouteArgs>(name);
+}
+
+class GrammarDetailRouteArgs {
+  const GrammarDetailRouteArgs({
+    required this.id,
+    this.key,
+  });
+
+  final int id;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'GrammarDetailRouteArgs{id: $id, key: $key}';
+  }
+}
+
+/// generated route for
+/// [GrammarListScreen]
+class GrammarListRoute extends PageRouteInfo<void> {
+  const GrammarListRoute({List<PageRouteInfo>? children})
+      : super(
+          GrammarListRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'GrammarListRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

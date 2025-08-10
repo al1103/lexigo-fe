@@ -1,0 +1,82 @@
+{
+    "@@locale": "vi",
+    "signIn": "Đăng nhập",
+    "signUpAppBarTitle": "Đăng ký",
+    "signUpButtonText": "Đăng ký",
+    "bottomNavLearn": "Học",
+    "bottomNavPractice": "Luyện tập",
+    "bottomNavStories": "Truyện",
+    "bottomNavProfile": "Hồ sơ",
+    "progressYourLevel": "Cấp độ của bạn",
+    "progressIntermediateLearner": "Người học trung cấp",
+    "progressNextLevel": "Cấp độ tiếp theo: cần thêm {points} điểm",
+    "@progressNextLevel": {
+        "placeholders": {
+            "points": {}
+        }
+    },
+    "progressPoints": "{points} điểm",
+    "@progressPoints": {
+        "placeholders": {
+            "points": {}
+        }
+    },
+    "progressLessons": "Bài học",
+    "progressVocabulary": "Từ vựng",
+    "progressStreak": "Chuỗi ngày",
+    "progressStudyTime": "Thời gian học",
+    "vocabularyQuizzes": "Câu đố",
+    "vocabularyGuest": "#Khách",
+    "vocabularyUserBi": "Bi",
+    "vocabularyJapaneseQuestion": "彼は社内の情報___から得た情報をわざと漏洩した。",
+    "vocabularyAnswerOption1": "視",
+    "vocabularyAnswerOption2": "網",
+    "vocabularyAnswerOption3": "派",
+    "vocabularyAnswerOption4": "圏",
+    "reviewTitle": "Dấu trang",
+    "reviewClearAll": "Xóa tất cả dấu trang",
+    "reviewErrorLoading": "Lỗi tải dấu trang",
+    "reviewPracticeMode": "Chế độ luyện tập",
+    "reviewEmptyTitle": "Chưa có dấu trang nào",
+    "reviewEmptySubtitle": "Đánh dấu câu hỏi trong các bài kiểm tra\nđể xem lại sau",
+    "reviewTakeAQuiz": "Làm bài kiểm tra",
+    "reviewBookmarkedQuestions": "{count} câu hỏi đã đánh dấu",
+    "@reviewBookmarkedQuestions": {
+        "placeholders": {
+            "count": {}
+        }
+    },
+    "reviewStats": "{correct} đúng • {incorrect} cần xem lại",
+    "@reviewStats": {
+        "placeholders": {
+            "correct": {},
+            "incorrect": {}
+        }
+    },
+    "reviewFilterAll": "Tất cả",
+    "reviewFilterCorrect": "Đúng",
+    "reviewFilterIncorrect": "Sai",
+    "reviewClearAllDialogTitle": "Xóa tất cả dấu trang",
+    "reviewClearAllDialogContent": "Bạn có chắc chắn muốn xóa tất cả các câu hỏi đã đánh dấu không? Hành động này không thể hoàn tác.",
+    "reviewClearAllDialogCancel": "Hủy",
+    "reviewClearAllDialogClear": "Xóa tất cả",
+    "reviewAllBookmarksCleared": "Đã xóa tất cả dấu trang",
+    "reviewPracticeDialogTitle": "Chế độ luyện tập",
+    "reviewPracticeDialogContent": "Chọn câu hỏi để luyện tập:",
+    "reviewPracticeAllBookmarks": "Tất cả dấu trang",
+    "reviewPracticeIncorrectOnly": "Chỉ câu sai",
+    "reviewPracticeNoQuestions": "Không có câu hỏi để luyện tập",
+    "reviewCardCorrect": "Đúng",
+    "reviewCardIncorrect": "Sai",
+    "reviewCardAddNote": "Thêm ghi chú",
+    "reviewCardRemoveBookmark": "Xóa dấu trang",
+    "reviewCardYourAnswer": "Câu trả lời của bạn",
+    "reviewCardPersonalNote": "Ghi chú cá nhân",
+    "reviewCardHintText": "Thêm ghi chú cá nhân của bạn ở đây...",
+    "reviewCardBookmarkedOn": "Đã đánh dấu vào {date}",
+    "@reviewCardBookmarkedOn": {
+        "placeholders": {
+            "date": {}
+        }
+    }
+}

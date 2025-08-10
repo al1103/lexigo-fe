@@ -26,4 +26,11 @@ class ApiEndPoint {
   // Quotes endpoints
   static const String dailyQuotes = '/quotes/daily';
   static const String submitSpeakingResult = '/speaking/submit-result';
+
+  static const String grammar = '/grammar';
+  static const String grammarCategories = '/grammar/categories';
+  static const String grammarPopular = '/grammar/popular';
+  static const String grammarSearch = '/grammar/search';
+  static const String grammarByCategory = '/grammar/category';
+  static const String grammarByDifficulty = '/grammar/difficulty';
 }
