@@ -15,16 +15,16 @@ class ChatTopic {
   static const List<ChatTopic> topics = [
     ChatTopic(
       id: 'general',
-      title: 'General English',
-      description: 'Basic conversation and everyday English',
+      title: 'Tiếng Anh Tổng quát',
+      description: 'Hội thoại cơ bản và tiếng Anh hàng ngày',
       emoji: '💬',
       welcomeMessage: '''
  General English!''',
     ),
     ChatTopic(
       id: 'business',
-      title: 'Business English',
-      description: 'Professional communication and workplace vocabulary',
+      title: 'Tiếng Anh Kinh doanh',
+      description: 'Giao tiếp chuyên nghiệp và từ vựng nơi làm việc',
       emoji: '💼',
       welcomeMessage: '''
 Business
@@ -32,8 +32,8 @@ Business
     ),
     ChatTopic(
       id: 'academic',
-      title: 'Academic English',
-      description: 'Essay writing, research, and academic vocabulary',
+      title: 'Tiếng Anh Học thuật',
+      description: 'Viết luận, nghiên cứu và từ vựng học thuật',
       emoji: '🎓',
       welcomeMessage: '''
 🎓 Academic
@@ -41,16 +41,16 @@ Business
     ),
     ChatTopic(
       id: 'travel',
-      title: 'Travel English',
-      description: 'Essential phrases for traveling and tourism',
+      title: 'Tiếng Anh Du lịch',
+      description: 'Cụm từ thiết yếu cho du lịch và khách sạn',
       emoji: '✈️',
       welcomeMessage: '''
  Travel''',
     ),
     ChatTopic(
       id: 'conversation',
-      title: 'Daily Conversation',
-      description: 'Casual chats and social interactions',
+      title: 'Hội thoại Hàng ngày',
+      description: 'Trò chuyện thông thường và tương tác xã hội',
       emoji: '🗣️',
       welcomeMessage: '''
 Practice Daily Conversation!
@@ -58,8 +58,8 @@ Practice Daily Conversation!
     ),
     ChatTopic(
       id: 'grammar',
-      title: 'Grammar Focus',
-      description: 'Detailed grammar rules and practice',
+      title: 'Tập trung Ngữ pháp',
+      description: 'Quy tắc ngữ pháp chi tiết và luyện tập',
       emoji: '📝',
       welcomeMessage: '''
 📝 Grammar Mastery Session!

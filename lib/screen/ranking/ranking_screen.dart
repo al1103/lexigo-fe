@@ -87,7 +87,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
           const SizedBox(width: 8),
           const Expanded(
             child: Text(
-              'Leaderboard',
+              'Bảng xếp hạng',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w700,
@@ -138,9 +138,9 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: Colors.transparent,
         tabs: const [
-          Tab(text: 'Global'),
-          Tab(text: 'Weekly'),
-          Tab(text: 'Monthly'),
+          Tab(text: 'Toàn cầu'),
+          Tab(text: 'Tuần'),
+          Tab(text: 'Tháng'),
         ],
       ),
     );
@@ -158,7 +158,8 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
               data: (List<LeaderboardUser> data) =>
                   _buildRankingContent(data, 'global'),
               loading: () => const Center(
-                child: AppLoading(message: 'Loading global rankings...'),
+                child:
+                    AppLoading(message: 'Đang tải bảng xếp hạng toàn cầu...'),
               ),
               error: (Object error, StackTrace stack) =>
                   _buildErrorState('global', error),
@@ -174,7 +175,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
               data: (List<LeaderboardUser> data) =>
                   _buildRankingContent(data, 'weekly'),
               loading: () => const Center(
-                child: AppLoading(message: 'Loading weekly rankings...'),
+                child: AppLoading(message: 'Đang tải bảng xếp hạng tuần...'),
               ),
               error: (Object error, StackTrace stack) =>
                   _buildErrorState('weekly', error),
@@ -190,7 +191,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
               data: (List<LeaderboardUser> data) =>
                   _buildRankingContent(data, 'monthly'),
               loading: () => const Center(
-                child: AppLoading(message: 'Loading monthly rankings...'),
+                child: AppLoading(message: 'Đang tải bảng xếp hạng tháng...'),
               ),
               error: (Object error, StackTrace stack) =>
                   _buildErrorState('monthly', error),
@@ -213,7 +214,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
           ),
           const SizedBox(height: 16),
           Text(
-            'Error loading $period rankings',
+            'Lỗi khi tải bảng xếp hạng $period',
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -240,7 +241,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                 ref.invalidate(rankingControllerProvider);
               }
             },
-            child: const Text('Retry'),
+            child: const Text('Thử lại'),
           ),
         ],
       ),
@@ -302,7 +303,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
           // 2nd Place
           _buildPodiumPlace(
             rank: '2',
-            name: top3[1].fullName ?? top3[1].username ?? 'User',
+            name: top3[1].fullName ?? top3[1].username ?? 'Người dùng',
             points: '${top3[1].totalPoints ?? top3[1].periodPoints ?? 0} XP',
             height: 80,
             color: const Color(0xFFC0C0C0),
@@ -310,7 +311,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
           // 1st Place
           _buildPodiumPlace(
             rank: '1',
-            name: top3[0].fullName ?? top3[0].username ?? 'User',
+            name: top3[0].fullName ?? top3[0].username ?? 'Người dùng',
             points: '${top3[0].totalPoints ?? top3[0].periodPoints ?? 0} XP',
             height: 120,
             color: const Color(0xFFFFD700),
@@ -319,7 +320,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
           // 3rd Place
           _buildPodiumPlace(
             rank: '3',
-            name: top3[2].fullName ?? top3[2].username ?? 'User',
+            name: top3[2].fullName ?? top3[2].username ?? 'Người dùng',
             points: '${top3[2].totalPoints ?? top3[2].periodPoints ?? 0} XP',
             height: 60,
             color: const Color(0xFFCD7F32),
@@ -343,7 +344,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
       ),
       child: const Center(
         child: Text(
-          'No ranking data available',
+          'Không có dữ liệu xếp hạng',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -466,13 +467,13 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
     Color periodColor;
     switch (period) {
       case 'weekly':
-        title = 'Your Weekly Position';
+        title = 'Vị trí tuần của bạn';
         periodColor = const Color(0xFFF59E0B);
       case 'monthly':
-        title = 'Your Monthly Position';
+        title = 'Vị trí tháng của bạn';
         periodColor = const Color(0xFF8B5CF6);
       default:
-        title = 'Your Global Position';
+        title = 'Vị trí toàn cầu của bạn';
         periodColor = const Color(0xFF6366F1);
     }
 
@@ -534,7 +535,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${period.replaceFirst(period[0], period[0].toUpperCase())} Leaderboard',
+                  'Bảng xếp hạng ${_getPeriodVietnamese(period)}',
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -643,7 +644,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        user.fullName ?? user.username ?? 'User',
+                        user.fullName ?? user.username ?? 'Người dùng',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -652,7 +653,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        user.level ?? 'Beginner',
+                        user.level ?? 'Cơ bản',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -708,6 +709,18 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
         },
       ),
     );
+  }
+
+  String _getPeriodVietnamese(String period) {
+    switch (period) {
+      case 'weekly':
+        return 'tuần';
+      case 'monthly':
+        return 'tháng';
+      case 'global':
+      default:
+        return 'toàn cầu';
+    }
   }
 
   Color _getRankColor(int index) {

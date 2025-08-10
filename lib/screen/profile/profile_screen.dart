@@ -20,7 +20,7 @@ class ProfileScreen extends ConsumerWidget {
       body: SafeArea(
         child: profileState.when(
           data: (userInfo) => _buildProfileContent(context, ref, userInfo),
-          loading: () => const AppLoading(message: 'Loading profile...'),
+          loading: () => const AppLoading(message: 'Đang tải hồ sơ...'),
           error: (error, stack) => _buildErrorContent(context, ref, error),
         ),
       ),
@@ -39,7 +39,7 @@ class ProfileScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           const Text(
-            'Error loading profile',
+            'Lỗi khi tải hồ sơ',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -59,7 +59,7 @@ class ProfileScreen extends ConsumerWidget {
             onPressed: () {
               ref.read(profileControllerProvider.notifier).refreshProfile();
             },
-            child: const Text('Retry'),
+            child: const Text('Thử lại'),
           ),
         ],
       ),
@@ -73,7 +73,7 @@ class ProfileScreen extends ConsumerWidget {
   ) {
     // Handle null userInfo
     if (userInfo == null) {
-      return _buildErrorContent(context, ref, 'No profile data available');
+      return _buildErrorContent(context, ref, 'Không có dữ liệu hồ sơ');
     }
 
     return SingleChildScrollView(
@@ -101,18 +101,18 @@ class ProfileScreen extends ConsumerWidget {
             const SizedBox(height: 32),
 
             // Preferences Section
-            _buildSectionHeader('Preferences', Icons.settings),
+            _buildSectionHeader('Tùy chọn', Icons.settings),
 
             // Preference Items
-            _buildPreferenceItem('Theme', 'Light', Icons.palette),
-            _buildPreferenceItem('Notifications', 'On', Icons.notifications),
+            _buildPreferenceItem('Giao diện', 'Sáng', Icons.palette),
+            _buildPreferenceItem('Thông báo', 'Bật', Icons.notifications),
             const SizedBox(height: 32),
             // Account Section
-            _buildSectionHeader('Account', Icons.account_circle),
+            _buildSectionHeader('Tài khoản', Icons.account_circle),
 
-            _buildAccountAction(context, ref, 'Edit Profile', Icons.edit),
-            _buildAccountAction(context, ref, 'Send Feedback', Icons.feedback),
-            _buildAccountAction(context, ref, 'Log Out', Icons.logout),
+            _buildAccountAction(context, ref, 'Chỉnh sửa hồ sơ', Icons.edit),
+            _buildAccountAction(context, ref, 'Gửi phản hồi', Icons.feedback),
+            _buildAccountAction(context, ref, 'Đăng xuất', Icons.logout),
 
             const SizedBox(height: 32),
 
@@ -148,7 +148,7 @@ class ProfileScreen extends ConsumerWidget {
           ),
           const SizedBox(width: 12),
           const Text(
-            'Profile & Settings',
+            'Hồ sơ & Cài đặt',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
@@ -218,7 +218,7 @@ class ProfileScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  userInfo.fullName ?? userInfo.username ?? 'User',
+                  userInfo.fullName ?? userInfo.username ?? 'Người dùng',
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
@@ -227,7 +227,7 @@ class ProfileScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  userInfo.currentLevel ?? userInfo.level ?? 'Level 1',
+                  userInfo.currentLevel ?? userInfo.level ?? 'Cấp độ 1',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -285,7 +285,7 @@ class ProfileScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Your Progress',
+            'Tiến độ của bạn',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -296,14 +296,14 @@ class ProfileScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildStatItem(
-                'Words Mastered',
+                'Từ đã thành thạo',
                 '${userInfo.wordsMastered ?? 0}',
               ),
               _buildStatItem(
-                'Quiz Score',
+                'Điểm Quiz',
                 '${userInfo.quizAverageScore ?? "0"}%',
               ),
-              _buildStatItem('Streak Days', '${userInfo.streakDays ?? 0}'),
+              _buildStatItem('Chuỗi ngày', '${userInfo.streakDays ?? 0}'),
             ],
           ),
           const SizedBox(height: 16),
@@ -311,15 +311,15 @@ class ProfileScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildStatItem(
-                'Total Sessions',
+                'Tổng phiên',
                 '${userInfo.quizTotalSessions ?? 0}',
               ),
               _buildStatItem(
-                'Speaking Score',
+                'Điểm Phát âm',
                 '${userInfo.speakingAverageScore ?? "0"}%',
               ),
               _buildStatItem(
-                'Study Time',
+                'Thời gian học',
                 _formatStudyTime(userInfo.totalStudyTime ?? 0),
               ),
             ],
@@ -398,7 +398,7 @@ class ProfileScreen extends ConsumerWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
           onTap: () async {
-            if (title == 'Edit Profile') {
+            if (title == 'Chỉnh sửa hồ sơ') {
               final updated = await Navigator.of(context).push<bool>(
                 MaterialPageRoute<bool>(
                   builder: (context) => const EditProfileScreen(),
@@ -429,14 +429,14 @@ class ProfileScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: title == 'Log Out'
+                    color: title == 'Đăng xuất'
                         ? Colors.red.withValues(alpha: 0.1)
                         : const Color(0xFF6366F1).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     icon,
-                    color: title == 'Log Out'
+                    color: title == 'Đăng xuất'
                         ? Colors.red
                         : const Color(0xFF6366F1),
                     size: 20,
@@ -449,7 +449,7 @@ class ProfileScreen extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: title == 'Log Out'
+                      color: title == 'Đăng xuất'
                           ? Colors.red
                           : const Color(0xFF1F2937),
                     ),
@@ -526,62 +526,6 @@ class ProfileScreen extends ConsumerWidget {
             Icons.chevron_right,
             color: Color(0xFF9CA3AF),
             size: 20,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAchievementItem(String title, IconData icon) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFFEAB308).withValues(alpha: 0.3),
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: const Color(0xFFEAB308).withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(
-              icon,
-              color: const Color(0xFFEAB308),
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1F2937),
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: const Color(0xFFEAB308).withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Text(
-              'Earned',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFFEAB308),
-              ),
-            ),
           ),
         ],
       ),

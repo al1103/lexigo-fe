@@ -52,20 +52,20 @@ class _TopicSelectionDialogState extends ConsumerState<TopicSelectionDialog>
       return ChatTopic(
         id: 'custom',
         title: _customTopicController.text.trim(),
-        description: 'Custom learning topic',
+        description: 'Chủ đề học tùy chọn',
         emoji: '🎯',
         welcomeMessage:
             // ignore: leading_newlines_in_multiline_strings
-            '''🎯 Welcome to your custom learning topic: ${_customTopicController.text.trim()}!
+            '''🎯 Chào mừng đến với chủ đề học tùy chọn: ${_customTopicController.text.trim()}!
 
-I'm excited to help you learn about this specific topic. I can assist you with:
-• 📚 Vocabulary related to ${_customTopicController.text.trim()}
-• 🗣️ Pronunciation and speaking practice
-• ✍️ Grammar in context
-• 💬 Conversations about ${_customTopicController.text.trim()}
-• 🎯 Specific questions and explanations
+Tôi rất hào hứng được giúp bạn học về chủ đề này. Tôi có thể hỗ trợ bản với:
+• 📚 Từ vựng liên quan đến ${_customTopicController.text.trim()}
+• 🗣️ Luyện phát âm và nói
+• ✍️ Ngữ pháp trong ngữ cảnh
+• 💬 Hội thoại về ${_customTopicController.text.trim()}
+• 🎯 Câu hỏi và giải thích cụ thể
 
-What would you like to know about ${_customTopicController.text.trim()}?''',
+Bạn muốn biết gì về ${_customTopicController.text.trim()}?''',
       );
     }
     return _selectedTopic;
@@ -74,7 +74,7 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final maxHeight = screenSize.height * 0.85; // Max 85% of screen height
+    final maxHeight = screenSize.height * 0.8; // Giảm xuống 80%
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -84,7 +84,7 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
           constraints: BoxConstraints(
             maxHeight: maxHeight,
             maxWidth: 500,
-            minHeight: 400,
+            minHeight: 300, // Giảm minHeight
           ),
           margin: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -123,7 +123,7 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
                 child: Column(
                   children: [
                     const Text(
-                      'Choose Your Learning Path',
+                      'Chọn lộ trình học của bạn',
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -133,7 +133,7 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Personalize your English learning experience',
+                      'Cá nhân hóa trải nghiệm học tiếng Anh',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white.withValues(alpha: 0.9),
@@ -146,153 +146,161 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
 
               // Content area with scrolling support
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
-                      // Modern toggle buttons
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF8FAFC),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: const Color(0xFFE2E8F0),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20), // Giảm padding
+                    child: Column(
+                      children: [
+                        // Modern toggle buttons
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF8FAFC),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: const Color(0xFFE2E8F0),
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _isCustomTopicMode = false;
-                                    _customTopicController.clear();
-                                  });
-                                },
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 14),
-                                  decoration: BoxDecoration(
-                                    color: !_isCustomTopicMode
-                                        ? Colors.white
-                                        : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(12),
-                                    boxShadow: !_isCustomTopicMode
-                                        ? [
-                                            BoxShadow(
-                                              color: Colors.black
-                                                ..withValues(alpha: 0.1),
-                                              blurRadius: 8,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.auto_awesome,
-                                        size: 18,
-                                        color: !_isCustomTopicMode
-                                            ? const Color(0xFF6366F1)
-                                            : const Color(0xFF64748B),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        'Popular Topics',
-                                        style: TextStyle(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _isCustomTopicMode = false;
+                                      _customTopicController.clear();
+                                    });
+                                  },
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 200),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 14,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: !_isCustomTopicMode
+                                          ? Colors.white
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(12),
+                                      boxShadow: !_isCustomTopicMode
+                                          ? [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                  ..withValues(alpha: 0.1),
+                                                blurRadius: 8,
+                                                offset: const Offset(0, 2),
+                                              ),
+                                            ]
+                                          : null,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.auto_awesome,
+                                          size: 18,
                                           color: !_isCustomTopicMode
                                               ? const Color(0xFF6366F1)
                                               : const Color(0xFF64748B),
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'phổ biến',
+                                          style: TextStyle(
+                                            color: !_isCustomTopicMode
+                                                ? const Color(0xFF6366F1)
+                                                : const Color(0xFF64748B),
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _isCustomTopicMode = true;
-                                    _selectedTopic = null;
-                                  });
-                                },
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 14),
-                                  decoration: BoxDecoration(
-                                    color: _isCustomTopicMode
-                                        ? Colors.white
-                                        : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(12),
-                                    boxShadow: _isCustomTopicMode
-                                        ? [
-                                            BoxShadow(
-                                              color: Colors.black
-                                                ..withValues(alpha: 0.1),
-                                              blurRadius: 8,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.edit_outlined,
-                                        size: 18,
-                                        color: _isCustomTopicMode
-                                            ? const Color(0xFF6366F1)
-                                            : const Color(0xFF64748B),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        'Custom Topic',
-                                        style: TextStyle(
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _isCustomTopicMode = true;
+                                      _selectedTopic = null;
+                                    });
+                                  },
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 200),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 14,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: _isCustomTopicMode
+                                          ? Colors.white
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(12),
+                                      boxShadow: _isCustomTopicMode
+                                          ? [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                  ..withValues(alpha: 0.1),
+                                                blurRadius: 8,
+                                                offset: const Offset(0, 2),
+                                              ),
+                                            ]
+                                          : null,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.edit_outlined,
+                                          size: 18,
                                           color: _isCustomTopicMode
                                               ? const Color(0xFF6366F1)
                                               : const Color(0xFF64748B),
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'tùy chọn',
+                                          style: TextStyle(
+                                            color: _isCustomTopicMode
+                                                ? const Color(0xFF6366F1)
+                                                : const Color(0xFF64748B),
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
 
-                      const SizedBox(height: 24),
+                        const SizedBox(height: 24),
 
-                      // Content area that adapts to available space
-                      Expanded(
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 300),
-                          child: _isCustomTopicMode
-                              ? _buildCustomTopicInput()
-                              : _buildPresetTopics(),
+                        // Content area that adapts to available space
+                        SizedBox(
+                          height: 300, // Đặt chiều cao cố định
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            child: _isCustomTopicMode
+                                ? _buildCustomTopicInput()
+                                : _buildPresetTopics(),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
 
               // Action buttons with modern design
               Container(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                padding:
+                    const EdgeInsets.fromLTRB(20, 8, 20, 20), // Giảm padding
                 child: Row(
                   children: [
                     Expanded(
@@ -305,7 +313,7 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
                           ),
                         ),
                         child: const Text(
-                          'Cancel',
+                          'Hủy',
                           style: TextStyle(
                             fontSize: 16,
                             color: Color(0xFF64748B),
@@ -353,7 +361,7 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
                               const Icon(Icons.rocket_launch, size: 20),
                               const SizedBox(width: 8),
                               Text(
-                                'Start Learning',
+                                'Bắt đầu học',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
@@ -439,24 +447,23 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? Colors.white.withValues(alpha: 0.2)
-                        : const Color(0xFF6366F1)
-                      ..withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Center(
-                    child: Text(
-                      topic.emoji,
-                      style: const TextStyle(fontSize: 24),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
+                // Container(
+                //   width: 50,
+                //   height: 50,
+                //   decoration: BoxDecoration(
+                //     color: isSelected
+                //         ? Colors.white.withValues(alpha: 0.2)
+                //         : const Color(0xFF6366F1)
+                //       ..withValues(alpha: 0.1),
+                //     borderRadius: BorderRadius.circular(16),
+                //   ),
+                //   child: Center(
+                //     child: Text(
+                //       topic.emoji,
+                //       style: const TextStyle(fontSize: 24),
+                //     ),
+                //   ),
+                // ),
                 Text(
                   topic.title,
                   textAlign: TextAlign.center,
@@ -467,19 +474,19 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
                   ),
                 ),
                 const SizedBox(height: 6),
-                Text(
-                  topic.description,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: isSelected
-                        ? Colors.white.withValues(alpha: 0.9)
-                        : const Color(0xFF64748B),
-                    height: 1.3,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                // Text(
+                //   topic.description,
+                //   textAlign: TextAlign.center,
+                //   style: TextStyle(
+                //     fontSize: 12,
+                //     color: isSelected
+                //         ? Colors.white.withValues(alpha: 0.9)
+                //         : const Color(0xFF64748B),
+                //     height: 1.3,
+                //   ),
+                //   maxLines: 2,
+                //   overflow: TextOverflow.ellipsis,
+                // ),
                 if (isSelected) ...[
                   const SizedBox(height: 8),
                   Container(
@@ -492,7 +499,7 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Text(
-                      'Selected',
+                      'Đã chọn',
                       style: TextStyle(
                         fontSize: 10,
                         color: Colors.white,
@@ -551,7 +558,7 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'Your Unique Learning Journey',
+                  'Hành trình học độc đáo của bạn',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -561,7 +568,7 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  "Tell us what you're passionate about",
+                  'Hãy cho chúng tôi biết bạn đam mê gì',
                   style: TextStyle(
                     fontSize: 13,
                     color: Colors.grey[600],
@@ -595,7 +602,7 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
                 color: Color(0xFF1E293B),
               ),
               decoration: InputDecoration(
-                hintText: 'e.g., Space exploration, Cooking, Business...',
+                hintText: 'Ví dụ: Khám phá vũ trụ, Nấu ăn, Kinh doanh...',
                 hintStyle: TextStyle(
                   color: Colors.grey[400],
                   fontSize: 15,
@@ -643,65 +650,65 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
           const SizedBox(height: 16),
 
           // Confirmation message
-          if (_customTopicController.text.trim().isNotEmpty)
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.green[50]!,
-                    Colors.green[100]!,
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: Colors.green[200]!,
-                  width: 2,
-                ),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: Colors.green[500],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(
-                      Icons.check,
-                      color: Colors.white,
-                      size: 16,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Perfect Choice!',
-                          style: TextStyle(
-                            color: Colors.green[700],
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Ready to explore "${_customTopicController.text.trim()}"',
-                          style: TextStyle(
-                            color: Colors.green[600],
-                            fontSize: 12,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          // if (_customTopicController.text.trim().isNotEmpty)
+          //   Container(
+          //     padding: const EdgeInsets.all(16),
+          //     decoration: BoxDecoration(
+          //       gradient: LinearGradient(
+          //         colors: [
+          //           Colors.green[50]!,
+          //           Colors.green[100]!,
+          //         ],
+          //       ),
+          //       borderRadius: BorderRadius.circular(14),
+          //       border: Border.all(
+          //         color: Colors.green[200]!,
+          //         width: 2,
+          //       ),
+          //     ),
+          //     child: Row(
+          //       children: [
+          //         Container(
+          //           padding: const EdgeInsets.all(6),
+          //           decoration: BoxDecoration(
+          //             color: Colors.green[500],
+          //             borderRadius: BorderRadius.circular(10),
+          //           ),
+          //           child: const Icon(
+          //             Icons.check,
+          //             color: Colors.white,
+          //             size: 16,
+          //           ),
+          //         ),
+          //         const SizedBox(width: 12),
+          //         Expanded(
+          //           child: Column(
+          //             crossAxisAlignment: CrossAxisAlignment.start,
+          //             children: [
+          //               Text(
+          //                 'Lựa chọn hoàn hảo!',
+          //                 style: TextStyle(
+          //                   color: Colors.green[700],
+          //                   fontWeight: FontWeight.bold,
+          //                   fontSize: 14,
+          //                 ),
+          //               ),
+          //               const SizedBox(height: 2),
+          //               Text(
+          //                 'Sẵn sàng khám phá "${_customTopicController.text.trim()}"',
+          //                 style: TextStyle(
+          //                   color: Colors.green[600],
+          //                   fontSize: 12,
+          //                 ),
+          //                 overflow: TextOverflow.ellipsis,
+          //                 maxLines: 2,
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
         ],
       ),
     );
@@ -758,7 +765,7 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
               ),
               const SizedBox(height: 24),
               Text(
-                'Preparing your ${selectedTopic.title} journey...',
+                'Đang chuẩn bị hành trình ${selectedTopic.title} của bạn...',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -768,7 +775,7 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
               ),
               const SizedBox(height: 8),
               Text(
-                'Creating personalized content just for you',
+                'Đang tạo nội dung cá nhân hóa dành riêng cho bạn',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -785,11 +792,11 @@ What would you like to know about ${_customTopicController.text.trim()}?''',
       // Prepare context message for AI
       final contextMessage = _isCustomTopicMode
           ? '''
-I want to learn about: ${selectedTopic.title}
+Tôi muốn học về: ${selectedTopic.title}
 
-Please provide a comprehensive welcome message and initial learning guidance for this custom topic.
-Make it engaging, relevant, and helpful for someone wanting to learn about ${selectedTopic.title}.
-Include specific vocabulary, phrases, and conversation starters related to this topic.
+Vui lòng cung cấp thông điệp chào mừng toàn diện và hướng dẫn học tập ban đầu cho chủ đề tùy chọn này.
+Hãy làm cho nó hấp dẫn, phù hợp và hữu ích cho ai đó muốn học về ${selectedTopic.title}.
+Bao gồm từ vựng cụ thể, cụm từ và cách bắt đầu cuộc trò chuyện liên quan đến chủ đề này.
 '''
           : selectedTopic.welcomeMessage;
 
