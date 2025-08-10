@@ -80,4 +80,103 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get vocabularyAnswerOption4 => '圏';
+
+  @override
+  String get reviewTitle => 'Bookmarks';
+
+  @override
+  String get reviewClearAll => 'Clear all bookmarks';
+
+  @override
+  String get reviewErrorLoading => 'Error loading bookmarks';
+
+  @override
+  String get reviewPracticeMode => 'Practice Mode';
+
+  @override
+  String get reviewEmptyTitle => 'No bookmarks yet';
+
+  @override
+  String get reviewEmptySubtitle =>
+      'Bookmark questions during quizzes\nto review them later';
+
+  @override
+  String get reviewTakeAQuiz => 'Take a Quiz';
+
+  @override
+  String reviewBookmarkedQuestions(Object count) {
+    return '$count Bookmarked Questions';
+  }
+
+  @override
+  String reviewStats(Object correct, Object incorrect) {
+    return '$correct correct • $incorrect to review';
+  }
+
+  @override
+  String get reviewFilterAll => 'All';
+
+  @override
+  String get reviewFilterCorrect => 'Correct';
+
+  @override
+  String get reviewFilterIncorrect => 'Incorrect';
+
+  @override
+  String get reviewClearAllDialogTitle => 'Clear All Bookmarks';
+
+  @override
+  String get reviewClearAllDialogContent =>
+      'Are you sure you want to remove all bookmarked questions? This action cannot be undone.';
+
+  @override
+  String get reviewClearAllDialogCancel => 'Cancel';
+
+  @override
+  String get reviewClearAllDialogClear => 'Clear All';
+
+  @override
+  String get reviewAllBookmarksCleared => 'All bookmarks cleared';
+
+  @override
+  String get reviewPracticeDialogTitle => 'Practice Mode';
+
+  @override
+  String get reviewPracticeDialogContent =>
+      'Choose which questions to practice:';
+
+  @override
+  String get reviewPracticeAllBookmarks => 'All Bookmarks';
+
+  @override
+  String get reviewPracticeIncorrectOnly => 'Incorrect Only';
+
+  @override
+  String get reviewPracticeNoQuestions => 'No questions available for practice';
+
+  @override
+  String get reviewCardCorrect => 'Correct';
+
+  @override
+  String get reviewCardIncorrect => 'Incorrect';
+
+  @override
+  String get reviewCardAddNote => 'Add note';
+
+  @override
+  String get reviewCardRemoveBookmark => 'Remove bookmark';
+
+  @override
+  String get reviewCardYourAnswer => 'Your answer';
+
+  @override
+  String get reviewCardPersonalNote => 'Personal Note';
+
+  @override
+  String get reviewCardHintText => 'Add your personal note here...';
+
+  @override
+  String reviewCardBookmarkedOn(Object date) {
+    return 'Bookmarked on $date';
+  }
 }

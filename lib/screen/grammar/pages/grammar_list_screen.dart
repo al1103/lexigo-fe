@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lexigo/common/widgets/common_tab_bar.dart';
 import 'package:lexigo/core/presentation/view_status.dart';
 import 'package:lexigo/screen/grammar/controller/grammar_controller.dart';
 import 'package:lexigo/screen/grammar/pages/grammar_detail_screen.dart';
@@ -90,6 +91,7 @@ class _GrammarListScreenState extends ConsumerState<GrammarListScreen> {
           ),
         ),
       ),
+      bottomNavigationBar: const CommonTabBar(),
       body: state.status is ViewLoading && state.articles.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : state.status is ViewError && state.articles.isEmpty

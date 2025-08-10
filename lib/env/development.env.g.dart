@@ -12,13 +12,13 @@ final class _Env {
   static const String appMode = '\'\'';
 
   static const List<int> _enviedkeyapiKey = <int>[
-    1207174024,
-    3205443679,
+    1334116527,
+    885673366,
   ];
 
   static const List<int> _envieddataapiKey = <int>[
-    1207174063,
-    3205443704,
+    1334116488,
+    885673393,
   ];
 
   static final String apiKey = String.fromCharCodes(List<int>.generate(
@@ -28,5 +28,5 @@ final class _Env {
   ).map((int i) => _envieddataapiKey[i] ^ _enviedkeyapiKey[i]));
 
   static const String apiUrl =
-      'https://uzbekistan-monaco-loved-realistic.trycloudflare.com/api';
+      'https://movement-foto-indicators-heavy.trycloudflare.com/api';
 }

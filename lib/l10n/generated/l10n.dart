@@ -235,6 +235,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'圏'**
   String get vocabularyAnswerOption4;
+
+  /// No description provided for @reviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmarks'**
+  String get reviewTitle;
+
+  /// No description provided for @reviewClearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all bookmarks'**
+  String get reviewClearAll;
+
+  /// No description provided for @reviewErrorLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading bookmarks'**
+  String get reviewErrorLoading;
+
+  /// No description provided for @reviewPracticeMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice Mode'**
+  String get reviewPracticeMode;
+
+  /// No description provided for @reviewEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No bookmarks yet'**
+  String get reviewEmptyTitle;
+
+  /// No description provided for @reviewEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmark questions during quizzes\nto review them later'**
+  String get reviewEmptySubtitle;
+
+  /// No description provided for @reviewTakeAQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a Quiz'**
+  String get reviewTakeAQuiz;
+
+  /// No description provided for @reviewBookmarkedQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Bookmarked Questions'**
+  String reviewBookmarkedQuestions(Object count);
+
+  /// No description provided for @reviewStats.
+  ///
+  /// In en, this message translates to:
+  /// **'{correct} correct • {incorrect} to review'**
+  String reviewStats(Object correct, Object incorrect);
+
+  /// No description provided for @reviewFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get reviewFilterAll;
+
+  /// No description provided for @reviewFilterCorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct'**
+  String get reviewFilterCorrect;
+
+  /// No description provided for @reviewFilterIncorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect'**
+  String get reviewFilterIncorrect;
+
+  /// No description provided for @reviewClearAllDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All Bookmarks'**
+  String get reviewClearAllDialogTitle;
+
+  /// No description provided for @reviewClearAllDialogContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove all bookmarked questions? This action cannot be undone.'**
+  String get reviewClearAllDialogContent;
+
+  /// No description provided for @reviewClearAllDialogCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get reviewClearAllDialogCancel;
+
+  /// No description provided for @reviewClearAllDialogClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get reviewClearAllDialogClear;
+
+  /// No description provided for @reviewAllBookmarksCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'All bookmarks cleared'**
+  String get reviewAllBookmarksCleared;
+
+  /// No description provided for @reviewPracticeDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice Mode'**
+  String get reviewPracticeDialogTitle;
+
+  /// No description provided for @reviewPracticeDialogContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose which questions to practice:'**
+  String get reviewPracticeDialogContent;
+
+  /// No description provided for @reviewPracticeAllBookmarks.
+  ///
+  /// In en, this message translates to:
+  /// **'All Bookmarks'**
+  String get reviewPracticeAllBookmarks;
+
+  /// No description provided for @reviewPracticeIncorrectOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect Only'**
+  String get reviewPracticeIncorrectOnly;
+
+  /// No description provided for @reviewPracticeNoQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'No questions available for practice'**
+  String get reviewPracticeNoQuestions;
+
+  /// No description provided for @reviewCardCorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct'**
+  String get reviewCardCorrect;
+
+  /// No description provided for @reviewCardIncorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect'**
+  String get reviewCardIncorrect;
+
+  /// No description provided for @reviewCardAddNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Add note'**
+  String get reviewCardAddNote;
+
+  /// No description provided for @reviewCardRemoveBookmark.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove bookmark'**
+  String get reviewCardRemoveBookmark;
+
+  /// No description provided for @reviewCardYourAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Your answer'**
+  String get reviewCardYourAnswer;
+
+  /// No description provided for @reviewCardPersonalNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Note'**
+  String get reviewCardPersonalNote;
+
+  /// No description provided for @reviewCardHintText.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your personal note here...'**
+  String get reviewCardHintText;
+
+  /// No description provided for @reviewCardBookmarkedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmarked on {date}'**
+  String reviewCardBookmarkedOn(Object date);
 }
 
 class _AppLocalizationsDelegate
