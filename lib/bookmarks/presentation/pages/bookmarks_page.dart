@@ -84,7 +84,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
         ),
       ),
       title: Text(
-        'Bookmarks',
+        'Đánh dấu',
         style: GoogleFonts.inter(
           fontSize: 20,
           fontWeight: FontWeight.w600,
@@ -125,7 +125,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
           color: const Color(0xFF1A1A1A),
         ),
         decoration: InputDecoration(
-          hintText: 'Search bookmarks...',
+          hintText: 'Tìm kiếm đánh dấu...',
           hintStyle: GoogleFonts.inter(
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -256,7 +256,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
 
                 // Word
                 Text(
-                  bookmark.word ?? 'Unknown word',
+                  bookmark.word ?? 'Từ không xác định',
                   style: GoogleFonts.inter(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
@@ -282,7 +282,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
 
                 // Meaning (replacing definition)
                 Text(
-                  bookmark.meaning ?? 'No meaning available',
+                  bookmark.meaning ?? 'Không có nghĩa',
                   style: GoogleFonts.inter(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
@@ -310,7 +310,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
-                          'Example',
+                          'Ví dụ',
                           style: GoogleFonts.inter(
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
@@ -352,7 +352,9 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
           ),
           const SizedBox(height: 16),
           Text(
-            _searchQuery.isNotEmpty ? 'No bookmarks found' : 'No bookmarks yet',
+            _searchQuery.isNotEmpty
+                ? 'Không tìm thấy đánh dấu'
+                : 'Chưa có đánh dấu nào',
             style: GoogleFonts.inter(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -362,8 +364,8 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
           const SizedBox(height: 8),
           Text(
             _searchQuery.isNotEmpty
-                ? 'Try searching with different keywords'
-                : 'Start learning and bookmark words you want to remember',
+                ? 'Thử tìm kiếm với từ khóa khác'
+                : 'Bắt đầu học và đánh dấu những từ bạn muốn nhớ',
             style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w400,
@@ -392,7 +394,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
                 ),
               ),
               child: Text(
-                'Start Learning',
+                'Bắt đầu học',
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -425,7 +427,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
           ),
           const SizedBox(height: 16),
           Text(
-            'Something went wrong',
+            'Có lỗi xảy ra',
             style: GoogleFonts.inter(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -461,7 +463,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
               ),
             ),
             child: Text(
-              'Try Again',
+              'Thử lại',
               style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -486,7 +488,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Sort by',
+              'Sắp xếp theo',
               style: GoogleFonts.inter(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -494,9 +496,9 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
               ),
             ),
             const SizedBox(height: 16),
-            _buildSortOption('Recently Added', Icons.access_time),
-            _buildSortOption('Alphabetical', Icons.sort_by_alpha),
-            _buildSortOption('Difficulty', Icons.signal_cellular_alt),
+            _buildSortOption('Mới thêm gần đây', Icons.access_time),
+            _buildSortOption('Thứ tự bảng chữ cái', Icons.sort_by_alpha),
+            _buildSortOption('Độ khó', Icons.signal_cellular_alt),
             const SizedBox(height: 16),
           ],
         ),
@@ -558,7 +560,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
                   children: [
                     Expanded(
                       child: Text(
-                        bookmark.word ?? 'Unknown word',
+                        bookmark.word ?? 'Từ không xác định',
                         style: GoogleFonts.inter(
                           fontSize: 28,
                           fontWeight: FontWeight.w700,
@@ -595,7 +597,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
 
                 // Meaning
                 Text(
-                  bookmark.meaning ?? 'No meaning available',
+                  bookmark.meaning ?? 'Không có nghĩa',
                   style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.w400,
@@ -609,7 +611,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
                 // Example if available
                 if (bookmark.exampleSentence?.isNotEmpty ?? false) ...[
                   Text(
-                    'Example',
+                    'Ví dụ',
                     style: GoogleFonts.inter(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -653,7 +655,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
           borderRadius: BorderRadius.circular(16),
         ),
         title: Text(
-          'Remove Bookmark',
+          'Xóa đánh dấu',
           style: GoogleFonts.inter(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -661,7 +663,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
           ),
         ),
         content: Text(
-          'Are you sure you want to remove "${bookmark.word ?? 'this word'}" from your bookmarks?',
+          'Bạn có chắc chắn muốn xóa "${bookmark.word ?? 'từ này'}" khỏi danh sách đánh dấu không?',
           style: GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.w400,
@@ -672,7 +674,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
             child: Text(
-              'Cancel',
+              'Hủy',
               style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -687,13 +689,15 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
                 await ref
                     .read(bookmarksControllerProvider.notifier)
                     .removeBookmark(bookmark.id ?? 0);
-                _showSnackBar('Bookmark removed');
+                _showSnackBar('Đã xóa đánh dấu');
               } catch (e) {
-                _showSnackBar('Remove bookmark feature is coming soon!');
+                _showSnackBar(
+                  'đã sảy ra lỗi khi xóa đánh dấu vui lòng thử lại',
+                );
               }
             },
             child: Text(
-              'Remove',
+              'Xóa',
               style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -709,10 +713,13 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
   Color _getDifficultyColor(String difficulty) {
     switch (difficulty.toLowerCase()) {
       case 'easy':
+      case 'cơ bản':
         return const Color(0xFF10B981);
       case 'medium':
+      case 'trung bình':
         return const Color(0xFFF59E0B);
       case 'hard':
+      case 'khó':
         return const Color(0xFFEF4444);
       default:
         return const Color(0xFF6B7280);
@@ -724,11 +731,11 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
     final difference = now.difference(date).inDays;
 
     if (difference == 0) {
-      return 'Today';
+      return 'Hôm nay';
     } else if (difference == 1) {
-      return 'Yesterday';
+      return 'Hôm qua';
     } else if (difference < 7) {
-      return '$difference days ago';
+      return '$difference ngày trước';
     } else {
       return '${date.day}/${date.month}/${date.year}';
     }

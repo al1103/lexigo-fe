@@ -64,7 +64,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'Speaking Result',
+          'Kết quả phát âm',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -154,7 +154,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
                     ),
                   ),
                   const Text(
-                    'Score',
+                    'Điểm',
                     style: TextStyle(
                       fontSize: 16,
                       color: Color(0xFF6B7280), // neutral gray
@@ -225,7 +225,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
               Icon(Icons.text_fields, color: Color(0xFF8B5CF6), size: 20),
               SizedBox(width: 8),
               Text(
-                'Text Comparison',
+                'So sánh văn bản',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -238,7 +238,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
 
           // Reference Text
           _buildTextBox(
-            'Reference',
+            'Tham khảo',
             widget.speakingResult.referenceText ?? 'N/A',
             const Color(0xFF10B981),
           ),
@@ -246,7 +246,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
 
           // Spoken Text
           _buildTextBox(
-            'Your Speech',
+            'Câu nói của bạn',
             widget.speakingResult.spokenText ?? 'N/A',
             const Color(0xFF6366F1),
           ),
@@ -262,7 +262,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
                 Icon(Icons.analytics, color: Color(0xFF8B5CF6), size: 20),
                 SizedBox(width: 8),
                 Text(
-                  'IPA Pronunciation',
+                  'Phát âm IPA',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -274,14 +274,14 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
             const SizedBox(height: 12),
             if (widget.speakingResult.referenceIpa != null)
               _buildIPABox(
-                'Reference IPA',
+                'IPA tham khảo',
                 widget.speakingResult.referenceIpa!,
                 const Color(0xFF10B981),
               ),
             if (widget.speakingResult.spokenIpa != null) ...[
               const SizedBox(height: 8),
               _buildIPABox(
-                'Your IPA',
+                'IPA của bạn',
                 widget.speakingResult.spokenIpa!,
                 const Color(0xFF8B5CF6),
               ),
@@ -397,7 +397,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
               Icon(Icons.assessment, color: Color(0xFF8B5CF6), size: 20),
               SizedBox(width: 8),
               Text(
-                'Word Analysis',
+                'Phân tích từ',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -467,7 +467,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
                 Row(
                   children: [
                     const Text(
-                      'Expected: ',
+                      'Mong đợi: ',
                       style: TextStyle(
                         fontSize: 14,
                         color: Color(0xFF6B7280),
@@ -487,7 +487,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
                 Row(
                   children: [
                     const Text(
-                      'Spoken: ',
+                      'Đã nói: ',
                       style: TextStyle(
                         fontSize: 14,
                         color: Color(0xFF6B7280),
@@ -542,7 +542,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
                 widget.onTryAgain?.call();
               },
               icon: const Icon(Icons.refresh),
-              label: const Text('Try Again'),
+              label: const Text('Thử lại'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: const Color(0xFF8B5CF6),
@@ -562,7 +562,7 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
                 widget.onContinue?.call();
               },
               icon: const Icon(Icons.arrow_forward),
-              label: const Text('Continue'),
+              label: const Text('Tiếp tục'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF8B5CF6),
                 foregroundColor: Colors.white,

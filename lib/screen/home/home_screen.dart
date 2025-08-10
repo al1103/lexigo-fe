@@ -24,7 +24,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Initialize toast for this screen
+    // Khởi tạo toast cho màn hình này
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AppToast.init(context);
     });
@@ -47,10 +47,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              // Enhanced Header
+              // Header nâng cao
               _buildEnhancedHeader(context),
 
-              // Main Content
+              // Nội dung chính
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.only(top: 20),
@@ -68,34 +68,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       children: [
                         const SizedBox(height: 24),
 
-                        // Motivational Quote - Hero Section
+                        // Quote động viên - Phần hero
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: _buildHeroQuote(),
                         ),
                         const SizedBox(height: 32),
 
-                        // Stats Overview
+                        // Tổng quan thống kê
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: _buildStatsOverview(),
                         ),
                         const SizedBox(height: 32),
 
-                        // Quick Actions Grid
+                        // Lưới hành động nhanh
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: _buildModernQuickActions(context),
                         ),
                         const SizedBox(height: 32),
 
-                        // Learning Paths
+                        // Lộ trình học tập
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _buildModernSectionTitle('Learning Paths', '🚀'),
+                              _buildModernSectionTitle(
+                                'Lộ trình học tập',
+                                '🚀',
+                              ),
                               const SizedBox(height: 16),
                               _buildLearningPaths(context),
                             ],
@@ -104,10 +107,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         const SizedBox(height: 32),
 
                         // Today's Challenge
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: _buildTodayChallenge(),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                        //   child: _buildTodayChallenge(),
+                        // ),
                         const SizedBox(height: 120),
                       ],
                     ),
@@ -169,7 +172,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           const SizedBox(height: 2),
                           profileAsync.when(
                             data: (userInfo) => Text(
-                              userInfo?.fullName ?? 'Welcome back!',
+                              userInfo?.fullName ?? 'Chào mừng trở lại!',
                               style: const TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w800,
@@ -185,7 +188,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               ),
                             ),
                             error: (_, __) => const Text(
-                              'Welcome back!',
+                              'Chào mừng trở lại!',
                               style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w800,
@@ -261,11 +264,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   String _getGreeting() {
     final hour = DateTime.now().hour;
     if (hour < 12) {
-      return 'Good Morning! 🌅';
+      return 'Chào buổi sáng! 🌅';
     } else if (hour < 17) {
-      return 'Good Afternoon! ☀️';
+      return 'Chào buổi chiều! ☀️';
     } else {
-      return 'Good Evening! 🌙';
+      return 'Chào buổi tối! 🌙';
     }
   }
 
@@ -322,10 +325,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                     const SizedBox(width: 12),
                     const Text(
-                      'Daily Inspiration',
+                      'Cảm hứng hàng ngày',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
                   ],
@@ -344,7 +348,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  '— ${quotesAsync.author ?? 'Unknown'}',
+                  '— ${quotesAsync.author ?? 'Không rõ'}',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -366,7 +370,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: _buildStatCard(
               '📚',
               '${userInfo?.wordsMastered ?? 0}',
-              'Words Mastered',
+              'Từ đã thành thạo',
               const Color(0xFF10B981),
             ),
           ),
@@ -375,7 +379,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: _buildStatCard(
               '🔥',
               '${userInfo?.streakDays ?? 0}',
-              'Day Streak',
+              'Chuỗi ngày',
               const Color(0xFFEF4444),
             ),
           ),
@@ -384,7 +388,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: _buildStatCard(
               '⭐',
               _formatPoints(userInfo?.totalPoints ?? 0),
-              'XP Points',
+              'Điểm XP',
               const Color(0xFFF59E0B),
             ),
           ),
@@ -405,7 +409,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: _buildStatCard(
               '📚',
               '0',
-              'Words Mastered',
+              'Từ đã thành thạo',
               const Color(0xFF10B981),
             ),
           ),
@@ -414,14 +418,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: _buildStatCard(
               '🔥',
               '0',
-              'Day Streak',
+              'Chuỗi ngày',
               const Color(0xFFEF4444),
             ),
           ),
           const SizedBox(width: 16),
           Expanded(
-            child:
-                _buildStatCard('⭐', '0', 'XP Points', const Color(0xFFF59E0B)),
+            child: _buildStatCard('⭐', '0', 'Điểm XP', const Color(0xFFF59E0B)),
           ),
         ],
       ),
@@ -531,15 +534,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildModernSectionTitle('Quick Start', '⚡'),
+        _buildModernSectionTitle('Bắt đầu nhanh', '⚡'),
         const SizedBox(height: 16),
         Row(
           children: [
             Expanded(
               child: _buildModernActionCard(
                 '🎯',
-                'Daily Quiz',
-                'Test your skills',
+                'Quiz hàng ngày',
+                'Kiểm tra kỹ năng',
                 const Color(0xFF6366F1),
                 () {},
               ),
@@ -548,8 +551,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             Expanded(
               child: _buildModernActionCard(
                 '💬',
-                'AI Tutor',
-                'Chat & learn',
+                'Gia sư AI',
+                'Trò chuyện & học',
                 const Color(0xFF8B5CF6),
                 () => AutoRouter.of(context).pushNamed('/chat'),
               ),
@@ -649,9 +652,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         children: [
           _buildLearningPathCard(
             '📝',
-            'Vocabulary Master',
-            'Build your word power',
-            '${userInfo?.wordsMastered ?? 0} words mastered',
+            'Thành thạo từ vựng',
+            'Xây dựng vốn từ vựng',
+            '${userInfo?.wordsMastered ?? 0} từ đã thành thạo',
             const Color(0xFF3B82F6),
             _calculateVocabularyProgress(userInfo?.wordsMastered ?? 0),
             () => AutoRouter.of(context).pushNamed('/levelSelection'),
@@ -659,9 +662,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           const SizedBox(height: 16),
           _buildLearningPathCard(
             '🗣️',
-            'Speaking Practice',
-            'Perfect your pronunciation',
-            '${userInfo?.speakingTotalSessions ?? 0} sessions • Avg: ${userInfo?.speakingAverageScore ?? "0"}%',
+            'Luyện phát âm',
+            'Hoàn thiện cách phát âm',
+            '${userInfo?.speakingTotalSessions ?? 0} phiên • TB: ${userInfo?.speakingAverageScore ?? "0"}%',
             const Color(0xFFEF4444),
             _calculateSpeakingProgress(userInfo?.speakingTotalSessions ?? 0),
             () => Navigator.of(context).push(
@@ -673,9 +676,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           const SizedBox(height: 16),
           _buildLearningPathCard(
             '📖',
-            'Quiz Master',
-            'Test your knowledge',
-            '${userInfo?.quizTotalQuestions ?? 0} questions • ${userInfo?.quizCorrectAnswers ?? 0} correct',
+            'Bậc thầy Quiz',
+            'Kiểm tra kiến thức',
+            '${userInfo?.quizTotalQuestions ?? 0} câu hỏi • ${userInfo?.quizCorrectAnswers ?? 0} đúng',
             const Color(0xFF10B981),
             _calculateQuizProgress(
               userInfo?.quizCorrectAnswers ?? 0,
@@ -684,10 +687,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             () => AutoRouter.of(context).pushNamed('/chat'),
           ),
           _buildLearningPathCard(
-            '📝',
-            'Vocabulary Master',
-            'Build your word power',
-            '${userInfo?.wordsMastered ?? 0} words mastered',
+            '📷',
+            'Quét đối tượng',
+            'Học từ vựng từ camera',
+            'Nhận diện và học từ vựng',
             const Color(0xFF3B82F6),
             _calculateVocabularyProgress(userInfo?.wordsMastered ?? 0),
             () => AutoRouter.of(context).pushNamed('/camera'),
@@ -707,9 +710,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         children: [
           _buildLearningPathCard(
             '📝',
-            'Vocabulary Master',
-            'Build your word power',
-            '0 words mastered',
+            'Thành thạo từ vựng',
+            'Xây dựng vốn từ vựng',
+            '0 từ đã thành thạo',
             const Color(0xFF3B82F6),
             0,
             () => AutoRouter.of(context).pushNamed('/levelSelection'),
@@ -717,9 +720,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           const SizedBox(height: 16),
           _buildLearningPathCard(
             '🗣️',
-            'Speaking Practice',
-            'Perfect your pronunciation',
-            '0 sessions completed',
+            'Luyện phát âm',
+            'Hoàn thiện cách phát âm',
+            '0 phiên đã hoàn thành',
             const Color(0xFFEF4444),
             0,
             () => Navigator.of(context).push(
@@ -731,9 +734,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           const SizedBox(height: 16),
           _buildLearningPathCard(
             '📖',
-            'Quiz Master',
-            'Test your knowledge',
-            '0 questions answered',
+            'Bậc thầy Quiz',
+            'Kiểm tra kiến thức',
+            '0 câu hỏi đã trả lời',
             const Color(0xFF10B981),
             0,
             () => AutoRouter.of(context).pushNamed('/chat'),
@@ -986,7 +989,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Learning Progress',
+                          'Tiến độ học tập',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
@@ -995,7 +998,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Level: ${userInfo?.currentLevel?.toUpperCase() ?? "BEGINNER"} • $studyMinutes mins studied',
+                          'Cấp độ: ${userInfo?.currentLevel?.toUpperCase() ?? "CƠ BẢN"} • $studyMinutes phút đã học',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.white70,
@@ -1016,7 +1019,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Total Points: $currentPoints',
+                          'Tổng điểm: $currentPoints',
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -1025,7 +1028,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Quiz Accuracy: ${userInfo?.quizAverageScore ?? "0"}%',
+                          'Độ chính xác Quiz: ${userInfo?.quizAverageScore ?? "0"}%',
                           style: const TextStyle(
                             fontSize: 12,
                             color: Colors.white70,
@@ -1062,7 +1065,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: const Text(
-                        'Continue',
+                        'Tiếp tục',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
@@ -1142,7 +1145,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Learning Progress',
+                        'Tiến độ học tập',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w800,
@@ -1151,7 +1154,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        'Start your learning journey',
+                        'Bắt đầu hành trình học tập',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.white70,
@@ -1170,7 +1173,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Ready to begin?',
+                        'Sẵn sàng bắt đầu?',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -1205,7 +1208,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: const Text(
-                      'Start',
+                      'Bắt đầu',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,

@@ -114,7 +114,7 @@ class CameraOverlay extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    isCapturing ? 'Processing...' : 'Tap to capture',
+                    isCapturing ? 'Đang xử lý...' : 'Chạm để chụp',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,

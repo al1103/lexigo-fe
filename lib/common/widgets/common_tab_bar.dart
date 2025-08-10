@@ -31,25 +31,25 @@ class CommonTabBar extends StatelessWidget {
           children: [
             _buildTabItem(
               context,
-              'Home',
+              'Trang chủ',
               Assets.icons.icLearn,
               const HomeRoute(),
             ),
             _buildTabItem(
               context,
-              'History',
+              'Ngữ pháp',
               Assets.icons.icStories,
               const GrammarListRoute(),
             ),
             _buildTabItem(
               context,
-              'Bookmark',
-              Assets.icons.icNotifications,
+              'Đánh dấu',
+              Assets.icons.icStories,
               const BookmarksRoute(),
             ),
             _buildTabItem(
               context,
-              'Profile',
+              'Hồ sơ',
               Assets.icons.icProfile,
               const ProfileRoute(),
             ),
@@ -72,7 +72,9 @@ class CommonTabBar extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: isActive ? Colors.blue.shade50 : Colors.transparent,
+          color: isActive
+              ? const Color(0xFF6366F1).withValues(alpha: 0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -82,12 +84,18 @@ class CommonTabBar extends StatelessWidget {
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: isActive ? Colors.blue.shade100 : Colors.transparent,
+                color: isActive
+                    ? const Color(0xFF6366F1).withValues(alpha: 0.15)
+                    : Colors.transparent,
                 shape: BoxShape.circle,
               ),
               child: icon.svg(
                 width: 24,
                 height: 24,
+                colorFilter: ColorFilter.mode(
+                  isActive ? const Color(0xFF6366F1) : Colors.grey.shade600,
+                  BlendMode.srcIn,
+                ),
               ),
             ),
             const SizedBox(height: 4),
@@ -96,7 +104,8 @@ class CommonTabBar extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
-                color: isActive ? Colors.blue.shade700 : Colors.grey.shade600,
+                color:
+                    isActive ? const Color(0xFF6366F1) : Colors.grey.shade600,
               ),
               child: Text(label),
             ),

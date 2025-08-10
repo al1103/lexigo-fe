@@ -108,7 +108,7 @@ class SpeakingLevelSelectionScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Speaking Practice',
+                  'Luyện phát âm',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
@@ -117,7 +117,7 @@ class SpeakingLevelSelectionScreen extends ConsumerWidget {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  'Choose your level',
+                  'Chọn cấp độ của bạn',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.white70,
@@ -154,7 +154,7 @@ class SpeakingLevelSelectionScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Practice Pronunciation',
+                    'Luyện phát âm',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
@@ -163,7 +163,7 @@ class SpeakingLevelSelectionScreen extends ConsumerWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Perfect your speaking skills with AI feedback',
+                    'Hoàn thiện kỹ năng nói với phản hồi AI',
                     style: TextStyle(
                       fontSize: 14,
                       color: Color(0xFF64748B),
@@ -190,7 +190,7 @@ class SpeakingLevelSelectionScreen extends ConsumerWidget {
             ),
             SizedBox(height: 16),
             Text(
-              'No levels available',
+              'Không có cấp độ nào',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -237,7 +237,7 @@ class SpeakingLevelSelectionScreen extends ConsumerWidget {
           MaterialPageRoute<void>(
             builder: (context) => SpeakingScreen(
               levelCode: level.levelCode ?? '',
-              levelName: level.levelName ?? 'Unknown Level',
+              levelName: level.levelName ?? 'Cấp độ không xác định',
             ),
           ),
         );
@@ -280,7 +280,7 @@ class SpeakingLevelSelectionScreen extends ConsumerWidget {
 
             // Level Name
             Text(
-              level.levelName ?? 'Unknown',
+              level.levelName ?? 'Không rõ',
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -291,7 +291,7 @@ class SpeakingLevelSelectionScreen extends ConsumerWidget {
 
             // Level Description
             Text(
-              level.description ?? 'Practice vocabulary',
+              level.description ?? 'Luyện từ vựng',
               style: const TextStyle(
                 fontSize: 12,
                 color: Color(0xFF64748B),
@@ -406,7 +406,7 @@ class SpeakingLevelSelectionScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           const Text(
-            'Failed to load levels',
+            'Không thể tải cấp độ',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -425,7 +425,7 @@ class SpeakingLevelSelectionScreen extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text('Retry'),
+            child: const Text('Thử lại'),
           ),
         ],
       ),

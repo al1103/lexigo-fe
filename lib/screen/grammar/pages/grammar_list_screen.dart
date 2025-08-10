@@ -127,7 +127,7 @@ class _GrammarListScreenState extends ConsumerState<GrammarListScreen> {
   Widget _buildFilters(GrammarState state, GrammarNotifier controller) {
     return Column(
       children: [
-        // Categories filter
+        // Bộ lọc danh mục
         if (state.categories.isNotEmpty) ...[
           SizedBox(
             height: 50,
@@ -168,7 +168,7 @@ class _GrammarListScreenState extends ConsumerState<GrammarListScreen> {
             ),
           ),
         ],
-        // Difficulty filter
+        // Bộ lọc độ khó
         SizedBox(
           height: 50,
           child: ListView(

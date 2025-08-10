@@ -43,7 +43,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
 
-  String _targetWord = 'Loading...';
+  String _targetWord = 'Đang tải...';
   String _ipa = '';
   int _currentWordIndex = 0;
   List<VocabularyModel> _vocabularyList = [];
@@ -95,7 +95,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
         setState(() {
           _isSpeaking = false;
         });
-        _showErrorSnackBar('Text-to-speech error: $msg');
+        _showErrorSnackBar('Lỗi phát âm: $msg');
       });
   }
 
@@ -106,7 +106,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
         ref.invalidate(vocabularyLevelDetailControllerProvider(levelCode));
       }
     } catch (e) {
-      _showErrorSnackBar('Failed to load vocabulary');
+      _showErrorSnackBar('Không thể tải từ vựng');
     }
   }
 
@@ -123,7 +123,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
         _currentWordIndex < _vocabularyList.length) {
       final currentVocab = _vocabularyList[_currentWordIndex];
       setState(() {
-        _targetWord = currentVocab.word ?? 'Hello';
+        _targetWord = currentVocab.word ?? 'Xin chào';
         _ipa = _extractIPA(currentVocab.pronunciation);
       });
 
@@ -174,7 +174,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
         _isRecording = false;
         _recordingDuration = 0;
       });
-      _showErrorSnackBar('Failed to start recording');
+      _showErrorSnackBar('Không thể bắt đầu ghi âm');
     }
   }
 
@@ -227,7 +227,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
         } catch (e) {
           if (mounted) {
             Navigator.of(context).pop();
-            _showErrorSnackBar('Failed to analyze pronunciation');
+            _showErrorSnackBar('Không thể phân tích phát âm');
           }
         }
       }
@@ -245,7 +245,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
         _isRecording = false;
         _recordingDuration = 0;
       });
-      _showErrorSnackBar('Error stopping recording');
+      _showErrorSnackBar('Lỗi khi dừng ghi âm');
     }
   }
 
@@ -271,7 +271,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
             children: [
               CircularProgressIndicator(),
               SizedBox(height: 16),
-              Text('Analyzing pronunciation...'),
+              Text('Đang phân tích phát âm...'),
             ],
           ),
         ),
@@ -299,7 +299,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
       try {
         await _flutterTts.speak(_targetWord);
       } catch (e) {
-        _showErrorSnackBar('Failed to speak word');
+        _showErrorSnackBar('Không thể phát âm từ');
       }
     }
   }
@@ -313,7 +313,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        title: Text(widget.levelName ?? 'Speaking Practice'),
+        title: Text(widget.levelName ?? 'Luyện phát âm'),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
@@ -326,11 +326,11 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
             children: [
               const Icon(Icons.error, size: 48, color: Colors.red),
               const SizedBox(height: 16),
-              Text('Error: $error'),
+              Text('Lỗi: $error'),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _loadVocabulary,
-                child: const Text('Retry'),
+                child: const Text('Thử lại'),
               ),
             ],
           ),
@@ -343,7 +343,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
     final vocabularyList = data.contents;
 
     if (vocabularyList.isEmpty) {
-      return const Center(child: Text('No vocabulary available'));
+      return const Center(child: Text('Không có từ vựng nào'));
     }
 
     if (_vocabularyList.isEmpty) {
@@ -378,7 +378,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
               ],
             ),
             child: Text(
-              'Word ${_currentWordIndex + 1} of ${vocabularyList.length}',
+              'Từ ${_currentWordIndex + 1} / ${vocabularyList.length}',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -428,9 +428,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
                     ),
                     const SizedBox(width: 16),
                     Tooltip(
-                      message: _isSpeaking
-                          ? 'Stop pronunciation'
-                          : 'Hear pronunciation',
+                      message: _isSpeaking ? 'Dừng phát âm' : 'Nghe phát âm',
                       child: GestureDetector(
                         onTap: _speakCurrentWord,
                         child: AnimatedContainer(
@@ -510,7 +508,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
                 SizedBox(width: 8),
                 Flexible(
                   child: Text(
-                    'Tap the speaker icon to hear pronunciation',
+                    'Chạm biểu tượng loa để nghe phát âm',
                     style: TextStyle(
                       fontSize: 12,
                       color: Color(0xFF6366F1),
@@ -578,7 +576,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
               children: [
                 if (_isRecording) ...[
                   Text(
-                    'Recording: ${_recordingDuration}s / ${_maxDuration}s',
+                    'Đang ghi: ${_recordingDuration}s / ${_maxDuration}s',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -597,7 +595,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
                   Column(
                     children: [
                       const Text(
-                        'Tap the microphone and speak clearly',
+                        'Chạm micro và nói rõ ràng',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -624,7 +622,7 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
                               ),
                               SizedBox(width: 4),
                               Text(
-                                'Hear again',
+                                'Nghe lại',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Color(0xFF6366F1),
@@ -685,8 +683,8 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
                 const SizedBox(height: 16),
                 Text(
                   _isRecording
-                      ? 'Tap to stop recording'
-                      : 'Tap to start recording',
+                      ? 'Chạm để dừng ghi âm'
+                      : 'Chạm để bắt đầu ghi âm',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
