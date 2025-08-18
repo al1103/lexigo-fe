@@ -6,7 +6,6 @@ environment:
   sdk: ^3.5.0
 
 dependencies:
-  liquid_glass_renderer: ^0.1.1-dev.9
   auto_route: ^7.5.0
   camera: ^0.11.1
   cupertino_icons: ^1.0.2
@@ -28,7 +27,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.3
   flutter_localizations:
     sdk: flutter
-  flutter_native_splash: ^2.4.6
+  flutter_native_splash: ^2.4.0
   flutter_riverpod: ^2.3.6
   flutter_svg: ^2.1.0
   flutter_tts: ^4.2.2
