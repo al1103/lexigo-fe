@@ -353,7 +353,6 @@ class _SpeakingResultScreenState extends State<SpeakingResultScreen>
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: color,
-                fontFamily: 'monospace',
               ),
             ),
           ),

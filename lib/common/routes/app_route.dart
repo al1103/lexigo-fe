@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:lexigo/auth/presentation/pages/sign_in_page.dart';
 import 'package:lexigo/auth/presentation/pages/sign_up_page.dart';
+import 'package:lexigo/auth/presentation/pages/verification_page.dart';
 import 'package:lexigo/bookmarks/presentation/pages/bookmarks_page.dart';
 import 'package:lexigo/common/routes/route_path.dart';
 import 'package:lexigo/quiz/presentation/pages/quiz_result_page.dart';
@@ -106,6 +107,10 @@ class AppRouter extends _$AppRouter {
       AutoRoute(
         page: GrammarDetailRoute.page,
         path: '/grammar-detail',
+      ),
+      AutoRoute(
+        page: VerificationRoute.page,
+        path: '/verification',
       ),
       RedirectRoute(path: '*', redirectTo: '/'),
     ];

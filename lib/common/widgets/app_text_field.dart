@@ -40,7 +40,7 @@ class AppTextField extends StatelessWidget {
         if (label != null) ...[
           Text(
             label!,
-            style: AppTextStyles.body2.copyWith(
+            style: AppTextStyles.body1.copyWith(
               fontWeight: FontWeight.w600,
               color: AppColors.neutral700,
             ),

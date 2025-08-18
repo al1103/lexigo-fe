@@ -5,17 +5,21 @@ class CameraOverlay extends StatelessWidget {
   const CameraOverlay({
     required this.isFlashOn,
     required this.isCapturing,
+    required this.isPickingImage,
     required this.onFlashToggle,
     required this.onCapture,
     required this.onBack,
+    required this.onPickImage,
     super.key,
   });
 
   final bool isFlashOn;
   final bool isCapturing;
+  final bool isPickingImage;
   final VoidCallback onFlashToggle;
   final VoidCallback onCapture;
   final VoidCallback onBack;
+  final VoidCallback onPickImage;
 
   @override
   Widget build(BuildContext context) {
@@ -66,61 +70,84 @@ class CameraOverlay extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                GestureDetector(
-                  onTap: isCapturing ? null : onCapture,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 150),
-                    width: isCapturing ? 70 : 80,
-                    height: isCapturing ? 70 : 80,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black..withValues(alpha: 0.3),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Camera button
+                    GestureDetector(
+                      onTap: isCapturing ? null : onCapture,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        width: isCapturing ? 70 : 80,
+                        height: isCapturing ? 70 : 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: isCapturing
-                        ? const Center(
-                            child: SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                color: Colors.black,
-                                strokeWidth: 3,
+                        child: isCapturing
+                            ? const Center(
+                                child: SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.black,
+                                    strokeWidth: 3,
+                                  ),
+                                ),
+                              )
+                            : const Center(
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  size: 32,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                          )
-                        : const Center(
-                            child: Icon(
-                              Icons.camera_alt,
-                              size: 32,
-                              color: Colors.black,
-                            ),
-                          ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    isCapturing ? 'Đang xử lý...' : 'Chạm để chụp',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 24),
+                    // Gallery button
+                    GestureDetector(
+                      onTap: isCapturing || isPickingImage ? null : onPickImage,
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: isPickingImage
+                            ? const Center(
+                                child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.black,
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              )
+                            : const Icon(
+                                Icons.photo_library,
+                                size: 30,
+                                color: Colors.black,
+                              ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -138,7 +165,7 @@ class CameraOverlay extends StatelessWidget {
       width: 48,
       height: 48,
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.6),
+        color: Colors.black.withOpacity(0.6),
         shape: BoxShape.circle,
       ),
       child: IconButton(

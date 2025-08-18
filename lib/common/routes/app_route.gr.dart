@@ -184,6 +184,16 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    VerificationRoute.name: (routeData) {
+      final args = routeData.argsAs<VerificationRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: VerificationPage(
+          email: args.email,
+          key: args.key,
+        ),
+      );
+    },
     VocabularyRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -706,6 +716,44 @@ class SpeakingRouteArgs {
   @override
   String toString() {
     return 'SpeakingRouteArgs{key: $key, levelCode: $levelCode, levelName: $levelName}';
+  }
+}
+
+/// generated route for
+/// [VerificationPage]
+class VerificationRoute extends PageRouteInfo<VerificationRouteArgs> {
+  VerificationRoute({
+    required String email,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          VerificationRoute.name,
+          args: VerificationRouteArgs(
+            email: email,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'VerificationRoute';
+
+  static const PageInfo<VerificationRouteArgs> page =
+      PageInfo<VerificationRouteArgs>(name);
+}
+
+class VerificationRouteArgs {
+  const VerificationRouteArgs({
+    required this.email,
+    this.key,
+  });
+
+  final String email;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'VerificationRouteArgs{email: $email, key: $key}';
   }
 }
 

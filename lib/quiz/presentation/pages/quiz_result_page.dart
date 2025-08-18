@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lexigo/common/routes/app_route.dart';
 import 'package:lexigo/common/widgets/app_button.dart';
 
 @RoutePage()
@@ -117,7 +118,7 @@ class QuizResultPage extends ConsumerWidget {
               children: [
                 Expanded(
                   child: AppButton.outline(
-                    text: 'Review Bookmarks',
+                    text: 'Xem lại đánh dấu',
                     onPressed: () => context.router.pushNamed('/bookmarks'),
                     isFullWidth: true,
                   ),
@@ -125,8 +126,8 @@ class QuizResultPage extends ConsumerWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: AppButton.primary(
-                    text: 'Try Again',
-                    onPressed: () => context.router.pop(),
+                    text: 'Quay lại',
+                    onPressed: () => context.router.replace(const HomeRoute()),
                     isFullWidth: true,
                   ),
                 ),

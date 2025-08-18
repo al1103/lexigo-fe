@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart' show ImagePicker, ImageSource;
 import 'package:lexigo/screen/scan_objects/screens/image_preview_screen.dart';
 import 'package:lexigo/screen/scan_objects/widgets/camera_overlay.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -22,6 +23,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
   bool _isCameraInitialized = false;
   bool _isFlashOn = false;
   bool _isCapturing = false;
+  bool _isPickingImage = false;
   List<CameraDescription> _cameras = [];
   final int _selectedCameraIndex = 0;
 
@@ -355,9 +357,11 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
             CameraOverlay(
               isFlashOn: _isFlashOn,
               isCapturing: _isCapturing,
+              isPickingImage: _isPickingImage,
               onFlashToggle: _toggleFlash,
               onCapture: _capturePhoto,
               onBack: () => context.router.pop(),
+              onPickImage: _pickImage,
             ),
         ],
       ),
@@ -405,6 +409,37 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
       });
     } catch (e) {
       debugPrint('Error toggling flash: $e');
+    }
+  }
+
+  Future<void> _pickImage() async {
+    if (_isCapturing || _isPickingImage) return;
+
+    try {
+      setState(() {
+        _isPickingImage = true;
+      });
+
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null && mounted) {
+        await Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (context) => ImagePreviewScreen(
+              imagePath: pickedFile.path,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      _showErrorDialog('Failed to pick image: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPickingImage = false;
+        });
+      }
     }
   }
 

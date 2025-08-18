@@ -35,10 +35,15 @@ class AppColors {
   static const Color neutral800 = Color(0xFF1F2937);
   static const Color neutral900 = Color(0xFF1E293B);
 
-  // Background colors
+  // Background colors - Light theme
   static const Color background = Color(0xFFF8FAFC);
   static const Color surface = Colors.white;
   static const Color surfaceVariant = Color(0xFFF9FAFB);
+
+  // Dark theme colors
+  static const Color backgroundDark = Color(0xFF0F172A);
+  static const Color surfaceDark = Color(0xFF1E293B);
+  static const Color surfaceVariantDark = Color(0xFF334155);
 }
 
 class AppTextStyles {

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:lexigo/auth/domain/login_response.dart';
+import 'package:lexigo/auth/domain/sign_up_request.dart';
 import 'package:lexigo/bookmarks/domain/entities/bookmark.dart';
 import 'package:lexigo/core/infrastructure/datasource/remote/api_end_point.dart';
 import 'package:lexigo/core/infrastructure/datasource/remote/api_response.dart';
@@ -29,6 +30,20 @@ abstract class ApiClient {
   Future<ApiResponse<LoginResponse>> login(
     @Field('email') String email,
     @Field('password') String password,
+  );
+
+  @POST(ApiEndPoint.register)
+  Future<SignUpResponse> register(
+    @Field('username') String username,
+    @Field('email') String email,
+    @Field('password') String password,
+    @Field('fullName') String fullName,
+  );
+
+  @POST(ApiEndPoint.verifyRegistration)
+  Future<SignUpResponse> verifyRegistration(
+    @Field('email') String email,
+    @Field('code') String code,
   );
   @POST(ApiEndPoint.profile)
   Future<ApiResponse<LoginResponse>> updateUserProfile(

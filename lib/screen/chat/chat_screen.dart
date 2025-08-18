@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lexigo/common/theme/theme_helper.dart';
 import 'package:lexigo/screen/chat/components/topic_dialog.dart';
 import 'package:lexigo/screen/chat/controller/chat_controller.dart';
 import 'package:lexigo/screen/chat/model/topic_model.dart';
@@ -125,6 +126,22 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
+  void _resetChat() {
+    setState(() {
+      // Xóa tất cả tin nhắn
+      _messages.clear();
+      // Xóa tất cả trạng thái translation
+      _translationVisible.clear();
+      _translatedMessages.clear();
+      _originalTexts.clear();
+      _isTranslating.clear();
+      // Reset trạng thái typing
+      _isTyping = false;
+      // Reset chủ đề đã chọn
+      _selectedTopic = null;
+    });
+  }
+
   void _loadWelcomeMessage(ChatTopic topic, String? aiResponse) {
     final messageText = aiResponse ?? topic.welcomeMessage;
 
@@ -136,6 +153,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
 
     setState(() {
+      // Xóa tất cả tin nhắn cũ và reset UI
+      _messages.clear();
+      // Xóa trạng thái translation
+      _translationVisible.clear();
+      _translatedMessages.clear();
+      _originalTexts.clear();
+      _isTranslating.clear();
+      // Reset trạng thái typing
+      _isTyping = false;
+      // Thêm tin nhắn chào mừng mới
       _messages.insert(0, welcomeMessage);
     });
   }
@@ -234,12 +261,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Learning Tools',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF1F2937),
+                color: ThemeHelper.getTextColor(context),
               ),
             ),
             const SizedBox(height: 20),
@@ -249,13 +276,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 _buildAttachmentOption(
                   icon: Icons.attach_file,
                   label: 'File',
-                  color: const Color(0xFFF59E0B),
+                  color: ThemeHelper.getWarningColor(context),
                   onTap: _handleFileSelection,
                 ),
                 _buildAttachmentOption(
                   icon: Icons.mic,
                   label: 'Voice',
-                  color: const Color(0xFFEF4444),
+                  color: ThemeHelper.getErrorColor(context),
                   onTap: _handleVoiceRecording,
                 ),
               ],
@@ -267,13 +294,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 _buildAttachmentOption(
                   icon: Icons.translate,
                   label: 'Multi Translate',
-                  color: const Color(0xFF06B6D4),
+                  color: ThemeHelper.getInfoColor(context),
                   onTap: _showMultiTranslateDialog,
                 ),
                 _buildAttachmentOption(
                   icon: Icons.lightbulb_outline,
                   label: 'Tips',
-                  color: const Color(0xFF8B5CF6),
+                  color: ThemeHelper.getPrimaryColor(context),
                   onTap: () {},
                 ),
               ],
@@ -292,11 +319,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.translate, color: Color(0xFF06B6D4)),
-            SizedBox(width: 8),
-            Text('Dịch đa ngôn ngữ'),
+            Icon(Icons.translate, color: ThemeHelper.getInfoColor(context)),
+            const SizedBox(width: 8),
+            const Text('Dịch đa ngôn ngữ'),
           ],
         ),
         content: Column(
@@ -358,11 +385,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         await showDialog<void>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Row(
+            title: Row(
               children: [
-                Icon(Icons.translate, color: Color(0xFF06B6D4)),
-                SizedBox(width: 8),
-                Text('Kết quả dịch'),
+                Icon(Icons.translate, color: ThemeHelper.getInfoColor(context)),
+                const SizedBox(width: 8),
+                const Text('Kết quả dịch'),
               ],
             ),
             content: SingleChildScrollView(
@@ -432,10 +459,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF06B6D4).withValues(alpha: 0.5),
+        color: ThemeHelper.getInfoColor(context).withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(8),
-        border:
-            Border.all(color: const Color(0xFF06B6D4).withValues(alpha: 0.2)),
+        border: Border.all(
+          color: ThemeHelper.getInfoColor(context).withValues(alpha: 0.2),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -727,7 +755,10 @@ Is there specific content you'd like help with? 📝''',
       actions: [
         IconButton(
           icon: const Icon(Icons.topic, color: Colors.white),
-          onPressed: _showTopicSelection,
+          onPressed: () {
+            _resetChat();
+            _showTopicSelection();
+          },
           tooltip: 'Change Topic',
         ),
         IconButton(

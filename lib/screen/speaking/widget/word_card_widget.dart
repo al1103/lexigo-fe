@@ -120,7 +120,6 @@ class WordCardWidget extends StatelessWidget {
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
                                   color: Color(0xFF667EEA),
-                                  fontFamily: 'monospace',
                                 ),
                               ),
                             ],

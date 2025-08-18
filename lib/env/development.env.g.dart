@@ -12,13 +12,13 @@ final class _Env {
   static const String appMode = '\'\'';
 
   static const List<int> _enviedkeyapiKey = <int>[
-    1334116527,
-    885673366,
+    2985244355,
+    2855527760,
   ];
 
   static const List<int> _envieddataapiKey = <int>[
-    1334116488,
-    885673393,
+    2985244388,
+    2855527799,
   ];
 
   static final String apiKey = String.fromCharCodes(List<int>.generate(
@@ -28,5 +28,5 @@ final class _Env {
   ).map((int i) => _envieddataapiKey[i] ^ _enviedkeyapiKey[i]));
 
   static const String apiUrl =
-      'https://movement-foto-indicators-heavy.trycloudflare.com/api';
+      'https://volume-server-variety-eastern.trycloudflare.com/api';
 }

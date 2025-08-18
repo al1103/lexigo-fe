@@ -468,7 +468,6 @@ class _SpeakingScreenState extends ConsumerState<SpeakingScreen>
                   style: const TextStyle(
                     fontSize: 22,
                     color: Color(0xFF6366F1),
-                    fontFamily: 'monospace',
                   ),
                 ),
                 const SizedBox(height: 18),

@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lexigo/common/theme/theme_helper.dart';
 import 'package:lexigo/common/widgets/app_toast.dart';
 import 'package:lexigo/common/widgets/common_tab_bar.dart';
-import 'package:lexigo/gen/assets.gen.dart';
 import 'package:lexigo/screen/home/controller/quotes_controller.dart';
 import 'package:lexigo/screen/profile/controller/profile_controller.dart';
 import 'package:lexigo/screen/speaking/speaking_level_selection_screen.dart';
@@ -32,16 +32,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       bottomNavigationBar: const CommonTabBar(),
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF667EEA),
-              Color(0xFF764BA2),
-              Color(0xFF8B5CF6),
-            ],
-            stops: [0.0, 0.5, 1.0],
+            colors: Theme.of(context).brightness == Brightness.dark
+                ? [
+                    ThemeHelper.getBackgroundColor(context),
+                    ThemeHelper.getPrimaryColor(context).withValues(alpha: 0.3),
+                    ThemeHelper.getPrimaryColor(context).withValues(alpha: 0.1),
+                  ]
+                : [
+                    const Color(0xFF667EEA),
+                    const Color(0xFF764BA2),
+                    const Color(0xFF8B5CF6),
+                  ],
+            stops: const [0.0, 0.5, 1.0],
           ),
         ),
         child: SafeArea(
@@ -54,9 +60,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.only(top: 20),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF8FAFC),
-                    borderRadius: BorderRadius.only(
+                  decoration: BoxDecoration(
+                    color: ThemeHelper.getBackgroundColor(context),
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30),
                     ),
@@ -79,13 +85,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: _buildStatsOverview(),
-                        ),
-                        const SizedBox(height: 32),
-
-                        // Lưới hành động nhanh
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: _buildModernQuickActions(context),
                         ),
                         const SizedBox(height: 32),
 
@@ -222,38 +221,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Stack(
-                  children: [
-                    Assets.icons.icNotifications.svg(
-                      width: 24,
-                      height: 24,
-                      colorFilter: const ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFFF6B6B),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
         ],
@@ -278,19 +245,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFF4F46E5),
-            Color(0xFF7C3AED),
-            Color(0xFFEC4899),
+            ThemeHelper.getPrimaryColor(context),
+            ThemeHelper.getPrimaryColor(context).withValues(alpha: 0.8),
+            ThemeHelper.getPrimaryColor(context).withValues(alpha: 0.6),
           ],
         ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF4F46E5)..withValues(alpha: 0.4),
+            color: ThemeHelper.getPrimaryColor(context).withValues(alpha: 0.4),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -371,7 +338,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               '📚',
               '${userInfo?.wordsMastered ?? 0}',
               'Từ đã thành thạo',
-              const Color(0xFF10B981),
+              ThemeHelper.getSuccessColor(context),
             ),
           ),
           const SizedBox(width: 16),
@@ -410,7 +377,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               '📚',
               '0',
               'Từ đã thành thạo',
-              const Color(0xFF10B981),
+              ThemeHelper.getSuccessColor(context),
             ),
           ),
           const SizedBox(width: 16),
@@ -686,6 +653,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             () => AutoRouter.of(context).pushNamed('/chat'),
           ),
+          const SizedBox(height: 16),
           _buildLearningPathCard(
             '📷',
             'Quét đối tượng',
@@ -953,18 +921,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         return Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color(0xFF059669),
-                Color(0xFF10B981),
+                const Color(0xFF059669),
+                ThemeHelper.getSuccessColor(context),
               ],
             ),
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF10B981)..withValues(alpha: 0.3),
+                color:
+                    ThemeHelper.getSuccessColor(context).withValues(alpha: 0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),

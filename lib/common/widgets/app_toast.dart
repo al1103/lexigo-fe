@@ -103,6 +103,39 @@ class AppToast {
     );
   }
 
+  // Reminder toast for learning
+  static void reminder({
+    required String message,
+    required VoidCallback onLearnNow,
+    required VoidCallback onSnooze,
+    Duration? duration,
+    ToastGravity? gravity,
+    String? title,
+  }) {
+    _showToast(
+      message,
+      ToastType.info,
+      duration: duration ?? const Duration(seconds: 5),
+      gravity: gravity ?? ToastGravity.TOP,
+      title: title ?? 'Đến giờ học rồi!',
+      customIcon: Icons.alarm,
+      onTap: onLearnNow,
+      customWidget: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          TextButton(
+            onPressed: onLearnNow,
+            child: const Text('Học ngay', style: TextStyle(color: Colors.blue)),
+          ),
+          TextButton(
+            onPressed: onSnooze,
+            child: const Text('Hoãn', style: TextStyle(color: Colors.grey)),
+          ),
+        ],
+      ),
+    );
+  }
+
   static void _showToast(
     String message,
     ToastType type, {
@@ -111,6 +144,7 @@ class AppToast {
     String? title,
     IconData? customIcon,
     VoidCallback? onTap,
+    Widget? customWidget,
   }) {
     if (_fToast == null) return;
 

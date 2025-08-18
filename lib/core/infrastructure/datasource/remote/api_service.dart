@@ -4,6 +4,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lexigo/auth/domain/login_response.dart';
+import 'package:lexigo/auth/domain/sign_up_request.dart';
 import 'package:lexigo/auth/infrastructure/token_service.dart';
 import 'package:lexigo/bookmarks/domain/entities/bookmark.dart';
 import 'package:lexigo/core/infrastructure/datasource/remote/api_client.dart';
@@ -45,6 +46,7 @@ class ApiService {
     // Add detailed logging
     _dio.interceptors.add(
       dio.LogInterceptor(
+        requestBody: true,
         responseBody: true,
         logPrint: (obj) => debugPrint('🌐 API: $obj'),
       ),
@@ -70,6 +72,25 @@ class ApiService {
     String password,
   ) async {
     final response = await _client.login(email, password);
+    return response;
+  }
+
+  Future<SignUpResponse> register(
+    String username,
+    String email,
+    String password,
+    String fullName,
+  ) async {
+    final response =
+        await _client.register(username, email, password, fullName);
+    return response;
+  }
+
+  Future<SignUpResponse> verifyRegistration(
+    String email,
+    String code,
+  ) async {
+    final response = await _client.verifyRegistration(email, code);
     return response;
   }
 
@@ -251,7 +272,12 @@ class ApiService {
     String? search,
   }) async {
     return _client.getAllGrammarArticles(
-        page, limit, difficulty, category, search);
+      page,
+      limit,
+      difficulty,
+      category,
+      search,
+    );
   }
 
   Future<ApiResponse<List<GrammarCategory>>> getGrammarCategories() async {

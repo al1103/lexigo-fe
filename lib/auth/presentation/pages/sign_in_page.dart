@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lexigo/auth/presentation/auth_controller.dart';
-import 'package:lexigo/common/routes/app_route.dart';
 import 'package:lexigo/common/routes/route_path.dart';
+import 'package:lexigo/common/widgets/app_toast.dart';
 import 'package:lexigo/gen/assets.gen.dart';
 
 @RoutePage()
@@ -18,8 +18,8 @@ class SignInPage extends ConsumerStatefulWidget {
 class _SignInPageState extends ConsumerState<SignInPage>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
-  String _email = 'admin';
-  String _password = 'dsđs';
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
   late AnimationController _animationController;
@@ -41,26 +41,25 @@ class _SignInPageState extends ConsumerState<SignInPage>
   @override
   void dispose() {
     _animationController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authControllerProvider);
+
+    // Listen to auth state changes for navigation
     ref.listen(authControllerProvider, (previous, next) {
-      switch (next) {
-        case AsyncError(:final error):
-          _showSnackBar('Invalid credentials. Please try again.');
-        case AsyncData():
-          context.router.pushAndPopUntil(
-            const HomeRoute(),
-            predicate: (route) => false,
-          );
-        default:
-          break;
+      if (next.hasError) {
+        AppToast.error('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
+      } else if (next.hasValue && !next.isLoading) {
+        // Login successful, navigate to home
+        AppToast.success('Đăng nhập thành công!');
+        context.router.pushNamed('/home');
       }
     });
-
-    final authState = ref.watch(authControllerProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -131,7 +130,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
     return Column(
       children: [
         Text(
-          'Welcome Back',
+          'Chào mừng trở lại',
           style: GoogleFonts.inter(
             fontSize: 28,
             fontWeight: FontWeight.w700,
@@ -141,7 +140,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
         ),
         const SizedBox(height: 8),
         Text(
-          'Sign in to your account',
+          'Đăng nhập vào tài khoản của bạn',
           style: GoogleFonts.inter(
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -162,19 +161,28 @@ class _SignInPageState extends ConsumerState<SignInPage>
           _buildTextField(
             label: 'Email',
             icon: Icons.email_outlined,
-            initialValue: _email,
             keyboardType: TextInputType.emailAddress,
-            onSaved: (value) => _email = value ?? '',
+            controller: _emailController,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'Vui lòng nhập email';
+              }
+              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                  .hasMatch(value)) {
+                return 'Email không hợp lệ';
+              }
+              return null;
+            },
           ),
 
           const SizedBox(height: 20),
 
           // Password field
           _buildTextField(
-            label: 'Password',
+            label: 'Mật khẩu',
             icon: Icons.lock_outline,
             obscureText: _obscurePassword,
-            initialValue: _password,
+            controller: _passwordController,
             suffixIcon: IconButton(
               onPressed: () {
                 setState(() {
@@ -189,7 +197,15 @@ class _SignInPageState extends ConsumerState<SignInPage>
                 size: 20,
               ),
             ),
-            onSaved: (value) => _password = value ?? '',
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'Vui lòng nhập mật khẩu';
+              }
+              if (value.length < 6) {
+                return 'Mật khẩu phải có ít nhất 6 ký tự';
+              }
+              return null;
+            },
           ),
 
           const SizedBox(height: 16),
@@ -202,7 +218,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
                 // Handle forgot password
               },
               child: Text(
-                'Forgot Password?',
+                'Quên mật khẩu?',
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -228,6 +244,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
     required String label,
     required IconData icon,
     String? initialValue,
+    TextEditingController? controller,
     bool obscureText = false,
     Widget? suffixIcon,
     TextInputType? keyboardType,
@@ -247,7 +264,8 @@ class _SignInPageState extends ConsumerState<SignInPage>
         ),
         const SizedBox(height: 8),
         TextFormField(
-          initialValue: initialValue,
+          controller: controller,
+          initialValue: controller == null ? initialValue : null,
           obscureText: obscureText,
           keyboardType: keyboardType,
           validator: validator,
@@ -338,7 +356,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
                 ),
               )
             : Text(
-                'Sign In',
+                'Đăng nhập',
                 style: GoogleFonts.inter(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -353,7 +371,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Don't have an account? ",
+          'Chưa có tài khoản? ',
           style: GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.w400,
@@ -368,7 +386,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
           child: Text(
-            'Sign Up',
+            'Đăng ký',
             style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w600,
@@ -381,31 +399,11 @@ class _SignInPageState extends ConsumerState<SignInPage>
   }
 
   void _signIn() {
-    _formKey.currentState?.save();
-    ref.read(authControllerProvider.notifier).signIn(
-          _email,
-          _password,
-        );
-  }
+    if (!_formKey.currentState!.validate()) return;
 
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: const Color(0xFFEF4444),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        margin: const EdgeInsets.all(16),
-      ),
-    );
+    ref.read(authControllerProvider.notifier).signIn(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
+        );
   }
 }

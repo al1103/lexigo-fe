@@ -3,7 +3,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lexigo/common/routes/app_route.dart';
+import 'package:lexigo/common/theme/app_theme.dart';
+import 'package:lexigo/common/theme/theme_provider.dart';
+import 'package:lexigo/common/utils/toast_helper.dart';
 import 'package:lexigo/core/infrastructure/service/notification_service.dart';
+import 'package:lexigo/core/infrastructure/service/notification_settings_service.dart';
 import 'package:lexigo/firebase_options.dart';
 import 'package:lexigo/l10n/generated/l10n.dart';
 
@@ -20,7 +24,18 @@ class _AppState extends ConsumerState<App> {
   @override
   void initState() {
     super.initState();
-    _initializeFirebase();
+    _initializeApp();
+  }
+
+  Future<void> _initializeApp() async {
+    // Initialize services
+    final notificationSettingsService =
+        ref.read(notificationSettingsServiceProvider);
+    ToastHelper.initialize(notificationSettingsService);
+    NotificationService.initializeWithSettings(notificationSettingsService);
+
+    // Initialize Firebase
+    await _initializeFirebase();
   }
 
   Future<void> _initializeFirebase() async {
@@ -129,58 +144,13 @@ class _AppState extends ConsumerState<App> {
 
   @override
   Widget build(BuildContext context) {
+    final themeMode = ref.watch(themeModeProvider);
+
     return MaterialApp.router(
       title: 'Lexigo',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: const Color(0xFF6366F1),
-        fontFamily: 'Inter',
-        appBarTheme: const AppBarTheme(
-          centerTitle: true,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          foregroundColor: Color(0xFF1F2937),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            elevation: 2,
-            shadowColor: const Color(0xFF6366F1).withValues(alpha: 0.2),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        ),
-        cardTheme: CardThemeData(
-          elevation: 2,
-          shadowColor: Colors.black.withValues(alpha: 0.05),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: const Color(0xFFFAFAFA),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: Colors.grey.withValues(alpha: 0.2),
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: Colors.grey.withValues(alpha: 0.2),
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(
-              color: Color(0xFF6366F1),
-              width: 2,
-            ),
-          ),
-        ),
-      ),
+      theme: AppTheme.lightTheme(context),
+      darkTheme: AppTheme.darkTheme(context),
+      themeMode: themeMode,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: appRouter.config(),

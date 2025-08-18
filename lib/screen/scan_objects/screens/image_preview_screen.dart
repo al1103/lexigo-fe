@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lexigo/common/theme/app_fonts.dart';
+import 'package:lexigo/common/utils/toast_helper.dart';
 import 'package:lexigo/screen/scan_objects/models/detection_result.dart';
 import 'package:lexigo/screen/scan_objects/scan_object_controller.dart';
 import 'package:lexigo/screen/scan_objects/widgets/image_analys.dart';
@@ -21,6 +24,43 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
   bool _hasAnalyzed = false;
   bool _showAnalysis = false;
   List<DetectionResult>? _detections;
+  Timer? _timeoutTimer;
+  Timer? _progressTimer;
+  int _secondsElapsed = 0;
+
+  @override
+  void dispose() {
+    _timeoutTimer?.cancel();
+    _progressTimer?.cancel();
+    super.dispose();
+  }
+
+  String _getErrorMessage(dynamic error) {
+    final errorString = error.toString().toLowerCase();
+
+    if (errorString.contains('500') ||
+        errorString.contains('server error') ||
+        errorString.contains('internal server error')) {
+      return 'Server AI quá tải. Vui lòng thử lại sau.';
+    } else if (errorString.contains('timeout') ||
+        errorString.contains('connection timeout')) {
+      return 'Kết nối quá chậm. Vui lòng kiểm tra mạng và thử lại.';
+    } else if (errorString.contains('network') ||
+        errorString.contains('no internet')) {
+      return 'Không có kết nối mạng. Vui lòng kiểm tra và thử lại.';
+    } else {
+      return 'Lỗi phân tích: $error';
+    }
+  }
+
+  void _showToast(String message, {bool isError = false}) {
+    if (isError) {
+      ToastHelper.showError(message);
+    } else {
+      ToastHelper.showWarning(message);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Listen to scan state changes
@@ -31,23 +71,31 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
 
         next.when(
           data: (results) {
-            if (results.isNotEmpty && _isAnalyzing) {
+            if (_isAnalyzing) {
+              _timeoutTimer?.cancel(); // Hủy timeout khi có kết quả
+              _progressTimer?.cancel(); // Hủy progress timer
               setState(() {
                 _isAnalyzing = false;
-                _detections = results;
-                _showAnalysis = true;
+                _detections = results.isNotEmpty ? results : null;
+                _showAnalysis = results.isNotEmpty;
+                _secondsElapsed = 0; // Reset counter
               });
+
+              // Hiển thị toast khi không tìm thấy object nào
+              if (results.isEmpty) {
+                _showToast('Không tìm thấy đối tượng nào trong hình ảnh');
+              }
             }
           },
           error: (error, stackTrace) {
             if (_isAnalyzing) {
-              setState(() => _isAnalyzing = false);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Error: $error'),
-                  backgroundColor: Colors.red,
-                ),
-              );
+              _timeoutTimer?.cancel(); // Hủy timeout khi có lỗi
+              _progressTimer?.cancel(); // Hủy progress timer
+              setState(() {
+                _isAnalyzing = false;
+                _secondsElapsed = 0; // Reset counter
+              });
+              _showToast(_getErrorMessage(error), isError: true);
             }
           },
           loading: () {},
@@ -98,15 +146,44 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
           if (_isAnalyzing)
             ColoredBox(
               color: Colors.black.withValues(alpha: 0.7),
-              child: const Center(
+              child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(color: Colors.white),
-                    SizedBox(height: 16),
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        SizedBox(
+                          width: 80,
+                          height: 80,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 3,
+                            value: _secondsElapsed /
+                                10, // Progress từ 0 đến 1 trong 30s
+                          ),
+                        ),
+                        Text(
+                          '${10 - _secondsElapsed}s',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
                     Text(
-                      'Analyzing image...',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      'Đang phân tích hình ảnh...',
+                      style: AppFonts.bodyLarge(color: Colors.white),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Vui lòng chờ trong giây lát',
+                      style: AppFonts.bodyMedium(
+                        color: Colors.white.withValues(alpha: 0.8),
+                      ),
                     ),
                   ],
                 ),
@@ -145,6 +222,32 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
     setState(() {
       _isAnalyzing = true;
       _hasAnalyzed = true;
+      _secondsElapsed = 0; // Reset counter
+    });
+
+    // Thiết lập progress timer
+    _progressTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_isAnalyzing && mounted) {
+        setState(() {
+          _secondsElapsed++;
+        });
+      } else {
+        timer.cancel();
+      }
+    });
+
+    // Thiết lập timeout 30 giây
+    _timeoutTimer = Timer(const Duration(seconds: 10), () {
+      if (_isAnalyzing && mounted) {
+        _progressTimer?.cancel();
+        setState(() {
+          _isAnalyzing = false;
+          _secondsElapsed = 0;
+        });
+        _showToast(
+          'Quá trình phân tích mất quá nhiều thời gian. Vui lòng thử lại.',
+        );
+      }
     });
 
     try {
@@ -154,13 +257,13 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
           );
     } catch (e) {
       if (mounted) {
-        setState(() => _isAnalyzing = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        _timeoutTimer?.cancel(); // Hủy timeout khi có lỗi
+        _progressTimer?.cancel(); // Hủy progress timer
+        setState(() {
+          _isAnalyzing = false;
+          _secondsElapsed = 0; // Reset counter
+        });
+        _showToast(_getErrorMessage(e), isError: true);
       }
     }
   }

@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lexigo/core/infrastructure/service/notification_settings_service.dart';
 
 // Provider for notification service
 final notificationServiceProvider = Provider<NotificationService>((ref) {
@@ -10,6 +11,14 @@ final notificationServiceProvider = Provider<NotificationService>((ref) {
 class NotificationService {
   static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   static String? _fcmToken;
+  static NotificationSettingsService? _settingsService;
+
+  // Initialize with settings service
+  static void initializeWithSettings(
+    NotificationSettingsService settingsService,
+  ) {
+    _settingsService = settingsService;
+  }
 
   // Initialize notifications
   Future<void> initialize() async {
@@ -121,7 +130,12 @@ class NotificationService {
       debugPrint('Body: ${message.notification?.body}');
       debugPrint('Data: ${message.data}');
 
-      onMessageReceived(message);
+      // Check if push notifications are enabled
+      if (_settingsService?.isPushEnabled ?? true) {
+        onMessageReceived(message);
+      } else {
+        debugPrint('Push notifications disabled, ignoring message');
+      }
     });
   }
 
@@ -183,6 +197,31 @@ class NotificationService {
       debugPrint('Error deleting token: $e');
     }
   }
+
+  // Enable push notifications
+  Future<void> enablePushNotifications() async {
+    try {
+      // Subscribe to default topic
+      await subscribeToTopic('lexigo_users');
+      debugPrint('Push notifications enabled');
+    } catch (e) {
+      debugPrint('Error enabling push notifications: $e');
+    }
+  }
+
+  // Disable push notifications
+  Future<void> disablePushNotifications() async {
+    try {
+      // Unsubscribe from all topics
+      await unsubscribeFromTopic('lexigo_users');
+      debugPrint('Push notifications disabled');
+    } catch (e) {
+      debugPrint('Error disabling push notifications: $e');
+    }
+  }
+
+  // Get push notification status
+  bool get isPushEnabled => _settingsService?.isPushEnabled ?? true;
 }
 
 // Background message handler

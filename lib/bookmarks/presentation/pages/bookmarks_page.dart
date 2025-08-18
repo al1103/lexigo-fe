@@ -377,9 +377,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
-                // Navigate to learning page
-                // ignore: deprecated_member_use
-                context.router.pop();
+                context.router.pushNamed('/levelSelection');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF007AFF),
@@ -688,7 +686,7 @@ class _BookmarksPageState extends ConsumerState<BookmarksPage>
               try {
                 await ref
                     .read(bookmarksControllerProvider.notifier)
-                    .removeBookmark(bookmark.id ?? 0);
+                    .removeBookmark(bookmark.wordId ?? 0);
                 _showSnackBar('Đã xóa đánh dấu');
               } catch (e) {
                 _showSnackBar(

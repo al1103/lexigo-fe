@@ -83,7 +83,7 @@ Bạn muốn biết gì về ${_customTopicController.text.trim()}?''',
         child: Container(
           constraints: BoxConstraints(
             maxHeight: maxHeight,
-            maxWidth: 500,
+            maxWidth: 700,
             minHeight: 300, // Giảm minHeight
           ),
           margin: const EdgeInsets.all(16),
