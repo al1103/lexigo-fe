@@ -32,6 +32,11 @@ abstract class ApiClient {
     @Field('password') String password,
   );
 
+  @POST(ApiEndPoint.forgotPassword)
+  Future<ApiResponse<void>> forgotPassword(
+    @Field('email') String email,
+  );
+
   @POST(ApiEndPoint.register)
   Future<SignUpResponse> register(
     @Field('username') String username,

@@ -3,24 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lexigo/auth/presentation/auth_controller.dart';
-import 'package:lexigo/common/routes/route_path.dart';
-import 'package:lexigo/common/widgets/app_toast.dart';
 import 'package:lexigo/gen/assets.gen.dart';
 
 @RoutePage()
-class SignInPage extends ConsumerStatefulWidget {
-  const SignInPage({super.key});
+class ForgotPasswordPage extends ConsumerStatefulWidget {
+  const ForgotPasswordPage({super.key});
 
   @override
-  ConsumerState<SignInPage> createState() => _SignInPageState();
+  ConsumerState<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
-class _SignInPageState extends ConsumerState<SignInPage>
+class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _obscurePassword = true;
+  String _email = '';
+  bool _emailSent = false;
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -41,28 +38,41 @@ class _SignInPageState extends ConsumerState<SignInPage>
   @override
   void dispose() {
     _animationController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authControllerProvider);
-
-    // Listen to auth state changes for navigation
     ref.listen(authControllerProvider, (previous, next) {
-      if (next.hasError) {
-        AppToast.error('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
-      } else if (next.hasValue && !next.isLoading) {
-        // Login successful, navigate to home
-        AppToast.success('Đăng nhập thành công!');
-        context.router.pushNamed('/home');
+      switch (next) {
+        case AsyncError():
+          _showSnackBar('Có lỗi xảy ra. Vui lòng thử lại.', isError: true);
+        case AsyncData():
+          setState(() {
+            _emailSent = true;
+          });
+          _showSnackBar('Email khôi phục mật khẩu đã được gửi!');
+        default:
+          break;
       }
     });
 
+    final authState = ref.watch(authControllerProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () => context.router.pop(),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Color(0xFF374151),
+            size: 20,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: FadeTransition(
           opacity: _fadeAnimation,
@@ -70,29 +80,27 @@ class _SignInPageState extends ConsumerState<SignInPage>
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
-                const SizedBox(height: 60),
+                const SizedBox(height: 20),
 
-                // Logo
-                _buildLogo(),
-
-                const SizedBox(height: 48),
-
-                // Welcome Text
-                _buildWelcomeText(),
+                // Logo and Header
+                _buildHeader(),
 
                 const SizedBox(height: 40),
 
-                // Form
+                // Content
                 Expanded(
                   child: SingleChildScrollView(
-                    child: _buildForm(authState),
+                    child: _emailSent
+                        ? _buildSuccessContent()
+                        : _buildForm(authState),
                   ),
                 ),
 
-                // Sign up link
-                _buildSignUpLink(),
-
-                const SizedBox(height: 32),
+                if (!_emailSent) ...[
+                  // Back to Sign In link
+                  _buildBackToSignInLink(),
+                  const SizedBox(height: 32),
+                ],
               ],
             ),
           ),
@@ -101,36 +109,34 @@ class _SignInPageState extends ConsumerState<SignInPage>
     );
   }
 
-  Widget _buildLogo() {
-    return Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        color: const Color(0xFF007AFF),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x4D007AFF),
-            blurRadius: 20,
-            offset: Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Center(
-        child: Assets.icons.logo.image(
-          width: 40,
-          height: 40,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWelcomeText() {
+  Widget _buildHeader() {
     return Column(
       children: [
+        Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            color: const Color(0xFF007AFF),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x4D007AFF),
+                blurRadius: 20,
+                offset: Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Center(
+            child: Assets.icons.logo.image(
+              width: 40,
+              height: 40,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        const SizedBox(height: 32),
         Text(
-          'Chào mừng trở lại',
+          _emailSent ? 'Check Your Email' : 'Forgot Password?',
           style: GoogleFonts.inter(
             fontSize: 28,
             fontWeight: FontWeight.w700,
@@ -140,11 +146,15 @@ class _SignInPageState extends ConsumerState<SignInPage>
         ),
         const SizedBox(height: 8),
         Text(
-          'Đăng nhập vào tài khoản của bạn',
+          _emailSent
+              ? "We've sent a password reset link to your email"
+              : "Enter your email address and we'll send you a link to reset your password",
+          textAlign: TextAlign.center,
           style: GoogleFonts.inter(
             fontSize: 16,
             fontWeight: FontWeight.w400,
             color: const Color(0xFF6B7280),
+            height: 1.4,
           ),
         ),
       ],
@@ -157,14 +167,16 @@ class _SignInPageState extends ConsumerState<SignInPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const SizedBox(height: 20),
+
           // Email field
           _buildTextField(
-            label: 'Email',
+            label: 'Email Address',
             icon: Icons.email_outlined,
+            initialValue: _email,
             keyboardType: TextInputType.emailAddress,
-            controller: _emailController,
             validator: (value) {
-              if (value == null || value.trim().isEmpty) {
+              if (value == null || value.isEmpty) {
                 return 'Vui lòng nhập email';
               }
               if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
@@ -173,66 +185,14 @@ class _SignInPageState extends ConsumerState<SignInPage>
               }
               return null;
             },
-          ),
-
-          const SizedBox(height: 20),
-
-          // Password field
-          _buildTextField(
-            label: 'Mật khẩu',
-            icon: Icons.lock_outline,
-            obscureText: _obscurePassword,
-            controller: _passwordController,
-            suffixIcon: IconButton(
-              onPressed: () {
-                setState(() {
-                  _obscurePassword = !_obscurePassword;
-                });
-              },
-              icon: Icon(
-                _obscurePassword
-                    ? Icons.visibility_outlined
-                    : Icons.visibility_off_outlined,
-                color: const Color(0xFF9CA3AF),
-                size: 20,
-              ),
-            ),
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'Vui lòng nhập mật khẩu';
-              }
-              if (value.length < 6) {
-                return 'Mật khẩu phải có ít nhất 6 ký tự';
-              }
-              return null;
-            },
-          ),
-
-          const SizedBox(height: 16),
-
-          // Forgot password
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () {
-                context.router.pushNamed(RoutePath.forgotPassword);
-              },
-              child: Text(
-                'Quên mật khẩu?',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF007AFF),
-                ),
-              ),
-            ),
+            onSaved: (value) => _email = value ?? '',
           ),
 
           const SizedBox(height: 32),
 
-          // Sign in button
-          _buildSignInButton(
-            onPressed: authState.isLoading ? null : _signIn,
+          // Send Reset Link button
+          _buildSendButton(
+            onPressed: authState.isLoading ? null : _sendResetLink,
             isLoading: authState.isLoading,
           ),
         ],
@@ -240,13 +200,81 @@ class _SignInPageState extends ConsumerState<SignInPage>
     );
   }
 
+  Widget _buildSuccessContent() {
+    return Column(
+      children: [
+        const SizedBox(height: 40),
+
+        // Success Icon
+        Container(
+          width: 120,
+          height: 120,
+          decoration: BoxDecoration(
+            color: const Color(0xFFF0FDF4),
+            borderRadius: BorderRadius.circular(60),
+          ),
+          child: const Icon(
+            Icons.mark_email_read_outlined,
+            size: 60,
+            color: Color(0xFF10B981),
+          ),
+        ),
+
+        const SizedBox(height: 32),
+
+        Text(
+          'Email Sent Successfully!',
+          style: GoogleFonts.inter(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            color: const Color(0xFF1A1A1A),
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        Text(
+          'Please check your inbox and click the reset link to create a new password.',
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            color: const Color(0xFF6B7280),
+            height: 1.4,
+          ),
+        ),
+
+        const SizedBox(height: 40),
+
+        // Resend button
+        TextButton(
+          onPressed: () {
+            setState(() {
+              _emailSent = false;
+            });
+          },
+          child: Text(
+            "Didn't receive the email? Try again",
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF007AFF),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 40),
+
+        // Back to Sign In button
+        _buildBackToSignInButton(),
+      ],
+    );
+  }
+
   Widget _buildTextField({
     required String label,
     required IconData icon,
     String? initialValue,
-    TextEditingController? controller,
-    bool obscureText = false,
-    Widget? suffixIcon,
     TextInputType? keyboardType,
     String? Function(String?)? validator,
     void Function(String?)? onSaved,
@@ -264,9 +292,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
         ),
         const SizedBox(height: 8),
         TextFormField(
-          controller: controller,
-          initialValue: controller == null ? initialValue : null,
-          obscureText: obscureText,
+          initialValue: initialValue,
           keyboardType: keyboardType,
           validator: validator,
           onSaved: onSaved,
@@ -281,7 +307,6 @@ class _SignInPageState extends ConsumerState<SignInPage>
               color: const Color(0xFF9CA3AF),
               size: 20,
             ),
-            suffixIcon: suffixIcon,
             filled: true,
             fillColor: const Color(0xFFF9FAFB),
             border: OutlineInputBorder(
@@ -319,7 +344,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
     );
   }
 
-  Widget _buildSignInButton({
+  Widget _buildSendButton({
     required VoidCallback? onPressed,
     bool isLoading = false,
   }) {
@@ -329,7 +354,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
         borderRadius: BorderRadius.circular(12),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x4D007AFF), // 30% opacity
+            color: Color(0x4D007AFF),
             blurRadius: 8,
             offset: Offset(0, 4),
           ),
@@ -356,7 +381,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
                 ),
               )
             : Text(
-                'Đăng nhập',
+                'Send Reset Link',
                 style: GoogleFonts.inter(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -366,12 +391,41 @@ class _SignInPageState extends ConsumerState<SignInPage>
     );
   }
 
-  Widget _buildSignUpLink() {
+  Widget _buildBackToSignInButton() {
+    return Container(
+      height: 52,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF007AFF)),
+      ),
+      child: ElevatedButton(
+        onPressed: () => context.router.pop(),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          foregroundColor: const Color(0xFF007AFF),
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: EdgeInsets.zero,
+        ),
+        child: Text(
+          'Back to Sign In',
+          style: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBackToSignInLink() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Chưa có tài khoản? ',
+          'Remember your password? ',
           style: GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.w400,
@@ -379,14 +433,14 @@ class _SignInPageState extends ConsumerState<SignInPage>
           ),
         ),
         TextButton(
-          onPressed: () => context.router.pushNamed(RoutePath.signUp),
+          onPressed: () => context.router.pop(),
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,
             minimumSize: Size.zero,
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
           child: Text(
-            'Đăng ký',
+            'Sign In',
             style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w600,
@@ -398,12 +452,32 @@ class _SignInPageState extends ConsumerState<SignInPage>
     );
   }
 
-  void _signIn() {
-    if (!_formKey.currentState!.validate()) return;
+  void _sendResetLink() {
+    if (_formKey.currentState?.validate() ?? false) {
+      _formKey.currentState?.save();
+      ref.read(authControllerProvider.notifier).forgotPassword(_email);
+    }
+  }
 
-    ref.read(authControllerProvider.notifier).signIn(
-          _emailController.text.trim(),
-          _passwordController.text.trim(),
-        );
+  void _showSnackBar(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor:
+            isError ? const Color(0xFFEF4444) : const Color(0xFF10B981),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        margin: const EdgeInsets.all(16),
+      ),
+    );
   }
 }

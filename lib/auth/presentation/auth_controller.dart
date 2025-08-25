@@ -27,6 +27,15 @@ class AuthController extends _$AuthController {
     );
   }
 
+  Future<void> forgotPassword(String email) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () async {
+        await ref.read(authRepositoryProvider).forgotPassword(email);
+      },
+    );
+  }
+
   Future<void> logout() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(

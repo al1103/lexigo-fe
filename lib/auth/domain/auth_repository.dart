@@ -2,6 +2,7 @@ import 'package:lexigo/auth/domain/sign_up_request.dart';
 
 mixin AuthRepository {
   Future<String> signIn(String email, String password);
+  Future<void> forgotPassword(String email);
   Future<SignUpResponse> signUp(
     String username,
     String email,

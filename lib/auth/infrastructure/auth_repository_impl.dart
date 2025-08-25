@@ -19,6 +19,17 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<void> forgotPassword(String email) async {
+    // Call API để gửi email reset password
+    final result = await apiService.forgotPassword(email);
+    if (result.status != '200') {
+      throw Exception(
+        result.message ?? 'Có lỗi xảy ra khi gửi email reset password',
+      );
+    }
+  }
+
+  @override
   Future<SignUpResponse> signUp(
     String username,
     String email,

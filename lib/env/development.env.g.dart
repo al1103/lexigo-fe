@@ -12,13 +12,13 @@ final class _Env {
   static const String appMode = '\'\'';
 
   static const List<int> _enviedkeyapiKey = <int>[
-    2985244355,
-    2855527760,
+    1258985139,
+    558120250,
   ];
 
   static const List<int> _envieddataapiKey = <int>[
-    2985244388,
-    2855527799,
+    1258985108,
+    558120221,
   ];
 
   static final String apiKey = String.fromCharCodes(List<int>.generate(
@@ -28,5 +28,5 @@ final class _Env {
   ).map((int i) => _envieddataapiKey[i] ^ _enviedkeyapiKey[i]));
 
   static const String apiUrl =
-      'https://volume-server-variety-eastern.trycloudflare.com/api';
+      'https://occasions-scanned-gifts-defects.trycloudflare.com/api';
 }

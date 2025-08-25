@@ -75,6 +75,11 @@ class ApiService {
     return response;
   }
 
+  Future<ApiResponse<void>> forgotPassword(String email) async {
+    final response = await _client.forgotPassword(email);
+    return response;
+  }
+
   Future<SignUpResponse> register(
     String username,
     String email,
