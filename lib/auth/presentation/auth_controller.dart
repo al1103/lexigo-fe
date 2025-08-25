@@ -78,4 +78,22 @@ class AuthController extends _$AuthController {
       return null;
     }
   }
+
+  Future<bool> verifyOtp(String email, String otp) async {
+    try {
+      await ref.read(authRepositoryProvider).verifyOtp(email, otp);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> resetPassword(String email, String newPassword) async {
+    try {
+      await ref.read(authRepositoryProvider).resetPassword(email, newPassword);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

@@ -80,6 +80,19 @@ class ApiService {
     return response;
   }
 
+  Future<ApiResponse<void>> verifyOtp(String email, String otp) async {
+    final response = await _client.verifyOtp(email, otp);
+    return response;
+  }
+
+  Future<ApiResponse<void>> resetPassword(
+    String email,
+    String newPassword,
+  ) async {
+    final response = await _client.resetPassword(email, newPassword);
+    return response;
+  }
+
   Future<SignUpResponse> register(
     String username,
     String email,
@@ -184,13 +197,11 @@ class ApiService {
 
   Future<ApiResponse<void>> updateUserProfile({
     String? fullName,
-    String? email,
     String? avatarUrl,
     String? username, // Add username if your model supports it
   }) async {
     return _client.updateUserProfile(
       fullName ?? '',
-      email ?? '',
       avatarUrl ?? '',
       username ?? '',
     );

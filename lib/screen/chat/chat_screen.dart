@@ -11,6 +11,7 @@ import 'package:lexigo/common/theme/theme_helper.dart';
 import 'package:lexigo/screen/chat/components/topic_dialog.dart';
 import 'package:lexigo/screen/chat/controller/chat_controller.dart';
 import 'package:lexigo/screen/chat/model/topic_model.dart';
+import 'package:lexigo/screen/word_learning/text_to_speech.dart';
 import 'package:translator/translator.dart';
 import 'package:uuid/uuid.dart';
 
@@ -33,19 +34,93 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   // Translator instance
   final GoogleTranslator _translator = GoogleTranslator();
 
+  // TTS instance
+  final TTSService _ttsService = TTSService();
+
   // Maps để theo dõi trạng thái translation
   final Map<String, bool> _translationVisible = {};
   final Map<String, String> _translatedMessages = {};
   final Map<String, String> _originalTexts = {};
   final Map<String, bool> _isTranslating = {}; // Theo dõi trạng thái đang dịch
 
+  // TTS status tracking
+  bool _isSpeaking = false;
+
   @override
   void initState() {
     super.initState();
     _initializeUsers();
+    _initializeTTS();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showTopicSelection();
     });
+  }
+
+  @override
+  void dispose() {
+    _ttsService.dispose();
+    super.dispose();
+  }
+
+  void _initializeTTS() {
+    _ttsService.initialize();
+
+    // Setup TTS callbacks
+    _ttsService.onSpeechStart = () {
+      if (mounted) {
+        setState(() {
+          _isSpeaking = true;
+        });
+      }
+    };
+
+    _ttsService.onSpeechComplete = () {
+      if (mounted) {
+        setState(() {
+          _isSpeaking = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 8),
+                Text('✅ Hoàn thành phát âm'),
+              ],
+            ),
+            backgroundColor: const Color(0xFF059669),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 1),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
+    };
+
+    _ttsService.onSpeechError = (error) {
+      if (mounted) {
+        setState(() {
+          _isSpeaking = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.error_outline, color: Colors.white),
+                const SizedBox(width: 8),
+                Expanded(child: Text('❌ Lỗi phát âm: $error')),
+              ],
+            ),
+            backgroundColor: const Color(0xFFEF4444),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 2),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
+    };
   }
 
   void _initializeUsers() {
@@ -1038,15 +1113,17 @@ Is there specific content you'd like help with? 📝''',
                       ),
                       _buildDivider(),
                       IconButton(
-                        icon: const Icon(
-                          Icons.volume_up,
+                        icon: Icon(
+                          _isSpeaking ? Icons.volume_off : Icons.volume_up,
                           size: 18,
-                          color: Color(0xFF10B981),
+                          color: _isSpeaking
+                              ? const Color(0xFFEF4444)
+                              : const Color(0xFF10B981),
                         ),
                         onPressed: () => _speakMessage(
                           _originalTexts[message.id] ?? message.text,
                         ),
-                        tooltip: 'Nghe',
+                        tooltip: _isSpeaking ? 'Dừng phát âm' : 'Nghe',
                       ),
                       _buildDivider(),
                       IconButton(
@@ -1276,49 +1353,63 @@ Is there specific content you'd like help with? 📝''',
 
   // Helper methods for bubble actions
 
-  void _speakMessage(String text) {
-    // Mock TTS với feedback
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.volume_up, color: Colors.white),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                '🔊 Đang phát: "${text.length > 30 ? '${text.substring(0, 30)}...' : text}"',
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: const Color(0xFF10B981),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-    );
+  Future<void> _speakMessage(String text) async {
+    // Nếu đang phát âm, dừng lại
+    if (_isSpeaking) {
+      await _ttsService.stop();
+      setState(() {
+        _isSpeaking = false;
+      });
+      return;
+    }
 
-    // Simulate speaking delay
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 8),
-                Text('✅ Hoàn thành phát âm'),
-              ],
-            ),
-            backgroundColor: const Color(0xFF059669),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 1),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    try {
+      // Show starting feedback
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.volume_up, color: Colors.white),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '🔊 Đang phát: "${text.length > 30 ? '${text.substring(0, 30)}...' : text}"',
+                ),
+              ),
+            ],
           ),
-        );
-      }
-    });
+          backgroundColor: const Color(0xFF10B981),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+
+      // Thực hiện phát âm
+      await _ttsService.speak(text);
+    } catch (e) {
+      // Handle error
+      setState(() {
+        _isSpeaking = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.error_outline, color: Colors.white),
+              const SizedBox(width: 8),
+              Expanded(child: Text('❌ Lỗi phát âm: $e')),
+            ],
+          ),
+          backgroundColor: const Color(0xFFEF4444),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+    }
   }
 
   void _copyMessageToClipboard(String text) {

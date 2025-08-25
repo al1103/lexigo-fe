@@ -3,6 +3,8 @@ class ApiEndPoint {
 
   static const String login = '/login';
   static const String forgotPassword = '/forgot-password';
+  static const String verifyOtp = '/verify-otp';
+  static const String resetPassword = '/reset-password';
   static const String register = '/register';
   static const String verifyRegistration = '/verify-registration';
   static const String scanObjects = '/ai/image-prompt';

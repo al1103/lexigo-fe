@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:lexigo/auth/presentation/pages/forgot_password_page.dart';
+import 'package:lexigo/auth/presentation/pages/otp_verification_page.dart';
+import 'package:lexigo/auth/presentation/pages/reset_password_page.dart';
 import 'package:lexigo/auth/presentation/pages/sign_in_page.dart';
 import 'package:lexigo/auth/presentation/pages/sign_up_page.dart';
 import 'package:lexigo/auth/presentation/pages/verification_page.dart';
@@ -48,6 +50,14 @@ class AppRouter extends _$AppRouter {
       AutoRoute(
         page: ForgotPasswordRoute.page,
         path: RoutePath.forgotPassword,
+      ),
+      AutoRoute(
+        page: OtpVerificationRoute.page,
+        path: RoutePath.otpVerification,
+      ),
+      AutoRoute(
+        page: ResetPasswordRoute.page,
+        path: RoutePath.resetPassword,
       ),
       AutoRoute(
         page: RegisterRoute.page,

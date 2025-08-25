@@ -36,6 +36,14 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
     super.dispose();
   }
 
+  Future<void> _handleRefresh(String period) async {
+    // Invalidate ranking data based on period
+    ref.invalidate(rankingControllerProvider);
+
+    // Wait for ranking data to reload
+    await ref.read(rankingControllerProvider.future);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -253,23 +261,21 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
     String period,
   ) {
     print('Building123 $leaderboard');
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          // Top 3 Podium
-          _buildPodium(leaderboard),
+    return RefreshIndicator(
+      onRefresh: () => _handleRefresh(period),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // Top 3 Podium
+            _buildPodium(leaderboard),
 
-          const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-          // Your Position (without userRank data for now)
-          _buildYourPosition(null, period),
-
-          const SizedBox(height: 24),
-
-          // Full Ranking List
-          _buildRankingList(leaderboard),
-        ],
+            // Full Ranking List
+            _buildRankingList(leaderboard),
+          ],
+        ),
       ),
     );
   }

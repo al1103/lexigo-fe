@@ -12,13 +12,13 @@ final class _Env {
   static const String appMode = '\'\'';
 
   static const List<int> _enviedkeyapiKey = <int>[
-    1272343822,
-    412691690,
+    2696077998,
+    2763449288,
   ];
 
   static const List<int> _envieddataapiKey = <int>[
-    1272343849,
-    412691661,
+    2696077961,
+    2763449327,
   ];
 
   static final String apiKey = String.fromCharCodes(List<int>.generate(

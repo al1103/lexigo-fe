@@ -3,8 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:lexigo/common/widgets/common_tab_bar.dart';
 
 @RoutePage()
-class HistoryScreen extends StatelessWidget {
+class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
+
+  @override
+  State<HistoryScreen> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
+  Future<void> _handleRefresh() async {
+    // Simulate refresh delay
+    await Future<void>.delayed(const Duration(seconds: 1));
+
+    // In a real app, you would refresh history data here
+    // e.g., call an API or update from a data source
+    if (mounted) {
+      setState(() {
+        // Trigger rebuild to show refreshed data
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,37 +41,40 @@ class HistoryScreen extends StatelessWidget {
       ),
       body: ColoredBox(
         color: Colors.blue.shade50,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            _buildHistoryItem(
-              'Bài học số 1: Từ vựng cơ bản',
-              'Hoàn thành: 15 từ',
-              '2 giờ trước',
-              Colors.green,
-            ),
-            const SizedBox(height: 12),
-            _buildHistoryItem(
-              'Bài học số 2: Ngữ pháp',
-              'Điểm số: 85/100',
-              '5 giờ trước',
-              Colors.orange,
-            ),
-            const SizedBox(height: 12),
-            _buildHistoryItem(
-              'Bài học số 3: Luyện nghe',
-              'Hoàn thành: 10 câu hỏi',
-              'Hôm qua',
-              Colors.blue,
-            ),
-            const SizedBox(height: 12),
-            _buildHistoryItem(
-              'Bài học số 4: Từ vựng nâng cao',
-              'Hoàn thành: 20 từ',
-              '2 ngày trước',
-              Colors.purple,
-            ),
-          ],
+        child: RefreshIndicator(
+          onRefresh: _handleRefresh,
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              _buildHistoryItem(
+                'Bài học số 1: Từ vựng cơ bản',
+                'Hoàn thành: 15 từ',
+                '2 giờ trước',
+                Colors.green,
+              ),
+              const SizedBox(height: 12),
+              _buildHistoryItem(
+                'Bài học số 2: Ngữ pháp',
+                'Điểm số: 85/100',
+                '5 giờ trước',
+                Colors.orange,
+              ),
+              const SizedBox(height: 12),
+              _buildHistoryItem(
+                'Bài học số 3: Luyện nghe',
+                'Hoàn thành: 10 câu hỏi',
+                'Hôm qua',
+                Colors.blue,
+              ),
+              const SizedBox(height: 12),
+              _buildHistoryItem(
+                'Bài học số 4: Từ vựng nâng cao',
+                'Hoàn thành: 20 từ',
+                '2 ngày trước',
+                Colors.purple,
+              ),
+            ],
+          ),
         ),
       ),
     );

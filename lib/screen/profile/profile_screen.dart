@@ -15,6 +15,11 @@ import 'package:lexigo/screen/profile/user_info_model.dart';
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
+  Future<void> _handleRefresh(WidgetRef ref) async {
+    // Refresh profile data
+    await ref.read(profileControllerProvider.notifier).refreshProfile();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileState = ref.watch(profileControllerProvider);
@@ -85,38 +90,41 @@ class ProfileScreen extends ConsumerWidget {
       return _buildErrorContent(context, ref, 'Không có dữ liệu hồ sơ');
     }
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // Header Section
-            _buildHeader(context),
+    return RefreshIndicator(
+      onRefresh: () => _handleRefresh(ref),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              // Header Section
+              _buildHeader(context),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // User Profile Section with real data
-            _buildUserProfileSection(userInfo),
+              // User Profile Section with real data
+              _buildUserProfileSection(userInfo),
 
-            const SizedBox(height: 32),
+              const SizedBox(height: 32),
 
-            // Preferences Section
-            _buildSectionHeader('Tùy chọn', Icons.settings),
+              // Preferences Section
+              _buildSectionHeader('Tùy chọn', Icons.settings),
 
-            // Preference Items
-            _buildThemePreferenceItem(ref),
-            _buildNotificationSettingItem(ref),
-            _buildPushNotificationSettingItem(ref),
-            _buildSectionHeader('Tài khoản', Icons.account_circle),
+              // Preference Items
+              _buildThemePreferenceItem(ref),
+              _buildNotificationSettingItem(ref),
+              _buildPushNotificationSettingItem(ref),
+              _buildSectionHeader('Tài khoản', Icons.account_circle),
 
-            _buildAccountAction(context, ref, 'Chỉnh sửa hồ sơ', Icons.edit),
-            _buildAccountAction(context, ref, 'Gửi phản hồi', Icons.feedback),
-            _buildAccountAction(context, ref, 'Đăng xuất', Icons.logout),
+              _buildAccountAction(context, ref, 'Chỉnh sửa hồ sơ', Icons.edit),
+              _buildAccountAction(context, ref, 'Gửi phản hồi', Icons.feedback),
+              _buildAccountAction(context, ref, 'Đăng xuất', Icons.logout),
 
-            const SizedBox(height: 32),
+              const SizedBox(height: 32),
 
-            const SizedBox(height: 20), // Extra padding at bottom
-          ],
+              const SizedBox(height: 20), // Extra padding at bottom
+            ],
+          ),
         ),
       ),
     );

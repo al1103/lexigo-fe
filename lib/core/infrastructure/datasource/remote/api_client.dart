@@ -37,6 +37,18 @@ abstract class ApiClient {
     @Field('email') String email,
   );
 
+  @POST(ApiEndPoint.verifyOtp)
+  Future<ApiResponse<void>> verifyOtp(
+    @Field('email') String email,
+    @Field('code') String otp,
+  );
+
+  @POST(ApiEndPoint.resetPassword)
+  Future<ApiResponse<void>> resetPassword(
+    @Field('email') String email,
+    @Field('new_password') String newPassword,
+  );
+
   @POST(ApiEndPoint.register)
   Future<SignUpResponse> register(
     @Field('username') String username,
@@ -50,10 +62,9 @@ abstract class ApiClient {
     @Field('email') String email,
     @Field('code') String code,
   );
-  @POST(ApiEndPoint.profile)
-  Future<ApiResponse<LoginResponse>> updateUserProfile(
-    @Field('full_name') String fullName,
-    @Field('email') String email,
+  @PUT(ApiEndPoint.profile)
+  Future<ApiResponse<void>> updateUserProfile(
+    @Field('full_name') String? fullName,
     @Field('avatar_url') String avatarUrl,
     @Field('username') String username,
   );

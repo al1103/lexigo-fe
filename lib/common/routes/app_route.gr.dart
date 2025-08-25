@@ -95,6 +95,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const MainWrapperScreen(),
       );
     },
+    OtpVerificationRoute.name: (routeData) {
+      final args = routeData.argsAs<OtpVerificationRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: OtpVerificationPage(
+          email: args.email,
+          key: args.key,
+        ),
+      );
+    },
     ProfileRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -139,6 +149,16 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const RegisterScreen(),
+      );
+    },
+    ResetPasswordRoute.name: (routeData) {
+      final args = routeData.argsAs<ResetPasswordRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ResetPasswordPage(
+          email: args.email,
+          key: args.key,
+        ),
       );
     },
     ReviewRoute.name: (routeData) {
@@ -447,6 +467,44 @@ class MainWrapperRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [OtpVerificationPage]
+class OtpVerificationRoute extends PageRouteInfo<OtpVerificationRouteArgs> {
+  OtpVerificationRoute({
+    required String email,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          OtpVerificationRoute.name,
+          args: OtpVerificationRouteArgs(
+            email: email,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'OtpVerificationRoute';
+
+  static const PageInfo<OtpVerificationRouteArgs> page =
+      PageInfo<OtpVerificationRouteArgs>(name);
+}
+
+class OtpVerificationRouteArgs {
+  const OtpVerificationRouteArgs({
+    required this.email,
+    this.key,
+  });
+
+  final String email;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'OtpVerificationRouteArgs{email: $email, key: $key}';
+  }
+}
+
+/// generated route for
 /// [ProfileScreen]
 class ProfileRoute extends PageRouteInfo<void> {
   const ProfileRoute({List<PageRouteInfo>? children})
@@ -585,6 +643,44 @@ class RegisterRoute extends PageRouteInfo<void> {
   static const String name = 'RegisterRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ResetPasswordPage]
+class ResetPasswordRoute extends PageRouteInfo<ResetPasswordRouteArgs> {
+  ResetPasswordRoute({
+    required String email,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ResetPasswordRoute.name,
+          args: ResetPasswordRouteArgs(
+            email: email,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ResetPasswordRoute';
+
+  static const PageInfo<ResetPasswordRouteArgs> page =
+      PageInfo<ResetPasswordRouteArgs>(name);
+}
+
+class ResetPasswordRouteArgs {
+  const ResetPasswordRouteArgs({
+    required this.email,
+    this.key,
+  });
+
+  final String email;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ResetPasswordRouteArgs{email: $email, key: $key}';
+  }
 }
 
 /// generated route for

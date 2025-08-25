@@ -5,7 +5,6 @@ abstract class ProfileRepository {
   Future<ApiResponse<UserInfoModel>> getUserProfile();
   Future<ApiResponse<void>> updateUserProfile({
     String? fullName,
-    String? email,
     String? avatarUrl,
     String? username, // Add username if your model supports it
   });

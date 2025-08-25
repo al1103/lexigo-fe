@@ -46,6 +46,14 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
     super.dispose();
   }
 
+  Future<void> _handleRefresh() async {
+    // Refresh level lessons data
+    ref.invalidate(levelLessonControllerProvider);
+
+    // Wait for levels data to reload
+    await ref.read(levelLessonControllerProvider.future);
+  }
+
   @override
   Widget build(BuildContext context) {
     final lessonsAsync = ref.watch(levelLessonControllerProvider);
@@ -187,11 +195,14 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen>
 
                   // Levels List
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: lessonsModel.length,
-                      itemBuilder: (context, index) {
-                        return _buildLevelCard(lessonsModel[index], index);
-                      },
+                    child: RefreshIndicator(
+                      onRefresh: _handleRefresh,
+                      child: ListView.builder(
+                        itemCount: lessonsModel.length,
+                        itemBuilder: (context, index) {
+                          return _buildLevelCard(lessonsModel[index], index);
+                        },
+                      ),
                     ),
                   ),
                 ],

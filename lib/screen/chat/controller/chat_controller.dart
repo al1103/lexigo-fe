@@ -1,5 +1,10 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:http/http.dart' as http; // Thêm 'as http'
+import 'package:lexigo/core/services/network_service.dart';
 import 'package:lexigo/screen/chat/data/chat_repository_impl.dart';
+import 'package:lexigo/screen/chat/exceptions/network_exception.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_controller.g.dart';
@@ -14,8 +19,21 @@ class ChatController extends _$ChatController {
   Future<String?> chatAI(String message, {bool? isReset}) async {
     print('🚀 ChatController.chatAI called with:');
     print(
-        '   Message: ${message.substring(0, message.length.clamp(0, 100))}...');
+      '   Message: ${message.substring(0, message.length.clamp(0, 100))}...',
+    );
     print('   isReset: $isReset');
+
+    // Check network connectivity first
+    final networkService = ref.read(networkServiceProvider);
+    final hasConnection = await networkService.hasConnection();
+
+    if (!hasConnection) {
+      print('❌ No network connection available');
+      throw const NetworkException(
+        'Không có kết nối internet. Vui lòng kiểm tra kết nối và thử lại.',
+        NetworkErrorType.noConnection,
+      );
+    }
 
     try {
       final response = await ref.read(chatRepositoryProvider).chatAI(
@@ -24,11 +42,63 @@ class ChatController extends _$ChatController {
           );
 
       print(
-          '✅ ChatController received response: ${response.substring(0, response.length.clamp(0, 100))}...');
+        '✅ ChatController received response: ${response.substring(0, response.length.clamp(0, 100))}...',
+      );
       return response;
+    } on SocketException catch (e) {
+      print('❌ No internet connection: $e');
+      throw const NetworkException(
+        'Không có kết nối internet',
+        NetworkErrorType.noConnection,
+      );
+    } on TimeoutException catch (e) {
+      print('❌ Connection timeout: $e');
+      throw const NetworkException(
+        'Kết nối quá chậm hoặc hết thời gian chờ',
+        NetworkErrorType.timeout,
+      );
+    } on HttpException catch (e) {
+      print('❌ HTTP error: $e');
+      throw const NetworkException(
+        'Lỗi kết nối máy chủ',
+        NetworkErrorType.serverError,
+      );
+    } on FormatException catch (e) {
+      print('❌ Data format error: $e');
+      throw const NetworkException(
+        'Dữ liệu trả về không hợp lệ',
+        NetworkErrorType.badResponse,
+      );
     } catch (e) {
-      print('❌ ChatController error: $e');
-      rethrow;
+      print('❌ Unknown error: $e');
+
+      // Kiểm tra nếu là network-related errors khác
+      final errorMessage = e.toString().toLowerCase();
+      if (errorMessage.contains('network') ||
+          errorMessage.contains('connection') ||
+          errorMessage.contains('host')) {
+        throw const NetworkException(
+          'Lỗi kết nối mạng',
+          NetworkErrorType.noConnection,
+        );
+      } else if (errorMessage.contains('timeout')) {
+        throw const NetworkException(
+          'Kết nối quá chậm',
+          NetworkErrorType.timeout,
+        );
+      } else if (errorMessage.contains('500') ||
+          errorMessage.contains('502') ||
+          errorMessage.contains('503')) {
+        throw const NetworkException(
+          'Máy chủ đang bảo trì',
+          NetworkErrorType.serverError,
+        );
+      } else {
+        throw NetworkException(
+          'Có lỗi xảy ra: $e',
+          NetworkErrorType.unknown,
+        );
+      }
     }
   }
 

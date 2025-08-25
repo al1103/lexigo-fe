@@ -23,7 +23,6 @@ class EditProfileScreen extends ConsumerStatefulWidget {
 class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
-  late TextEditingController _emailController;
   late TextEditingController _usernameController;
   bool _loading = false;
   String? _avatarUrl;
@@ -35,7 +34,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     super.initState();
     final userInfo = ref.read(profileControllerProvider).value;
     _nameController = TextEditingController(text: userInfo?.fullName ?? '');
-    _emailController = TextEditingController(text: userInfo?.email ?? '');
     _usernameController = TextEditingController(text: userInfo?.username ?? '');
     _avatarUrl = userInfo?.avatarUrl;
   }
@@ -133,7 +131,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       await ref.read(profileControllerProvider.notifier).updateProfile(
             username: _usernameController.text.trim(),
             fullName: _nameController.text.trim(),
-            email: _emailController.text.trim(),
             avatarUrl: uploadedAvatarUrl,
           );
       if (mounted) {
@@ -153,7 +150,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   @override
   void dispose() {
     _nameController.dispose();
-    _emailController.dispose();
     _usernameController.dispose();
     super.dispose();
   }
@@ -302,38 +298,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     ),
                     validator: (v) =>
                         v == null || v.isEmpty ? 'Vui lòng nhập họ tên' : null,
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: BorderSide(
-                          color: Colors.grey.withValues(alpha: 0.2),
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: BorderSide(
-                          color: Colors.grey.withValues(alpha: 0.2),
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(
-                          color: Color(0xFF6366F1),
-                          width: 2,
-                        ),
-                      ),
-                      prefixIcon: const Icon(Icons.email),
-                      filled: true,
-                      fillColor: const Color(0xFFFAFAFA),
-                    ),
-                    validator: (v) =>
-                        v == null || v.isEmpty ? 'Vui lòng nhập email' : null,
-                    keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 20),
                   TextFormField(

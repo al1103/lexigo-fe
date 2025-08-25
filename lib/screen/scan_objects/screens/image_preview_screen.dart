@@ -23,6 +23,7 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
   bool _isAnalyzing = false;
   bool _hasAnalyzed = false;
   bool _showAnalysis = false;
+  bool _hasTimedOut = false; // Track timeout state
   List<DetectionResult>? _detections;
   Timer? _timeoutTimer;
   Timer? _progressTimer;
@@ -71,7 +72,8 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
 
         next.when(
           data: (results) {
-            if (_isAnalyzing) {
+            // Chỉ xử lý nếu đang analyzing và chưa timeout
+            if (_isAnalyzing && !_hasTimedOut) {
               _timeoutTimer?.cancel(); // Hủy timeout khi có kết quả
               _progressTimer?.cancel(); // Hủy progress timer
               setState(() {
@@ -85,10 +87,14 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
               if (results.isEmpty) {
                 _showToast('Không tìm thấy đối tượng nào trong hình ảnh');
               }
+            } else if (_hasTimedOut) {
+              // Nếu API về nhưng đã timeout, show toast warning
+              _showToast('API đã phản hồi nhưng quá chậm. Vui lòng thử lại.');
             }
           },
           error: (error, stackTrace) {
-            if (_isAnalyzing) {
+            // Chỉ xử lý nếu đang analyzing và chưa timeout
+            if (_isAnalyzing && !_hasTimedOut) {
               _timeoutTimer?.cancel(); // Hủy timeout khi có lỗi
               _progressTimer?.cancel(); // Hủy progress timer
               setState(() {
@@ -96,6 +102,11 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
                 _secondsElapsed = 0; // Reset counter
               });
               _showToast(_getErrorMessage(error), isError: true);
+            } else if (_hasTimedOut) {
+              // Nếu API error về nhưng đã timeout, show toast warning
+              _showToast(
+                'API đã phản hồi lỗi nhưng quá chậm. Vui lòng thử lại.',
+              );
             }
           },
           loading: () {},
@@ -160,11 +171,11 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
                             color: Colors.white,
                             strokeWidth: 3,
                             value: _secondsElapsed /
-                                10, // Progress từ 0 đến 1 trong 30s
+                                30, // Progress từ 0 đến 1 trong 30s
                           ),
                         ),
                         Text(
-                          '${10 - _secondsElapsed}s',
+                          '${30 - _secondsElapsed}s',
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14,
@@ -222,12 +233,13 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
     setState(() {
       _isAnalyzing = true;
       _hasAnalyzed = true;
+      _hasTimedOut = false; // Reset timeout flag
       _secondsElapsed = 0; // Reset counter
     });
 
     // Thiết lập progress timer
     _progressTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_isAnalyzing && mounted) {
+      if (_isAnalyzing && mounted && !_hasTimedOut) {
         setState(() {
           _secondsElapsed++;
         });
@@ -237,11 +249,12 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
     });
 
     // Thiết lập timeout 30 giây
-    _timeoutTimer = Timer(const Duration(seconds: 10), () {
-      if (_isAnalyzing && mounted) {
+    _timeoutTimer = Timer(const Duration(seconds: 30), () {
+      if (_isAnalyzing && mounted && !_hasTimedOut) {
         _progressTimer?.cancel();
         setState(() {
           _isAnalyzing = false;
+          _hasTimedOut = true; // Set timeout flag
           _secondsElapsed = 0;
         });
         _showToast(
@@ -256,7 +269,8 @@ class _ImagePreviewScreenState extends ConsumerState<ImagePreviewScreen> {
             // 'en',
           );
     } catch (e) {
-      if (mounted) {
+      // Chỉ xử lý error nếu chưa timeout
+      if (mounted && !_hasTimedOut) {
         _timeoutTimer?.cancel(); // Hủy timeout khi có lỗi
         _progressTimer?.cancel(); // Hủy progress timer
         setState(() {

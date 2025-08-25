@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lexigo/auth/domain/auth_repository.dart';
 import 'package:lexigo/auth/domain/sign_up_request.dart';
+import 'package:lexigo/core/infrastructure/datasource/remote/api_response.dart';
 import 'package:lexigo/core/infrastructure/datasource/remote/api_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -58,6 +59,21 @@ class AuthRepositoryImpl implements AuthRepository {
       message: result.message ?? 'Xác thực thành công',
       data: result.data is Map<String, dynamic> ? result.data! : null,
     );
+  }
+
+  @override
+  Future<ApiResponse<void>> verifyOtp(String email, String otp) async {
+    final result = await apiService.verifyOtp(email, otp);
+    return result;
+  }
+
+  @override
+  Future<ApiResponse<void>> resetPassword(
+    String email,
+    String newPassword,
+  ) async {
+    final result = await apiService.resetPassword(email, newPassword);
+    return result;
   }
 }
 

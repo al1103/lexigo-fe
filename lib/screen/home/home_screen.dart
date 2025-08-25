@@ -22,6 +22,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     super.initState();
   }
 
+  Future<void> _handleRefresh() async {
+    // Refresh profile data
+    ref.invalidate(profileControllerProvider);
+
+    // Refresh quotes data
+    ref.invalidate(quotesControllerProvider);
+
+    // Wait for both providers to complete
+    await Future.wait([
+      ref.read(profileControllerProvider.future),
+      ref.read(quotesControllerProvider.future),
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     // Khởi tạo toast cho màn hình này
@@ -67,51 +81,54 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       topRight: Radius.circular(30),
                     ),
                   ),
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 24),
+                  child: RefreshIndicator(
+                    onRefresh: _handleRefresh,
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 24),
 
-                        // Quote động viên - Phần hero
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: _buildHeroQuote(),
-                        ),
-                        const SizedBox(height: 32),
-
-                        // Tổng quan thống kê
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: _buildStatsOverview(),
-                        ),
-                        const SizedBox(height: 32),
-
-                        // Lộ trình học tập
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildModernSectionTitle(
-                                'Lộ trình học tập',
-                                '🚀',
-                              ),
-                              const SizedBox(height: 16),
-                              _buildLearningPaths(context),
-                            ],
+                          // Quote động viên - Phần hero
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: _buildHeroQuote(),
                           ),
-                        ),
-                        const SizedBox(height: 32),
+                          const SizedBox(height: 32),
 
-                        // Today's Challenge
-                        // Padding(
-                        //   padding: const EdgeInsets.symmetric(horizontal: 20),
-                        //   child: _buildTodayChallenge(),
-                        // ),
-                        const SizedBox(height: 120),
-                      ],
+                          // Tổng quan thống kê
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: _buildStatsOverview(),
+                          ),
+                          const SizedBox(height: 32),
+
+                          // Lộ trình học tập
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildModernSectionTitle(
+                                  'Lộ trình học tập',
+                                  '🚀',
+                                ),
+                                const SizedBox(height: 16),
+                                _buildLearningPaths(context),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 32),
+
+                          // Today's Challenge
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                          //   child: _buildTodayChallenge(),
+                          // ),
+                          const SizedBox(height: 120),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -642,9 +659,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           const SizedBox(height: 16),
           _buildLearningPathCard(
-            '📖',
-            'Bậc thầy Quiz',
-            'Kiểm tra kiến thức',
+            '🤖',
+            'Chat cùng AI',
+            'Học từ vựng từ AI',
             '${userInfo?.quizTotalQuestions ?? 0} câu hỏi • ${userInfo?.quizCorrectAnswers ?? 0} đúng',
             const Color(0xFF10B981),
             _calculateQuizProgress(

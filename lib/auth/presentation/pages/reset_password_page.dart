@@ -7,18 +7,24 @@ import 'package:lexigo/common/routes/app_route.dart';
 import 'package:lexigo/gen/assets.gen.dart';
 
 @RoutePage()
-class ForgotPasswordPage extends ConsumerStatefulWidget {
-  const ForgotPasswordPage({super.key});
+class ResetPasswordPage extends ConsumerStatefulWidget {
+  const ResetPasswordPage({
+    required this.email,
+    super.key,
+  });
+
+  final String email;
 
   @override
-  ConsumerState<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+  ConsumerState<ResetPasswordPage> createState() => _ResetPasswordPageState();
 }
 
-class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
+class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
-  String _email = '';
-  bool _emailSent = false;
+  String _password = '';
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -47,12 +53,15 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
     ref.listen(authControllerProvider, (previous, next) {
       switch (next) {
         case AsyncError():
-          _showSnackBar('Email không tồn tại trong hệ thống.', isError: true);
+          _showSnackBar('Có lỗi xảy ra. Vui lòng thử lại.', isError: true);
         case AsyncData():
-          // Navigate to OTP verification screen
-          context.router.replace(
-            OtpVerificationRoute(email: _email),
-          );
+          _showSnackBar('Mật khẩu đã được đặt lại thành công!');
+          Future.delayed(const Duration(seconds: 2), () {
+            context.router.pushAndPopUntil(
+              const SignInRoute(),
+              predicate: (route) => false,
+            );
+          });
         default:
           break;
       }
@@ -88,20 +97,14 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
 
                 const SizedBox(height: 40),
 
-                // Content
+                // Form
                 Expanded(
                   child: SingleChildScrollView(
-                    child: _emailSent
-                        ? _buildSuccessContent()
-                        : _buildForm(authState),
+                    child: _buildForm(authState),
                   ),
                 ),
 
-                if (!_emailSent) ...[
-                  // Back to Sign In link
-                  _buildBackToSignInLink(),
-                  const SizedBox(height: 32),
-                ],
+                const SizedBox(height: 32),
               ],
             ),
           ),
@@ -137,7 +140,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
         ),
         const SizedBox(height: 32),
         Text(
-          _emailSent ? 'Check Your Email' : 'Forgot Password?',
+          'Tạo mật khẩu mới',
           style: GoogleFonts.inter(
             fontSize: 28,
             fontWeight: FontWeight.w700,
@@ -147,9 +150,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
         ),
         const SizedBox(height: 8),
         Text(
-          _emailSent
-              ? "We've sent a password reset link to your email"
-              : "Enter your email address and we'll send you a link to reset your password",
+          'Mật khẩu mới phải khác mật khẩu cũ\nvà có ít nhất 8 ký tự',
           textAlign: TextAlign.center,
           style: GoogleFonts.inter(
             fontSize: 16,
@@ -170,30 +171,79 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
         children: [
           const SizedBox(height: 20),
 
-          // Email field
+          // Password field
           _buildTextField(
-            label: 'Email Address',
-            icon: Icons.email_outlined,
-            initialValue: _email,
-            keyboardType: TextInputType.emailAddress,
+            label: 'Mật khẩu mới',
+            icon: Icons.lock_outline,
+            obscureText: _obscurePassword,
+            suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  _obscurePassword = !_obscurePassword;
+                });
+              },
+              icon: Icon(
+                _obscurePassword
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+                color: const Color(0xFF9CA3AF),
+                size: 20,
+              ),
+            ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Vui lòng nhập email';
+                return 'Vui lòng nhập mật khẩu mới';
               }
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                  .hasMatch(value)) {
-                return 'Email không hợp lệ';
+              if (value.length < 8) {
+                return 'Mật khẩu phải có ít nhất 8 ký tự';
               }
               return null;
             },
-            onSaved: (value) => _email = value ?? '',
+            onSaved: (value) => _password = value ?? '',
           ),
+
+          const SizedBox(height: 20),
+
+          // Confirm Password field
+          _buildTextField(
+            label: 'Xác nhận mật khẩu',
+            icon: Icons.lock_outline,
+            obscureText: _obscureConfirmPassword,
+            suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  _obscureConfirmPassword = !_obscureConfirmPassword;
+                });
+              },
+              icon: Icon(
+                _obscureConfirmPassword
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+                color: const Color(0xFF9CA3AF),
+                size: 20,
+              ),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Vui lòng xác nhận mật khẩu';
+              }
+              if (value != _password) {
+                return 'Mật khẩu xác nhận không khớp';
+              }
+              return null;
+            },
+          ),
+
+          const SizedBox(height: 8),
+
+          // Password requirements
+          _buildPasswordRequirements(),
 
           const SizedBox(height: 32),
 
-          // Send Reset Link button
-          _buildSendButton(
-            onPressed: authState.isLoading ? null : _sendResetLink,
+          // Reset Password button
+          _buildResetButton(
+            onPressed: authState.isLoading ? null : _resetPassword,
             isLoading: authState.isLoading,
           ),
         ],
@@ -201,82 +251,11 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
     );
   }
 
-  Widget _buildSuccessContent() {
-    return Column(
-      children: [
-        const SizedBox(height: 40),
-
-        // Success Icon
-        Container(
-          width: 120,
-          height: 120,
-          decoration: BoxDecoration(
-            color: const Color(0xFFF0FDF4),
-            borderRadius: BorderRadius.circular(60),
-          ),
-          child: const Icon(
-            Icons.mark_email_read_outlined,
-            size: 60,
-            color: Color(0xFF10B981),
-          ),
-        ),
-
-        const SizedBox(height: 32),
-
-        Text(
-          'Email Sent Successfully!',
-          style: GoogleFonts.inter(
-            fontSize: 24,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF1A1A1A),
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        Text(
-          'Please check your inbox and click the reset link to create a new password.',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
-            color: const Color(0xFF6B7280),
-            height: 1.4,
-          ),
-        ),
-
-        const SizedBox(height: 40),
-
-        // Resend button
-        TextButton(
-          onPressed: () {
-            setState(() {
-              _emailSent = false;
-            });
-          },
-          child: Text(
-            "Didn't receive the email? Try again",
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF007AFF),
-            ),
-          ),
-        ),
-
-        const SizedBox(height: 40),
-
-        // Back to Sign In button
-        _buildBackToSignInButton(),
-      ],
-    );
-  }
-
   Widget _buildTextField({
     required String label,
     required IconData icon,
-    String? initialValue,
-    TextInputType? keyboardType,
+    bool obscureText = false,
+    Widget? suffixIcon,
     String? Function(String?)? validator,
     void Function(String?)? onSaved,
   }) {
@@ -293,10 +272,15 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
         ),
         const SizedBox(height: 8),
         TextFormField(
-          initialValue: initialValue,
-          keyboardType: keyboardType,
+          obscureText: obscureText,
           validator: validator,
           onSaved: onSaved,
+          onChanged: (value) {
+            if (label == 'Mật khẩu mới') {
+              _password = value;
+            }
+            setState(() {});
+          },
           style: GoogleFonts.inter(
             fontSize: 16,
             fontWeight: FontWeight.w400,
@@ -308,6 +292,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
               color: const Color(0xFF9CA3AF),
               size: 20,
             ),
+            suffixIcon: suffixIcon,
             filled: true,
             fillColor: const Color(0xFFF9FAFB),
             border: OutlineInputBorder(
@@ -345,7 +330,60 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
     );
   }
 
-  Widget _buildSendButton({
+  Widget _buildPasswordRequirements() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF9FAFB),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Yêu cầu mật khẩu:',
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF374151),
+            ),
+          ),
+          const SizedBox(height: 4),
+          _buildRequirement('Ít nhất 8 ký tự', _password.length >= 8),
+          _buildRequirement(
+            'Có chữ hoa và chữ thường',
+            _password.contains(RegExp('[A-Z]')) &&
+                _password.contains(RegExp('[a-z]')),
+          ),
+          _buildRequirement('Có số', _password.contains(RegExp('[0-9]'))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRequirement(String text, bool isValid) {
+    return Row(
+      children: [
+        Icon(
+          isValid ? Icons.check_circle : Icons.radio_button_unchecked,
+          size: 16,
+          color: isValid ? const Color(0xFF10B981) : const Color(0xFF9CA3AF),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          text,
+          style: GoogleFonts.inter(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            color: isValid ? const Color(0xFF10B981) : const Color(0xFF6B7280),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildResetButton({
     required VoidCallback? onPressed,
     bool isLoading = false,
   }) {
@@ -382,7 +420,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
                 ),
               )
             : Text(
-                'Send Reset Link',
+                'Đặt lại mật khẩu',
                 style: GoogleFonts.inter(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -392,71 +430,13 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
     );
   }
 
-  Widget _buildBackToSignInButton() {
-    return Container(
-      height: 52,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF007AFF)),
-      ),
-      child: ElevatedButton(
-        onPressed: () => context.router.pop(),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          foregroundColor: const Color(0xFF007AFF),
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          padding: EdgeInsets.zero,
-        ),
-        child: Text(
-          'Back to Sign In',
-          style: GoogleFonts.inter(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBackToSignInLink() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          'Remember your password? ',
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            color: const Color(0xFF6B7280),
-          ),
-        ),
-        TextButton(
-          onPressed: () => context.router.pop(),
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-            minimumSize: Size.zero,
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          ),
-          child: Text(
-            'Sign In',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF007AFF),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  void _sendResetLink() {
+  void _resetPassword() {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState?.save();
-      ref.read(authControllerProvider.notifier).forgotPassword(_email);
+      ref.read(authControllerProvider.notifier).resetPassword(
+            widget.email,
+            _password,
+          );
     }
   }
 

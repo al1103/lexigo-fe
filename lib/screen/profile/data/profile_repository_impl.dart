@@ -20,14 +20,12 @@ class ProfileRepositoryImpl implements ProfileRepository {
   @override
   Future<ApiResponse<void>> updateUserProfile({
     String? fullName,
-    String? email,
     String? avatarUrl,
     String? username, // Add username if your model supports it
   }) async {
     return _apiService.updateUserProfile(
       username: username,
       fullName: fullName,
-      email: email,
       avatarUrl: avatarUrl,
     );
   }
