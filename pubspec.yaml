@@ -52,7 +52,7 @@ dependencies:
   shared_preferences: ^2.1.2
   translator: ^1.0.3+1
   uuid: ^4.5.1
-  very_good_analysis: ^7.0.0
+  very_good_analysis: ^9.0.0
   waveform_flutter: ^1.2.0
   image_picker: ^1.1.2
   firebase_messaging: ^14.7.10
